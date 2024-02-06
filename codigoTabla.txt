@@ -1,0 +1,50 @@
+DataTable(
+                    columns: [
+                      DataColumn(
+                        label: Text('Cant',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                      DataColumn(
+                        label: Text('Tela',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).primaryColor)),
+                      ),
+                      DataColumn(
+                        label: Text('Precio',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).primaryColor)),
+                      ),
+                      DataColumn(
+                        label: Text('Total',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).primaryColor)),
+                      ),
+                    ],
+                    columnSpacing: 20, // Ajusta el espacio entre columnas
+                    rows: ventas.take(5).map((venta) {
+                      // Limita a mostrar solo las primeras 5 filas
+                      return DataRow(cells: [
+                        DataCell(Text('${venta['cantidad']}mts',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black))),
+                        DataCell(Text('${venta['tela']}',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black))),
+                        DataCell(Text('${venta['precio']}Bs',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black))),
+                        DataCell(
+                          Text(
+                            '${(venta['cantidad'] as int) * (venta['precio'] as double)}Bs',
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          ),
+                        ),
+                      ]);
+                    }).toList(),
+                  ),
