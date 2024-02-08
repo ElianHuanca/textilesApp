@@ -1,3 +1,4 @@
+http://localhost/textiles-backend/public/api/ventas
 DataTable(
                     columns: [
                       DataColumn(
