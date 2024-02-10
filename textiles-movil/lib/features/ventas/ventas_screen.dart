@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/ventas_provider.dart';
@@ -12,17 +13,21 @@ class VentasScreen extends ConsumerStatefulWidget {
 class _VentasScreenState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
+    final ventasStates = ref.watch(ventasProvider);
+    print(ventasStates);
 
-    final productsState = ref.watch( ventasProvider );
-    print(productsState);
     const ventas = [
-      {'cantidad': 2, 'tela': 'razo suizo semilicra', 'precio': 30.00},
-      {'cantidad': 5, 'tela': 'razo suizo rigido', 'precio': 25.00},
-      {'cantidad': 3, 'tela': 'razo 3mts ancho', 'precio': 20.00},
-      {'cantidad': 1, 'tela': 'Dipiur 3D', 'precio': 160.00},
-      {'cantidad': 2, 'tela': 'razo suizo rigido', 'precio': 25.00},
-      {'cantidad': 1, 'tela': 'razo suizo rigido', 'precio': 25.00},
+      {"id": 2, "fecha": "2023-06-17", "total": 0.0, "ganancias": 0.0},
+      {"id": 3, "fecha": "2023-06-21", "total": 0.0, "ganancias": 0.0},
+      {"id": 4, "fecha": "2023-06-24", "total": 0.0, "ganancias": 0.0},
+      {"id": 5, "fecha": "2023-06-28", "total": 0.0, "ganancias": 0.0},
+      {"id": 6, "fecha": "2023-07-01", "total": 0.0, "ganancias": 0.0},
+      {"id": 7, "fecha": "2023-07-05", "total": 0.0, "ganancias": 0.0},
+      {"id": 8, "fecha": "2023-07-08", "total": 0.0, "ganancias": 0.0},
+      {"id": 9, "fecha": "2023-07-12", "total": 0.0, "ganancias": 0.0},
+      {"id": 1, "fecha": "2023-06-14", "total": 2553.5, "ganancias": 0.0}
     ];
+
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,
@@ -44,15 +49,6 @@ class _VentasScreenState extends ConsumerState {
                           .textTheme
                           .headlineSmall
                           ?.copyWith(color: Colors.white)),
-                  /* subtitle: Text('Good Morning',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Colors.white54)),
-                  trailing: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/images/no-image.jpg'), 
-                  ),*/
                 ),
                 const SizedBox(height: 30)
               ],
@@ -66,15 +62,21 @@ class _VentasScreenState extends ConsumerState {
                   color: Colors.white,
                   borderRadius:
                       BorderRadius.only(topLeft: Radius.circular(200))),
-              child: ListView(
-                //GridView.count(
+              child: //ListView(
+                  GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                /* crossAxisCount: 2,
+                crossAxisCount: 2,
                 crossAxisSpacing: 40,
-                mainAxisSpacing: 30, */
+                mainAxisSpacing: 30,
                 children: [
-                  
+                  ...ventas.map((venta) {
+                    return (itemDashboard(
+                        '${venta['fecha']}',
+                        CupertinoIcons.calendar,
+                        Colors.deepOrange,
+                        '/register'));
+                  }).toList(),
                 ],
               ),
             ),
@@ -84,4 +86,52 @@ class _VentasScreenState extends ConsumerState {
       ),
     );
   }
+
+  itemDashboard(
+          String title, IconData iconData, Color background, String url) =>
+      Material(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: () {
+            //context.push(url);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, 5),
+                  color: Theme.of(context).primaryColor.withOpacity(.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: background,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(iconData, color: Colors.white),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  title.toUpperCase(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 }
