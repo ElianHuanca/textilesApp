@@ -24,22 +24,32 @@ CREATE TABLE IF NOT EXISTS det_ventas (
     CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-INSERT INTO telas(id, nombre, precxmay, precxmen, precxrollo) VALUES
-(1, 'Razo Suizo Licra', 30, 25, 25),
-(2, 'Razo Suizo Rigido', 25, 20, 20),
-(3, 'Lipiur 3D', 160, 130, 120),
-(4, 'Mostazilla', 180, 160, 150),
-(5, 'Lipiur', 130, 100, 95),
-(6, 'Razo Doble Ancho', 20, 17, 16),
-(7, 'Razo', 10, 8, 7),
-(8, 'Tull Ramas',65,55,50),
-(9, 'Blonda 15',15,12,10),
-(10, 'Blonda 20',20,15,13),
-(11, 'Blonda 50',20,15,13),
-(12,'Tull Ilusion',10,8,6),
-(13, 'Tull Licra',20,17,16),
-(14, 'Tull Frances',25,20,18),
-(15, 'Can Can',20,17,16);
+INSERT INTO telas(id, nombre, precxmay, precxmen, precxrollo,precxcompra) VALUES
+(1, 'Razo Suizo Licra', 30, 25, 23, 20),
+(2, 'Razo Suizo Rigido', 25, 20, 18, 15),
+(3, 'Lipiur 3D', 160, 130, 110, 100),
+(4, 'Mostazilla', 180, 150, 140, 110),
+(5, 'Lipiur', 130, 100, 85, 70),
+(6, 'Razo Doble Ancho', 20, 15, 14, 11),
+(7, 'Razo', 10, 8, 6, 5.5),
+(8, 'Tull Ramas',65,55,50, 40),
+(9, 'Blonda 15',15,12,10,8),
+(10, 'Blonda 20',20,15,12, 10),
+(11, 'Blonda 50',50,45,43, 35),
+(12,'Tull Ilusion',10,8,6, 5.5),
+(13, 'Tull Licra',20,16,15,8),
+(14, 'Tull Frances',25,20,18,16),
+(15, 'Can Can',20,17,14,12),
+(16, 'Tull Maripozas LPZ',65,50,45,40),
+(17,'Tull Americano', 20,17,15,11.5),
+(18,'lipiur AG', 130,100,85,62),
+(19,'Tull Perlado', 100,80,70,46),
+(20,'Bonye', 10,8,6,5.5),
+(21, 'Tull Brilloso',23,18,15,12),
+(22, 'Lipiur IH',130,100,85,57),
+(23, 'Lipiur Blonda',60,50,45,40),
+(24,'gasa',15,12,10,9),
+(25, 'Tull Ramas Ramada', 65,55,50,40);
 
 insert into ventas(fecha) values
 ('14-06-2023'),
@@ -53,12 +63,18 @@ insert into ventas(fecha) values
 ('12-07-2023');
 
 -- Crear la función que se ejecutará en el trigger
-CREATE OR REPLACE FUNCTION actualizar_total_venta()
+CREATE OR REPLACE FUNCTION actualizar_total_ingresos()
 RETURNS TRIGGER AS $$
+DECLARE
+    precioxcompra numeric; -- Declarar la variable para almacenar el precio de compra
 BEGIN
-    -- Calcular la suma de cantidad y precio de la fila insertada en det_ventas
+    -- Obtener el precio de compra de la tela
+    SELECT telas.precxcompra INTO precioxcompra FROM telas WHERE id = NEW.idtelas;
+
+    -- Actualizar el total y los ingresos de la venta
     UPDATE ventas
-    SET total = total + (NEW.cantidad * NEW.precio)
+    SET total = total + (NEW.cantidad * NEW.precio),
+        ganancias = ganancias + ((NEW.precio - precioxcompra) * NEW.cantidad)
     WHERE id = NEW.idventas;
 
     RETURN NEW;
@@ -69,7 +85,8 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER det_venta_after_insert
 AFTER INSERT ON det_ventas
 FOR EACH ROW
-EXECUTE FUNCTION actualizar_total_venta();
+EXECUTE FUNCTION actualizar_total_ingresos();
+
 
 
 
@@ -94,11 +111,11 @@ insert into det_ventas(idventas,idtelas,cantidad,precio) values
 	(1,13,1, 20),
 	(1,2,5, 21);
 
-select * from ventas
+/*select * from ventas
 
 SELECT ventas.fecha, det_ventas.*
 FROM ventas, det_ventas
-WHERE det_ventas.idventas = ventas.id;
+WHERE det_ventas.idventas = ventas.id;*/
 
 
 

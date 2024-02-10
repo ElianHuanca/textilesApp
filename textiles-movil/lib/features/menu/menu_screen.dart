@@ -64,8 +64,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 children: [
                   itemDashboard('Ventas', CupertinoIcons.shopping_cart,
                       Colors.deepOrange, '/register'),
-                  itemDashboard(
-                      'Productos', CupertinoIcons.cube_box_fill, Colors.green,'eooooooooo'),
+                  itemDashboard('Productos', CupertinoIcons.cube_box_fill,
+                      Colors.green, 'eooooooooo'),
                 ],
               ),
             ),
@@ -76,7 +76,9 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  itemDashboard(String title, IconData iconData, Color background, String url) => Material(
+  itemDashboard(
+          String title, IconData iconData, Color background, String url) =>
+      Material(
         borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,
         child: InkWell(

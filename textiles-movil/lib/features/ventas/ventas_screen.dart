@@ -13,9 +13,8 @@ class VentasScreen extends ConsumerStatefulWidget {
 class _VentasScreenState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
-    final ventasStates = ref.watch(ventasProvider);
-    print(ventasStates);
-
+    /* final ventasState = ref.watch(ventasProvider);
+    print(ventasState); */
     const ventas = [
       {"id": 2, "fecha": "2023-06-17", "total": 0.0, "ganancias": 0.0},
       {"id": 3, "fecha": "2023-06-21", "total": 0.0, "ganancias": 0.0},
