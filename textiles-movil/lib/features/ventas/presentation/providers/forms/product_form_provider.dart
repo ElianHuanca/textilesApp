@@ -1,17 +1,17 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+/* import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 
 import 'package:teslo_shop/config/constants/environment.dart';
-import 'package:teslo_shop/features/products/domain/domain.dart';
-import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
+import 'package:teslo_shop/features/ventas/domain/domain.dart';
+import 'package:teslo_shop/features/ventas/presentation/providers/ventas_provider.dart';
 
 
-final productFormProvider = StateNotifierProvider.autoDispose.family<ProductFormNotifier, ProductFormState, Product>(
+final productFormProvider = StateNotifierProvider.autoDispose.family<ProductFormNotifier, ProductFormState, Venta>(
   (ref, product) {
 
     // final createUpdateCallback = ref.watch( productsRepositoryProvider ).createUpdateProduct;
-    final createUpdateCallback = ref.watch( productsProvider.notifier ).createOrUpdateProduct;
+    final createUpdateCallback = ref.watch( ventasProvider.notifier ).createOrUpdateProduct;
 
     return ProductFormNotifier(
       product: product,
@@ -30,7 +30,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
 
   ProductFormNotifier({
     this.onSubmitCallback,
-    required Product product,
+    //required Product product,
   }): super(
     ProductFormState(
       id: product.id,
@@ -222,4 +222,4 @@ class ProductFormState {
   );
 
 
-}
+} */

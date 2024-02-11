@@ -20,4 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('api/ventas',[VentasAPI::class, 'obtenerVentas']);
+Route::get('ventas',[VentasAPI::class, 'obtenerVentas']);
+
+Route::get('ventas/{idventas}',[VentasAPI::class, 'obtenerDetalleVentas']);
