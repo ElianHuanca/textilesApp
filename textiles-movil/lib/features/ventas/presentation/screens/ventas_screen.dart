@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/ventas_provider.dart';
@@ -66,15 +67,6 @@ class _VentasScreenState extends ConsumerState {
                           .textTheme
                           .headlineSmall
                           ?.copyWith(color: Colors.white)),
-                  /* subtitle: Text('Good Morning',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Colors.white54)),
-                  trailing: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/images/no-image.jpg'), 
-                  ),*/
                 ),
                 const SizedBox(height: 30)
               ],
