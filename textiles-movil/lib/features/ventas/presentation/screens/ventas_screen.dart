@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:teslo_shop/features/ventas/domain/domain.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/ventas_provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -79,7 +80,7 @@ class _VentasScreenState extends ConsumerState {
               decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius:
-                      BorderRadius.only(topLeft: Radius.circular(200))),
+                      BorderRadius.only(topLeft: Radius.circular(100))),
               child: GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -89,7 +90,7 @@ class _VentasScreenState extends ConsumerState {
                 children: [
                   ...ventasState.ventas
                         .map((venta) => itemDashboard(venta.fecha,
-                          Icons.shopping_cart, Colors.blue, venta.id.toString()))
+                          Icons.shopping_cart, Colors.blue, venta))
                       .toList(),
                 ],
               ),
@@ -102,14 +103,15 @@ class _VentasScreenState extends ConsumerState {
   }
 
   itemDashboard(
-          String title, IconData iconData, Color background, String idventas) =>
+          String title, IconData iconData, Color background, Venta venta) =>
       Material(
         borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            context.push('/ventas/$idventas');
+            ref.read(ventasProvider.notifier).setSelectedVenta(venta);
+            context.push('/detalleventas');
           },
           child: Container(
             decoration: BoxDecoration(

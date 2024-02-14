@@ -23,7 +23,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
   VentasNotifier({
     required this.ventasRepository
-  }): super( VentasState() ) {
+  }): super( VentasState(selectedVenta: Venta(id: 0, fecha: '', total: 0, ganancias: 0)) ) {
     loadNextPage();
   }
 
@@ -54,6 +54,8 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
   }
 
+
+
   Future loadNextPage() async {
 
     if ( state.isLoading || state.isLastPage ) return;
@@ -82,6 +84,13 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
   }
 
+  Future setSelectedVenta( Venta venta ) async {
+    state = state.copyWith(
+      selectedVenta: venta
+    );
+  }  
+
+
 }
 
 
@@ -95,13 +104,15 @@ class VentasState {
   final int offset;
   final bool isLoading;
   final List<Venta> ventas;
+  final Venta selectedVenta;
 
   VentasState({
     this.isLastPage = false, 
     this.limit = 10, 
     this.offset = 0, 
     this.isLoading = false, 
-    this.ventas = const[]
+    this.ventas = const[],
+    required this.selectedVenta 
   });
 
   VentasState copyWith({
@@ -110,12 +121,14 @@ class VentasState {
     int? offset,
     bool? isLoading,
     List<Venta>? ventas,
+    Venta? selectedVenta
   }) => VentasState(
     isLastPage: isLastPage ?? this.isLastPage,
     limit: limit ?? this.limit,
     offset: offset ?? this.offset,
     isLoading: isLoading ?? this.isLoading,
     ventas: ventas ?? this.ventas,
+    selectedVenta: selectedVenta ?? this.selectedVenta
   );
-
+  Venta get selectedVentas => this.selectedVenta;
 }

@@ -16,10 +16,12 @@ class VentasAPI extends Controller
 
     public function obtenerDetalleVentas($idventas)
     {
-        $consulta = "SELECT t.id, t.nombre, dv.cantidad, dv.precio , dv.total
-                 FROM det_ventas dv 
-                 INNER JOIN telas t ON dv.idtelas = t.id 
-                 WHERE dv.idventas = ?";
+        $consulta = "SELECT t.id, t.nombre, dv.cantidad, dv.precio, dv.total
+             FROM det_ventas dv 
+             INNER JOIN telas t ON dv.idtelas = t.id 
+             WHERE dv.idventas = ?
+             ORDER BY t.id DESC";
+
 
         $detalles = DB::select($consulta, [$idventas]);
 

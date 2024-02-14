@@ -54,7 +54,7 @@ class _MenuScreenState extends State<MenuScreen> {
               decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius:
-                      BorderRadius.only(topLeft: Radius.circular(200))),
+                      BorderRadius.only(topLeft: Radius.circular(100))),
               child: GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
