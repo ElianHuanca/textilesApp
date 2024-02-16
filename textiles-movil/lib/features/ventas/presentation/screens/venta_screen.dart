@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/detalleVentas_provider.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/providers.dart';
 
@@ -73,7 +74,9 @@ class _VentaScreenState extends ConsumerState {
                     child: FloatingActionButton(
                       backgroundColor: Colors.white,
                       elevation: 4,
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/ventaForm');
+                      },
                       child: Icon(Icons.add),
                     ),
                   ),
@@ -85,18 +88,13 @@ class _VentaScreenState extends ConsumerState {
           Container(
             color: Theme.of(context).primaryColor,
             child: Container(
-              //padding: const EdgeInsets.symmetric(horizontal: 5),
               decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius:
                       BorderRadius.only(topLeft: Radius.circular(100))),
               child: ListView(
-                //GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                /* crossAxisCount: 1,
-                crossAxisSpacing: 40,
-                mainAxisSpacing: 30, */
                 children: [
                   DataTable(
                     columns: [

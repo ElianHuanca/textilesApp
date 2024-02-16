@@ -39,6 +39,10 @@ final goRouterProvider = Provider((ref) {
         path: '/detalleventas', // /product/new
         builder: (context, state) => const VentaScreen(),
       ),
+      GoRoute(
+        path: '/ventaForm', // /product/new
+        builder: (context, state) => const VentaFormScreen(),
+      ),
     ],
     /* redirect: (context, state) {
       final isGoingTo = state.subloc;
