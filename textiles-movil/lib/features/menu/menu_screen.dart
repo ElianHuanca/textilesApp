@@ -64,8 +64,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 children: [
                   itemDashboard('Ventas', CupertinoIcons.shopping_cart,
                       Colors.deepOrange, '/register'),
-                  itemDashboard('Productos', CupertinoIcons.cube_box_fill,
-                      Colors.green, 'eooooooooo'),
+                  itemDashboard('Telas', CupertinoIcons.cube_box_fill,
+                      Colors.green, '/telas'),
                 ],
               ),
             ),

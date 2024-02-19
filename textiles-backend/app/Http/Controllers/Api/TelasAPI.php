@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\TelasModelo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TelasAPI extends Controller
 {
     public function obtenerTelas(){
-        return TelasModelo::obtenerTelas();
+        //return TelasModelo::obtenerTelas();
+        $consulta = "select * from telas";
+        $telas = DB::select($consulta);
+        return $telas;
     }
 
     public function obtenerTela($id){

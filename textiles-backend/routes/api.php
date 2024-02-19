@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TelasAPI;
 use App\Http\Controllers\Api\VentasAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,5 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('ventas',[VentasAPI::class, 'obtenerVentas']);
-
 Route::get('ventas/{idventas}',[VentasAPI::class, 'obtenerDetalleVentas']);
+Route::get('telas',[TelasAPI::class, 'obtenerTelas']);
