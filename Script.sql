@@ -1,10 +1,28 @@
+CREATE TABLE IF NOT EXISTS sucursales(
+	id SERIAL PRIMARY KEY,
+	nombre VARCHAR(100),
+	--idusers INT,
+	--CONSTRAINT fk_users FOREIGN KEY (idusers) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS suc_telas(
+	id SERIAL PRIMARY KEY,
+	idsucursales INT,
+	idtelas INT,
+	seleccionado boolean DEFAULT TRUE,
+	CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
 CREATE TABLE IF NOT EXISTS telas (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100),
     precxmay DOUBLE PRECISION,
     precxmen DOUBLE PRECISION,
     precxrollo DOUBLE PRECISION,
-    precxcompra DOUBLE PRECISION
+    precxcompra DOUBLE PRECISION,
+	idusers int,
+	CONSTRAINT fk_users FOREIGN KEY (idusers) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS ventas (
@@ -24,7 +42,10 @@ CREATE TABLE IF NOT EXISTS det_ventas (
     CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-INSERT INTO telas(id, nombre, precxmay, precxmen, precxrollo,precxcompra) VALUES
+INSERT INTO sucursales (nombre) VALUES
+
+
+INSERT INTO telas(nombre,precxmen, precxmay, precxrollo,precxcompra) VALUES
 (1, 'Razo Suizo Licra', 30, 25, 23, 20),
 (2, 'Razo Suizo Rigido', 25, 20, 18, 15),
 (3, 'Lipiur 3D', 160, 130, 110, 100),

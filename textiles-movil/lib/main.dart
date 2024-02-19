@@ -5,7 +5,7 @@ import 'package:teslo_shop/config/config.dart';
 
 
 void main() async {
-  
+
   await Environment.initEnvironment();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

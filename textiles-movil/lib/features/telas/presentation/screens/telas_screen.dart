@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
@@ -74,70 +72,30 @@ class _TelasScreenState extends ConsumerState {
 class _TelasView extends StatelessWidget {
   final BuildContext context;
   final List<Tela> telas;
-  const _TelasView({required this.context, required this.telas, super.key});
+  const _TelasView({required this.context, required this.telas, Key? key})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          DataTable(
-            columns: [
-              DataColumn(
-                label: Text('Tela',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).primaryColor, //Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
-              DataColumn(
-                label: Text('Menor',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).primaryColor, //Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
-              DataColumn(
-                label: Text('Mayor',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).primaryColor, //Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
-              DataColumn(
-                label: Text('Rollo',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).primaryColor, //Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
-              DataColumn(
-                label: Text('Compra',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).primaryColor, //Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
-            ],
-            columnSpacing: 20,
-            rows: telas.map((tela) {
-              return DataRow(cells: [
-                DataCell(Text(tela.nombre,
-                    style: const TextStyle(fontSize: 12, color: Colors.black))),
-                DataCell(Text(tela.precxmen.toString(),
-                    style: const TextStyle(fontSize: 12, color: Colors.black))),
-                DataCell(Text(tela.precxmay.toString(),
-                    style: const TextStyle(fontSize: 12, color: Colors.black))),
-                DataCell(Text(tela.precxrollo.toString(),
-                    style: const TextStyle(fontSize: 12, color: Colors.black))),
-                DataCell(Text(tela.precxcompra.toString(),
-                    style: const TextStyle(fontSize: 12, color: Colors.black))),
-              ]);
-            }).toList(),
-          )
-        ]);
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      itemCount: telas.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          height: 50,
+          color: Colors.amber[600],
+          child: Center(
+            child: Text(
+                'Tela: ${telas[index].nombre}, Precio Mayor: ${telas[index].precxcompra}, Precio Menor: ${telas[index].precxmen}, Precio Compra: ${telas[index].precxcompra}, Precio Rollo: ${telas[index]..precxrollo}'),
+          ),
+        );
+      },
+    );
   }
 }
+
 
 
 /* class _TelasView extends StatelessWidget {
