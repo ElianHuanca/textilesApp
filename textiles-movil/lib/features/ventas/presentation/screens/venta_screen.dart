@@ -4,43 +4,21 @@ import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/detalleVentas_provider.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/providers.dart';
 
-class VentaScreen extends ConsumerStatefulWidget {
+/* class VentaScreen extends ConsumerStatefulWidget {
   const VentaScreen({super.key});
 
   @override
   _VentaScreenState createState() => _VentaScreenState();
-}
+} */
 
-class _VentaScreenState extends ConsumerState {
-  final ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    scrollController.addListener(() {
-      if ((scrollController.position.pixels + 400) >=
-          scrollController.position.maxScrollExtent) {
-        final idVenta = ref.read(ventasProvider).selectedVenta.id;
-        print('idVenta');
-        print(idVenta);
-        ref.read(detalleVentasProvider.notifier).loadNextPage(idVenta);
-      }
-    });
-  }
+class VentaScreen extends ConsumerWidget {
+  const VentaScreen({Key? key}) : super(key: key);
 
   @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final detalleventasState = ref.watch(detalleVentasProvider);
     final ventas = ref.watch(ventasProvider).selectedVenta;
-    print('detalle venta');
-    print(detalleventasState.detalleVentas);
+
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,

@@ -3,17 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
+import 'package:teslo_shop/features/ventas/domain/domain.dart';
 
-class VentaFormScreen extends ConsumerStatefulWidget {
+/* class VentaFormScreen extends ConsumerStatefulWidget {
   const VentaFormScreen({super.key});
 
   @override
   _VentaFormScreenState createState() => _VentaFormScreenState();
-}
+} */
 
-class _VentaFormScreenState extends ConsumerState {
+class VentaFormScreen extends ConsumerWidget {
+  const VentaFormScreen({Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    //List<DetalleVenta> detventas = [];
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,

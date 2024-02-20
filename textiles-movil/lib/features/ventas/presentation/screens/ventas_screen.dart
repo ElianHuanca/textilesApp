@@ -1,54 +1,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:teslo_shop/features/shared/shared.dart';
 import 'package:teslo_shop/features/ventas/domain/domain.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/ventas_provider.dart';
 import 'package:go_router/go_router.dart';
 
-class VentasScreen extends ConsumerStatefulWidget {
+class VentasScreen extends ConsumerWidget {
   const VentasScreen({super.key});
-
+  
   @override
-  _VentasScreenState createState() => _VentasScreenState();
-}
-
-class _VentasScreenState extends ConsumerState {
-  final ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    
-    scrollController.addListener(() {
-      if ( (scrollController.position.pixels + 400) >= scrollController.position.maxScrollExtent ) {
-        ref.read(ventasProvider.notifier).loadNextPage();
-      }
-    });
-
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
-    final ventasState = ref.watch(ventasProvider);
-    print(ventasState.ventas);
-    /* const ventas = [
-      {"id": 2, "fecha": "2023-06-17", "total": 0.0, "ganancias": 0.0},
-      {"id": 3, "fecha": "2023-06-21", "total": 0.0, "ganancias": 0.0},
-      {"id": 4, "fecha": "2023-06-24", "total": 0.0, "ganancias": 0.0},
-      {"id": 5, "fecha": "2023-06-28", "total": 0.0, "ganancias": 0.0},
-      {"id": 6, "fecha": "2023-07-01", "total": 0.0, "ganancias": 0.0},
-      {"id": 7, "fecha": "2023-07-05", "total": 0.0, "ganancias": 0.0},
-      {"id": 8, "fecha": "2023-07-08", "total": 0.0, "ganancias": 0.0},
-      {"id": 9, "fecha": "2023-07-12", "total": 0.0, "ganancias": 0.0},
-      {"id": 1, "fecha": "2023-06-14", "total": 2553.5, "ganancias": 0.0}
-    ]; */
+  Widget build(BuildContext context,WidgetRef ref) {
+    final ventasState = ref.watch(ventasProvider);    
     return Scaffold(
-      body: ListView(
+      body: ventasState.isLoading
+          ? const FullScreenLoader()
+        : ListView(
         padding: EdgeInsets.zero,
         children: [
           Container(
@@ -90,7 +57,7 @@ class _VentasScreenState extends ConsumerState {
                 children: [
                   ...ventasState.ventas
                         .map((venta) => itemDashboard(venta.fecha,
-                          Icons.shopping_cart, Colors.blue, venta))
+                          Icons.shopping_cart, Colors.blue, venta,context,ref))
                       .toList(),
                 ],
               ),
@@ -103,7 +70,7 @@ class _VentasScreenState extends ConsumerState {
   }
 
   itemDashboard(
-          String title, IconData iconData, Color background, Venta venta) =>
+          String title, IconData iconData, Color background, Venta venta,BuildContext context,WidgetRef ref) =>
       Material(
         borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,

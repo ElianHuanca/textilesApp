@@ -4,16 +4,11 @@ import 'package:teslo_shop/features/shared/shared.dart';
 import 'package:teslo_shop/features/telas/domain/domain.dart';
 import 'package:teslo_shop/features/telas/presentation/providers/telas_provider.dart';
 
-class TelasScreen extends ConsumerStatefulWidget {
+class TelasScreen extends ConsumerWidget {
   const TelasScreen({super.key});
 
   @override
-  _TelasScreenState createState() => _TelasScreenState();
-}
-
-class _TelasScreenState extends ConsumerState {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final telaState = ref.watch(telasProvider);
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -36,16 +31,11 @@ class _TelasScreenState extends ConsumerState {
                           ListTile(
                             contentPadding:
                                 const EdgeInsets.symmetric(horizontal: 30),
-                            title: Text('Hello Isela!',
+                            title: Text('Telas',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall
                                     ?.copyWith(color: Colors.white)),
-                            subtitle: Text('Good Morning',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(color: Colors.white54)),
                           ),
                           const SizedBox(height: 30)
                         ],
@@ -54,7 +44,6 @@ class _TelasScreenState extends ConsumerState {
                     Container(
                       color: Theme.of(context).primaryColor,
                       child: Container(
-                        //padding: const EdgeInsets.symmetric(horizontal: 30),
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -78,17 +67,30 @@ class _TelasView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: const EdgeInsets.all(20.0),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemCount: telas.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
-          height: 50,
-          color: Colors.amber[600],
+          //padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Center(
-            child: Text(
-                'Tela: ${telas[index].nombre}, Precio Mayor: ${telas[index].precxcompra}, Precio Menor: ${telas[index].precxmen}, Precio Compra: ${telas[index].precxcompra}, Precio Rollo: ${telas[index]..precxrollo}'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '#${telas[index].id} ${telas[index].nombre}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 5),
+                Text('Precio Menor: ${telas[index].precxmen}'),
+                Text('Precio Mayor: ${telas[index].precxmay}'),                
+                Text('Precio Compra: ${telas[index].precxcompra}'),
+                Text('Precio Rollo: ${telas[index].precxrollo}')
+              ],
+            ),
           ),
         );
       },
@@ -96,71 +98,3 @@ class _TelasView extends StatelessWidget {
   }
 }
 
-
-
-/* class _TelasView extends StatelessWidget {
-  final BuildContext context;
-  final List<Tela> telas;
-  const _TelasView({required this.context, required this.telas, super.key});
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 40,
-      mainAxisSpacing: 30,
-      children: [
-        ...telas
-            .map((tela) => itemDashboard(tela.nombre, Icons.image, Colors.blue))
-            .toList()
-      ],
-    );
-  }
-
-  itemDashboard(String title, IconData iconData, Color background) => Material(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            //context.push(url);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, 5),
-                  color: Theme.of(context).primaryColor.withOpacity(.2),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: background,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(iconData, color: Colors.white),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  title.toUpperCase(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-} */
