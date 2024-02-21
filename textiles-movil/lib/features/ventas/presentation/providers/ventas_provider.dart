@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/ventas/domain/domain.dart';
 
-import 'products_repository_provider.dart';
+import 'ventas_repository_provider.dart';
 
 
-final ventasProvider = StateNotifierProvider<VentasNotifier, ProductsState>((ref) {
+final ventasProvider = StateNotifierProvider<VentasNotifier, VentasState>((ref) {
 
   final ventasRepository = ref.watch( ventasRepositoryProvider );
   return VentasNotifier(
@@ -19,13 +18,13 @@ final ventasProvider = StateNotifierProvider<VentasNotifier, ProductsState>((ref
 
 
 
-class VentasNotifier extends StateNotifier<ProductsState> {
+class VentasNotifier extends StateNotifier<VentasState> {
   
   final VentasRepository ventasRepository;
 
   VentasNotifier({
     required this.ventasRepository
-  }): super( ProductsState() ) {
+  }): super( VentasState() ) {
     loadNextPage();
   }
 
@@ -90,7 +89,7 @@ class VentasNotifier extends StateNotifier<ProductsState> {
 
 
 
-class ProductsState {
+class VentasState {
 
   final bool isLastPage;
   final int limit;
@@ -98,7 +97,7 @@ class ProductsState {
   final bool isLoading;
   final List<Venta> ventas;
 
-  ProductsState({
+  VentasState({
     this.isLastPage = false, 
     this.limit = 10, 
     this.offset = 0, 
@@ -106,13 +105,13 @@ class ProductsState {
     this.ventas = const[]
   });
 
-  ProductsState copyWith({
+  VentasState copyWith({
     bool? isLastPage,
     int? limit,
     int? offset,
     bool? isLoading,
     List<Venta>? ventas,
-  }) => ProductsState(
+  }) => VentasState(
     isLastPage: isLastPage ?? this.isLastPage,
     limit: limit ?? this.limit,
     offset: offset ?? this.offset,

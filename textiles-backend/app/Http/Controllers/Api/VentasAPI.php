@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 
 class VentasAPI extends Controller
 {
-    public function obtenerVentas(){
-        return VentasModelo::obtenerVentas();
+    public function obtenerVentas(){    
+        $ventasModelo = new VentasModelo();
+        $ventas = $ventasModelo->obtenerVentas();
+        return $ventas;
     }
 
     public function obtenerVenta($id){

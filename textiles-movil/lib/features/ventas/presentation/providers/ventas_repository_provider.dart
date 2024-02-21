@@ -9,10 +9,10 @@ final ventasRepositoryProvider = Provider<VentasRepository>((ref) {
   
   final accessToken = ref.watch( authProvider ).user?.token ?? '';
   
-  final productsRepository = VentasRepositoryImpl(
+  final ventasRepository = VentasRepositoryImpl(
     VentasDatasourceImpl(accessToken: accessToken )
   );
 
-  return productsRepository;
+  return ventasRepository;
 });
 

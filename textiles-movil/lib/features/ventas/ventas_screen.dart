@@ -10,10 +10,30 @@ class VentasScreen extends ConsumerStatefulWidget {
 }
 
 class _VentasScreenState extends ConsumerState {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+      if ((scrollController.position.pixels + 400) >=
+          scrollController.position.maxScrollExtent) {
+        ref.read(ventasProvider.notifier).loadNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    /* final ventasState = ref.watch(ventasProvider);
-    print(ventasState); */
+    final ventasState = ref.watch(ventasProvider);
+    print(ventasState.ventas);
     const ventas = [
       {"id": 2, "fecha": "2023-06-17", "total": 0.0, "ganancias": 0.0},
       {"id": 3, "fecha": "2023-06-21", "total": 0.0, "ganancias": 0.0},
