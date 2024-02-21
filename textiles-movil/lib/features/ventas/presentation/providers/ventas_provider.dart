@@ -9,7 +9,6 @@ final ventasProvider = StateNotifierProvider<VentasNotifier, VentasState>((ref) 
   final ventasRepository = ref.watch( ventasRepositoryProvider );
   return VentasNotifier(
     ventasRepository: ventasRepository
-    //productsRepository: productsRepository
   );
   
 });
@@ -24,26 +23,26 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
   VentasNotifier({
     required this.ventasRepository
-  }): super( VentasState() ) {
+  }): super( VentasState(selectedVenta: Venta(id: 0, fecha: '', total: 0, ganancias: 0)) ) {
     loadNextPage();
   }
 
-  /* Future<bool> createOrUpdateProduct( Map<String,dynamic> productLike ) async {
+  Future<bool> createOrUpdateVenta( Map<String,dynamic> ventaLike ) async {
 
     try {
-      final product = await productsRepository.createUpdateProduct(productLike);
-      final isProductInList = state.products.any((element) => element.id == product.id );
+      final venta = await ventasRepository.createUpdateVenta(ventaLike);
+      final isventaInList = state.ventas.any((element) => element.id == venta.id );
 
-      if ( !isProductInList ) {
+      if ( !isventaInList ) {
         state = state.copyWith(
-          products: [...state.products, product]
+          ventas: [...state.ventas, venta]
         );
         return true;
       }
 
       state = state.copyWith(
-        products: state.products.map(
-          (element) => ( element.id == product.id ) ? product : element,
+        ventas: state.ventas.map(
+          (element) => ( element.id == venta.id ) ? venta : element,
         ).toList()
       );
       return true;
@@ -53,7 +52,9 @@ class VentasNotifier extends StateNotifier<VentasState> {
     }
 
 
-  } */
+  }
+
+
 
   Future loadNextPage() async {
 
@@ -83,6 +84,13 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
   }
 
+  Future setSelectedVenta( Venta venta ) async {
+    state = state.copyWith(
+      selectedVenta: venta
+    );
+  }  
+
+
 }
 
 
@@ -96,13 +104,15 @@ class VentasState {
   final int offset;
   final bool isLoading;
   final List<Venta> ventas;
+  final Venta selectedVenta;
 
   VentasState({
     this.isLastPage = false, 
     this.limit = 10, 
     this.offset = 0, 
     this.isLoading = false, 
-    this.ventas = const[]
+    this.ventas = const[],
+    required this.selectedVenta 
   });
 
   VentasState copyWith({
@@ -111,12 +121,13 @@ class VentasState {
     int? offset,
     bool? isLoading,
     List<Venta>? ventas,
+    Venta? selectedVenta
   }) => VentasState(
     isLastPage: isLastPage ?? this.isLastPage,
     limit: limit ?? this.limit,
     offset: offset ?? this.offset,
     isLoading: isLoading ?? this.isLoading,
     ventas: ventas ?? this.ventas,
+    selectedVenta: selectedVenta ?? this.selectedVenta
   );
-
 }

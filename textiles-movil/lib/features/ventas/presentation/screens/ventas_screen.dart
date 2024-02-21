@@ -1,19 +1,21 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:teslo_shop/features/shared/shared.dart';
+import 'package:teslo_shop/features/ventas/domain/domain.dart';
+import 'package:teslo_shop/features/ventas/presentation/providers/ventas_provider.dart';
 import 'package:go_router/go_router.dart';
 
-class MenuScreen extends StatefulWidget {
-  const MenuScreen({super.key});
-
+class VentasScreen extends ConsumerWidget {
+  const VentasScreen({super.key});
+  
   @override
-  State<MenuScreen> createState() => _MenuScreenState();
-}
-
-class _MenuScreenState extends State<MenuScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final ventasState = ref.watch(ventasProvider);    
     return Scaffold(
-      body: ListView(
+      body: ventasState.isLoading
+          ? const FullScreenLoader()
+        : ListView(
         padding: EdgeInsets.zero,
         children: [
           Container(
@@ -28,20 +30,11 @@ class _MenuScreenState extends State<MenuScreen> {
                 const SizedBox(height: 50),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  title: Text('Hello Isela!',
+                  title: Text('Ventas',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
                           ?.copyWith(color: Colors.white)),
-                  subtitle: Text('Good Morning',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Colors.white54)),
-                  /* trailing: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/images/no-image.jpg'),
-                  ), */
                 ),
                 const SizedBox(height: 30)
               ],
@@ -50,7 +43,7 @@ class _MenuScreenState extends State<MenuScreen> {
           Container(
             color: Theme.of(context).primaryColor,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius:
@@ -62,10 +55,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 crossAxisSpacing: 40,
                 mainAxisSpacing: 30,
                 children: [
-                  itemDashboard('Ventas', CupertinoIcons.shopping_cart,
-                      Colors.deepOrange, '/register'),
-                  itemDashboard('Telas', CupertinoIcons.cube_box_fill,
-                      Colors.green, '/telas'),
+                  ...ventasState.ventas
+                        .map((venta) => itemDashboard(venta.fecha,
+                          Icons.shopping_cart, Colors.blue, venta,context,ref))
+                      .toList(),
                 ],
               ),
             ),
@@ -77,14 +70,15 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   itemDashboard(
-          String title, IconData iconData, Color background, String url) =>
+          String title, IconData iconData, Color background, Venta venta,BuildContext context,WidgetRef ref) =>
       Material(
         borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            context.push(url);
+            ref.read(ventasProvider.notifier).setSelectedVenta(venta);
+            context.push('/detalleventas');
           },
           child: Container(
             decoration: BoxDecoration(
