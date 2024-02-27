@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class TelasAPI extends Controller
 {
-    public function obtenerTelas(){
-        //return TelasModelo::obtenerTelas();
-        $consulta = "select * from telas";
+    public function obtenerTelas(){        
+        $consulta = "SELECT * FROM telas ORDER BY nombre";
         $telas = DB::select($consulta);
         return $telas;
     }
+    
 
     public function obtenerTela($id){
         return TelasModelo::obtenerTela($id);
