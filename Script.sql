@@ -1,8 +1,26 @@
+CREATE TABLE IF NOT EXISTS usuarios(
+	id SERIAL PRIMARY KEY,
+	nombre VARCHAR(100),
+	correo VARCHAR(100),
+	password VARCHAR(100)	
+);
+
 CREATE TABLE IF NOT EXISTS sucursales(
 	id SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
-	--idusers INT,
-	--CONSTRAINT fk_users FOREIGN KEY (idusers) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
+	idusuarios INT,
+	CONSTRAINT fk_users FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS telas (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
+    precxmay DOUBLE PRECISION,
+    precxmen DOUBLE PRECISION,
+    precxrollo DOUBLE PRECISION,
+    precxcompra DOUBLE PRECISION,
+	idusuarios int,
+	CONSTRAINT fk_users FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS suc_telas(
@@ -14,22 +32,13 @@ CREATE TABLE IF NOT EXISTS suc_telas(
 	CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS telas (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    precxmay DOUBLE PRECISION,
-    precxmen DOUBLE PRECISION,
-    precxrollo DOUBLE PRECISION,
-    precxcompra DOUBLE PRECISION
-	--idusers int,
-	--CONSTRAINT fk_users FOREIGN KEY (idusers) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
 CREATE TABLE IF NOT EXISTS ventas (
     id SERIAL PRIMARY KEY,
     fecha DATE,
     total DOUBLE precision default 0,
-    ganancias DOUBLE precision default 0
+    ganancias DOUBLE precision default 0,
+    idsucursales INT,
+    CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS det_ventas (
@@ -43,7 +52,11 @@ CREATE TABLE IF NOT EXISTS det_ventas (
     CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-INSERT INTO sucursales (nombre) VALUES
+INSERT INTO usuarios(nombre,correo,password)
+VALUES ('Isela Huanca','ise250395','123456');
+
+INSERT INTO sucursales (nombre,idusuarios) 
+VALUES ('Local D4-E4',1);
 
 
 INSERT INTO telas(nombre,precxmen, precxmay, precxrollo,precxcompra) VALUES
