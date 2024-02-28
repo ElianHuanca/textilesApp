@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS usuarios(
 	id SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
 	correo VARCHAR(100),
-	password VARCHAR(100)	
+	password VARCHAR(100),
+	token text
 );
 
 CREATE TABLE IF NOT EXISTS sucursales(

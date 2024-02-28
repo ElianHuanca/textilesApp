@@ -1,5 +1,5 @@
 // Server Model: Contiene todo el servidor de express + socket.io configurado
-const Server = require('./src/models/server');
+const Server = require('./models/server');
 
 // Paquete para leer y establecer las variables de entorno
 require('dotenv').config();
