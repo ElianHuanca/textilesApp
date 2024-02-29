@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS usuarios(
 	id SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
 	correo VARCHAR(100),
-	password VARCHAR(100),
+	password VARCHAR(255),
 	token text
 );
 
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS sucursales(
 	id SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
 	idusuarios INT,
-	CONSTRAINT fk_users FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
+	CONSTRAINT fk_usuarios FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS telas (
@@ -21,17 +21,17 @@ CREATE TABLE IF NOT EXISTS telas (
     precxrollo DOUBLE PRECISION,
     precxcompra DOUBLE PRECISION,
 	idusuarios int,
-	CONSTRAINT fk_users FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
+	CONSTRAINT fk_usuarios FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS suc_telas(
+/*CREATE TABLE IF NOT EXISTS suc_telas(
 	id SERIAL PRIMARY KEY,
 	idsucursales INT,
 	idtelas INT,
 	seleccionado boolean DEFAULT TRUE,
 	CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
+);*/
 
 CREATE TABLE IF NOT EXISTS ventas (
     id SERIAL PRIMARY KEY,
@@ -53,53 +53,57 @@ CREATE TABLE IF NOT EXISTS det_ventas (
     CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-INSERT INTO usuarios(nombre,correo,password)
-VALUES ('Isela Huanca','ise250395','123456');
-
-INSERT INTO sucursales (nombre,idusuarios) 
-VALUES ('Local D4-E4',1);
+INSERT INTO usuarios(nombre,correo,password) VALUES 
+('Isela Huanca','ise250395@gmail.com','$2a$10$xo3thy528awEhg.oq9aQGemdeiMTeTD70mE..Lx5PW8w4IMFo6C4u'),
+('Mary Choque','mary@gmail.com','$2a$10$z8RpPMFeYh2IP/2vkM3Y7OFqxfIw5VK5QsayKtbdhfW6n65qUZVXa');
 
 
-INSERT INTO telas(nombre,precxmen, precxmay, precxrollo,precxcompra) VALUES
-('Razo Suizo Licra', 30, 25, 23, 20),
-('Razo Suizo Rigido', 25, 20, 18, 15),
-('Lipiur 3D', 160, 130, 110, 100),
-('Mostazilla', 180, 150, 140, 110),
-('Lipiur', 130, 100, 85, 70),
-('Razo Doble Ancho', 20, 15, 14, 11),
-('Razo', 10, 8, 6, 5.5),
-('Tull Ramas',65,55,50, 40),
-('Blonda 15',15,12,10,8),
-('Blonda 20',20,15,12, 10),
-('Blonda 50',50,45,43, 35),
-('Tull Ilusion',10,8,6, 5.5),
-('Tull Licra',20,16,15,8),
-('Tull Frances',25,20,18,16),
-('Can Can',20,17,14,12),
-('Tull Maripozas LPZ',65,50,45,40),
-('Tull Americano', 20,17,15,11.5),
-('lipiur AG', 130,100,85,62),
-('Tull Perlado', 100,80,70,46),
-('Bonye', 10,8,6,5.5),
-('Tull Brilloso',23,18,15,12),
-('Lipiur IH',130,100,85,57),
-('Lipiur Blonda',60,50,45,40),
-('gasa',15,12,10,9),
-('Tull Ramas Ramada', 65,55,50,40);
+INSERT INTO sucursales (nombre,idusuarios) VALUES 
+('Local D4-E4',1),
+('Local F3-F4',2),
+('Ramada Parabano',2);
+
+
+INSERT INTO telas(nombre,precxmen, precxmay, precxrollo,precxcompra,idusuarios) VALUES
+('Razo Suizo Licra', 30, 25, 23, 20,1),
+('Razo Suizo Rigido', 25, 20, 18, 15,1),
+('Lipiur 3D', 160, 130, 110, 100,1),
+('Mostazilla', 180, 150, 140, 110,1),
+('Lipiur', 130, 100, 85, 70,1),
+('Razo Doble Ancho', 20, 15, 14, 11,1),
+('Razo', 10, 8, 6, 5.5,1),
+('Tull Ramas',65,55,50, 40,1),
+('Blonda 15',15,12,10,8,1),
+('Blonda 20',20,15,12, 10,1),
+('Blonda 50',50,45,43, 35,1),
+('Tull Ilusion',10,8,6, 5.5,1),
+('Tull Licra',20,16,15,8,1),
+('Tull Frances',25,20,18,16,1),
+('Can Can',20,17,14,12,1),
+('Tull Maripozas LPZ',65,50,45,40,1),
+('Tull Americano', 20,17,15,11.5,1),
+('lipiur AG', 130,100,85,62,1),
+('Tull Perlado', 100,80,70,46,1),
+('Bonye', 10,8,6,5.5,1),
+('Tull Brilloso',23,18,15,12,1),
+('Lipiur IH',130,100,85,57,1),
+('Lipiur Blonda',60,50,45,40,1),
+('gasa',15,12,10,9,1),
+('Tull Ramas Ramada', 65,55,50,40,1);
 --(27, 'Blonda 30',30,25,20, 18),
 --(28, 'Blonda 12',12,10,8, 6),
 --(29,'Gasa Cuadros',20,15,14,12),
 
-insert into ventas(fecha) values
-('14-06-2023'),
-('17-06-2023'),
-('21-06-2023'),
-('24-06-2023'),
-('28-06-2023'),
-('01-07-2023'),
-('05-07-2023'),
-('08-07-2023'),
-('12-07-2023');
+insert into ventas(fecha,idsucursales) values
+('14-06-2023',1),
+('17-06-2023',1),
+('21-06-2023',1),
+('24-06-2023',1),
+('28-06-2023',1),
+('01-07-2023',1),
+('05-07-2023',1),
+('08-07-2023',1),
+('12-07-2023',1);
 
 -- Crear la función que se ejecutará en el trigger
 CREATE OR REPLACE FUNCTION actualizar_total_ingresos()
