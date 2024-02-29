@@ -1,10 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-//import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
-import 'package:teslo_shop/features/menu/menu.dart';
-import 'package:teslo_shop/features/telas/telas.dart';
-import 'package:teslo_shop/features/ventas/ventas.dart';
-
+import 'package:textiles_app/features/auth/auth.dart';
+import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:textiles_app/features/sucursales/sucursales.dart';
 import 'app_router_notifier.dart';
 
 final goRouterProvider = Provider((ref) {
@@ -17,37 +15,24 @@ final goRouterProvider = Provider((ref) {
       ///* Primera pantalla
       GoRoute(
         path: '/splash',
-        //builder: (context, state) => const CheckAuthStatusScreen(),
-        builder: (context, state) => const MenuScreen(),
+        builder: (context, state) => const CheckAuthStatusScreen(),        
       ),
 
       ///* Auth Routes
       GoRoute(
         path: '/login',
-        builder: (context, state) => const MenuScreen(),
+        builder: (context, state) => const LoginScreen(),
       ),
-      GoRoute(
+      /* GoRoute(
         path: '/register',
         builder: (context, state) => const VentasScreen(),
-      ),
-
-      ///* Product Routes
-      /* GoRoute(
-        path: '/',
-        builder: (context, state) => const ProductsScreen(),
       ), */
+
       GoRoute(
-        path: '/detalleventas', // /product/new
-        builder: (context, state) => const VentaScreen(),
+        path: '/sucursales',
+        builder: (context, state) => const SucursalesScreen(),
       ),
-      GoRoute(
-        path: '/ventaForm', // /product/new
-        builder: (context, state) => const VentaFormScreen(),
-      ),
-      GoRoute(
-        path: '/telas',
-        builder: (context, state) => const TelasScreen(),
-      ),
+      
     ],
     redirect: (context, state) {
       final isGoingTo = state.subloc;
