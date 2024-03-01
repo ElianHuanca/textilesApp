@@ -2,7 +2,7 @@
 
 
 class Usuario {
-  final String id;
+  final int id;
   final String correo;
   final String nombre;
   final String token;

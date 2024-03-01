@@ -5,6 +5,7 @@ import 'package:textiles_app/config/config.dart';
 
 
 
+
 void main() async{
   await Environment.initEnvironment();
 
@@ -23,10 +24,10 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref ) {
 
-    //final appRouter = ref.watch( goRouterProvider );
+    final appRouter = ref.watch( goRouterProvider );
 
     return MaterialApp.router(
-      //routerConfig: appRouter,
+      routerConfig: appRouter,
       theme: AppTheme().getTheme(),
       debugShowCheckedModeBanner: false,
     );

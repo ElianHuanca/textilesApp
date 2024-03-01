@@ -29,17 +29,18 @@ final goRouterProvider = Provider((ref) {
       ), */
 
       GoRoute(
-        path: '/sucursales',
+        path: '/',
         builder: (context, state) => const SucursalesScreen(),
       ),
       
     ],
     redirect: (context, state) {
-      final isGoingTo = state.subloc;
+      final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
 
-      if (isGoingTo == '/splash' && authStatus == AuthStatus.checking)
+      if (isGoingTo == '/splash' && authStatus == AuthStatus.checking) {
         return null;
+      }
 
       if (authStatus == AuthStatus.notAuthenticated) {
         if (isGoingTo == '/login' || isGoingTo == '/register') return null;
