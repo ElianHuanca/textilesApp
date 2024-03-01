@@ -4,13 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/detalleVentas_provider.dart';
 import 'package:teslo_shop/features/ventas/presentation/providers/providers.dart';
 
-/* class VentaScreen extends ConsumerStatefulWidget {
-  const VentaScreen({super.key});
-
-  @override
-  _VentaScreenState createState() => _VentaScreenState();
-} */
-
 class VentaScreen extends ConsumerWidget {
   const VentaScreen({Key? key}) : super(key: key);
 

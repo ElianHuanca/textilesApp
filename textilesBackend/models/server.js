@@ -15,8 +15,7 @@ class Server {
             'auth': '/api/auth',
             'usuarios': '/api/usuarios',
             'sucursales': '/api/sucursales',
-            'telas': '/api/telas',
-            'suc_telas': '/api/suc_telas',
+            'telas': '/api/telas',            
             'ventas': '/api/ventas',
             'det_ventas': '/api/det_ventas',
         };
@@ -40,10 +39,9 @@ class Server {
         this.app.use(this.paths.auth, require('../routes/auth.routes'));
         this.app.use(this.paths.usuarios, require('../routes/usuarios.routes'));        
         this.app.use(this.paths.sucursales, require('../routes/sucursales.routes'));
-        /* this.app.use(this.paths.telas, require('../routes/telas.routes'));
-        this.app.use(this.paths.suc_telas, require('../routes/suc_telas.routes'));
         this.app.use(this.paths.ventas, require('../routes/ventas.routes'));
-        this.app.use(this.paths.det_ventas, require('../routes/det_ventas.routes')); */
+        this.app.use(this.paths.telas, require('../routes/telas.routes'));                
+        this.app.use(this.paths.det_ventas, require('../routes/det_ventas.routes'));
     }    
 
     async execute(){

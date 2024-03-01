@@ -1,15 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/auth.dart';
-import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
+//import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/sucursales/sucursales.dart';
+import 'package:textiles_app/features/ventas/ventas.dart';
 import 'app_router_notifier.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/',
     refreshListenable: goRouterNotifier,
     routes: [
       ///* Primera pantalla
@@ -23,18 +24,21 @@ final goRouterProvider = Provider((ref) {
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
-      /* GoRoute(
-        path: '/register',
-        builder: (context, state) => const VentasScreen(),
-      ), */
 
       GoRoute(
         path: '/',
         builder: (context, state) => const SucursalesScreen(),
       ),
+
+      GoRoute(
+        path: '/ventas/:id', // /product/new
+        builder: (context, state) => VentasScreen(
+          idsucursales: int.parse(state.pathParameters['id'] ?? '0'),
+        ),
+      ),
       
     ],
-    redirect: (context, state) {
+    /* redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
 
@@ -57,6 +61,6 @@ final goRouterProvider = Provider((ref) {
       }
 
       return null;
-    },
+    }, */
   );
 });

@@ -9,13 +9,16 @@ const Venta = sequelize.define('ventas', {
         autoIncrement: true
     },
     fecha:{
-        type: DataTypes.DATE,        
+        type: DataTypes.DATE, 
+        defaultValue: DataTypes.NOW       
     },
     total:{
         type: DataTypes.FLOAT,
+        defaultValue: 0
     },
     ganancias:{
         type: DataTypes.FLOAT,        
+        defaultValue: 0
     },
     idsucursales: {
         type: DataTypes.INTEGER,

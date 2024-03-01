@@ -1,0 +1,4 @@
+
+
+
+class DetalleVentaNotFound implements Exception {}

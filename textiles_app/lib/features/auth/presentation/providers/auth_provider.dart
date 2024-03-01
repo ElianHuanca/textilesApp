@@ -36,8 +36,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await Future.delayed(const Duration(milliseconds: 500));
 
     try {
-      final user = await authRepository.login(email, password);
-      _setLoggedUser( user );
+      final usuario = await authRepository.login(email, password);
+      _setLoggedUser( usuario );
 
     } on CustomError catch (e) {
       logout( e.message );
@@ -68,12 +68,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   }
 
-  void _setLoggedUser( Usuario user ) async {
+  void _setLoggedUser( Usuario usuario ) async {
     
-    await keyValueStorageService.setKeyValue('token', user.token);
+    await keyValueStorageService.setKeyValue('token', usuario.token);
 
     state = state.copyWith(
-      user: user,
+      usuario: usuario,
       authStatus: AuthStatus.authenticated,
       errorMessage: '',
     );
@@ -85,7 +85,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     state = state.copyWith(
       authStatus: AuthStatus.notAuthenticated,
-      user: null,
+      usuario: null,
       errorMessage: errorMessage
     );
   }
@@ -98,22 +98,22 @@ enum AuthStatus { checking, authenticated, notAuthenticated }
 
 class AuthState {
   final AuthStatus authStatus;
-  final Usuario? user;
+  final Usuario? usuario;
   final String errorMessage;
 
   AuthState({
     this.authStatus = AuthStatus.checking, 
-    this.user, 
+    this.usuario, 
     this.errorMessage = ''
   });
 
   AuthState copyWith({
     AuthStatus? authStatus,
-    Usuario? user,
+    Usuario? usuario,
     String? errorMessage,
   }) => AuthState(
     authStatus: authStatus ?? this.authStatus,
-    user: user ?? this.user,
+    usuario: usuario ?? this.usuario,
     errorMessage: errorMessage ?? this.errorMessage
   );
 }

@@ -24,18 +24,9 @@ CREATE TABLE IF NOT EXISTS telas (
 	CONSTRAINT fk_usuarios FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-/*CREATE TABLE IF NOT EXISTS suc_telas(
-	id SERIAL PRIMARY KEY,
-	idsucursales INT,
-	idtelas INT,
-	seleccionado boolean DEFAULT TRUE,
-	CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);*/
-
 CREATE TABLE IF NOT EXISTS ventas (
     id SERIAL PRIMARY KEY,
-    fecha DATE,
+    fecha DATE default NOW(),
     total DOUBLE precision default 0,
     ganancias DOUBLE precision default 0,
     idsucursales INT,
@@ -105,27 +96,28 @@ insert into ventas(fecha,idsucursales) values
 ('08-07-2023',1),
 ('12-07-2023',1);
 
--- Crear la función que se ejecutará en el trigger
+
 CREATE OR REPLACE FUNCTION actualizar_total_ingresos()
 RETURNS TRIGGER AS $$
 DECLARE
-    precioxcompra numeric; -- Declarar la variable para almacenar el precio de compra
+    precioxcompra numeric;
 BEGIN
-    -- Obtener el precio de compra de la tela
     SELECT telas.precxcompra INTO precioxcompra FROM telas WHERE id = NEW.idtelas;
-
-    -- Actualizar el total y los ingresos de la venta
+    
     UPDATE ventas
     SET total = total + (NEW.cantidad * NEW.precio),
         ganancias = ganancias + ((NEW.precio - precioxcompra) * NEW.cantidad)
     WHERE id = NEW.idventas;
-
+   
+    update det_ventas
+    set total = NEW.cantidad * NEW.precio
+	WHERE id = NEW.id;
+  
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Crear el trigger AFTER INSERT en la tabla det_ventas
-CREATE TRIGGER det_venta_after_insert
+CREATE or replace TRIGGER det_venta_after_insert
 AFTER INSERT ON det_ventas
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_total_ingresos();

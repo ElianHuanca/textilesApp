@@ -15,6 +15,10 @@ const DetVenta = sequelize.define('det_ventas', {
     precio: {
         type: DataTypes.FLOAT,
     },
+    total:{
+        type: DataTypes.FLOAT,
+        defaultValue: 0
+    },
     idtelas: {
         type: DataTypes.INTEGER,
         references: {
