@@ -4,7 +4,12 @@ import 'package:textiles_app/features/shared/shared.dart';
 class Screen1 extends StatelessWidget {
   final List<Widget> widget;
   final String title;
-  const Screen1({required this.widget, super.key, required this.title});
+  final bool isGridview;
+  const Screen1(
+      {required this.widget,
+      super.key,
+      required this.title,
+      required this.isGridview});
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +33,25 @@ class Screen1 extends StatelessWidget {
             /* color: Colors.white,
             constraints: const BoxConstraints.expand(), */
             padding: const EdgeInsets.all(30),
-            child: GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 40,
-              mainAxisSpacing: 30,
-              children: widget,
-            )));
+            child: isGridview
+                ? GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 40,
+                    mainAxisSpacing: 30,
+                    children: widget,
+                  )
+                : ListView(
+                    //padding: const EdgeInsets.all(8.0),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ...widget
+                    ],
+                  )));
   }
 }

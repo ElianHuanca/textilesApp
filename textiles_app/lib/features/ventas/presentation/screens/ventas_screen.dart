@@ -12,7 +12,7 @@ class VentasScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final ventasState = ref.watch(ventasProvider(idsucursales));    
-    return Screen1(widget: _buildBody(ventasState.ventas,context,ref), title: 'Ventas');
+    return Screen1(widget: _buildBody(ventasState.ventas,context,ref), title: 'Ventas', isGridview: true,);
     
   }
 

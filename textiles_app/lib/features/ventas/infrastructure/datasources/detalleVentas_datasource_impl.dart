@@ -23,12 +23,23 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
   @override
   Future<List<DetalleVenta>> getDetalleVenta(int idVenta) async{
 
-    final response = await dio.get<List>('/ventas/$idVenta');
+    final response = await dio.get<List>('/det_ventas/$idVenta');
     final List<DetalleVenta> detalleVentas = [];
     for(final detalle in response.data ?? []){
       detalleVentas.add(DetalleVentaMapper.jsonToEntity(detalle));
     }
     return detalleVentas;
+  }
+  
+  @override
+  Future<List<DetalleVenta>> createDetalleVenta(List<Map<String, dynamic>> detalleVentasLike) async{
+    try {
+      final response = await dio.post<List>('/det_ventas', data: detalleVentasLike);
+      final detalleVentas = response.data?.map((detalle) => DetalleVentaMapper.jsonToEntity(detalle)).toList();
+      return detalleVentas?.cast<DetalleVenta>() ?? [];
+    } catch (e) {
+      throw Exception();
+    }
   }
   
 }

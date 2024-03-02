@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/shared/shared.dart';
+import 'package:textiles_app/features/ventas/domain/domain.dart';
 import 'package:textiles_app/features/ventas/presentation/providers/providers.dart';
 
 class DetVentas extends ConsumerWidget {
@@ -8,15 +9,19 @@ class DetVentas extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final detalleVentasState = ref.watch(detalleVentasProvider);
     final venta = ref.watch(ventaProvider).venta;
     final String title = 'Ventas ${venta?.fecha}';
     final String subtitle =
         'Total: ${venta?.total}Bs Ganancias: ${venta?.ganancias}Bs';
-    return Screen2(title: title, subtitle: subtitle, widget: _buildBody(context));
+    return Screen2(
+        title: title,
+        subtitle: subtitle,
+        dataTable: _buildBody(context, detalleVentasState.detalleVentas));
   }
 
-  Widget _buildBody(BuildContext context) {
-    return DataTable(columns: _columns(context), rows: _rows);
+  DataTable _buildBody(BuildContext context, List<DetalleVenta> detalleVentas) {
+    return DataTable(columns: _columns(context), rows: _rows(detalleVentas));
   }
 
   List<DataColumn> _columns(BuildContext context) => <DataColumn>[
@@ -37,7 +42,16 @@ class DetVentas extends ConsumerWidget {
         ),
       );
 
-  List<DataRow> get _rows {
+  List<DataRow> _rows(List<DetalleVenta> detalleVentas) => <DataRow>[
+        for (var det in detalleVentas)
+          DataRow(cells: <DataCell>[
+            _cell(det.nombre ?? ''),
+            _cell('${det.cantidad}mts'),
+            _cell('${det.precio}Bs'),
+            _cell('${det.total}Bs'),
+          ]),
+      ];
 
-  }
+  DataCell _cell(String texto) => DataCell(
+      Text(texto, style: const TextStyle(fontSize: 12, color: Colors.black)));
 }

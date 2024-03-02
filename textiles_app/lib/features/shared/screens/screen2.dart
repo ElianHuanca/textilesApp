@@ -5,13 +5,13 @@ class Screen2 extends StatelessWidget {
   final String title;
   final String subtitle;
   //final String route;
-  final Widget widget;
+  final DataTable dataTable;
   const Screen2(
       {super.key,
       required this.title,
       required this.subtitle,
       //required this.route, 
-      required this.widget
+      required this.dataTable
       }
   );
 
@@ -58,7 +58,7 @@ class Screen2 extends StatelessWidget {
             ListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: [widget],
+                children: [dataTable],
             )
           ],
         ),
