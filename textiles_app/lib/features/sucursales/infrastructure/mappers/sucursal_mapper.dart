@@ -1,6 +1,6 @@
 
 
-import 'package:textiles_app/features/sucursales/domain/entities/sucursal.dart';
+import '../../domain/domain.dart';
 
 class SucursalMapper {
   static jsonToEntity(Map<String, dynamic> json)=> Sucursal(

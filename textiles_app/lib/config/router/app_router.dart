@@ -27,7 +27,22 @@ final goRouterProvider = Provider((ref) {
 
       GoRoute(
         path: '/',
-        builder: (context, state) => const SucursalesScreen(),
+        builder: (context, state) => const SucursalesScreen(
+          false,
+        ),
+      ),
+
+      GoRoute(
+        path: '/sucursales',
+        builder: (context, state) => const SucursalesScreen(
+          true,
+        ),
+      ),
+
+      GoRoute(
+        path: '/sucursal', // /product/new
+        builder: (context, state) => SucursalScreen(
+        ),
       ),
 
       GoRoute(

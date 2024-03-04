@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:textiles_app/config/config.dart';
-import 'package:textiles_app/features/sucursales/domain/domain.dart';
-import 'package:textiles_app/features/sucursales/infrastructure/infrastructure.dart';
+import '../../domain/domain.dart';
+import '../infrastructure.dart';
 
 
 class SucursalesDatasourceImpl implements SucursalesDatasource {
@@ -21,6 +21,41 @@ class SucursalesDatasourceImpl implements SucursalesDatasource {
       sucursales.add(  SucursalMapper.jsonToEntity(sucursal)  );
     }
     return sucursales;
+  }
+  
+  @override
+  Future<Sucursal> createUpdateSucursal(Map<String, dynamic> sucursalLike) async{
+    try {
+      
+      final int? sucursalId = sucursalLike['id'];
+      final String method = (sucursalId == 0) ? 'POST' : 'PUT';
+      final String url = (sucursalId == 0) ? '/sucursales' : '/sucursales/$sucursalId';
+
+      sucursalLike.remove('id');
+
+      final response = await dio.request(
+        url,
+        data: sucursalLike,
+        options: Options(
+          method: method
+        )
+      );
+
+      final sucursal = SucursalMapper .jsonToEntity(response.data);
+      return sucursal;
+
+    } catch (e) {
+      throw Exception();
+    }
+  }
+  
+  @override
+  void deleteSucursal(int id) async{    
+      try{
+        await dio.delete('/sucursales/$id');
+      }catch(e){
+        throw Exception();
+      }
   }
   
 }

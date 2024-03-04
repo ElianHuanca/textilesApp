@@ -1,4 +1,5 @@
 
 
-export 'package:textiles_app/features/sucursales/presentation/screens/sucursales_screen.dart';
+export 'sucursales_screen.dart';
 
+export 'sucursal_screen.dart';

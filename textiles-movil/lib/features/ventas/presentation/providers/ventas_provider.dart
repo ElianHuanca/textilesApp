@@ -89,8 +89,6 @@ class VentasNotifier extends StateNotifier<VentasState> {
       selectedVenta: venta
     );
   }  
-
-
 }
 
 

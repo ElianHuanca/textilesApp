@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
-import 'package:textiles_app/features/sucursales/domain/domain.dart';
-import 'package:textiles_app/features/sucursales/presentation/providers/sucursales_repository_provider.dart';
+import '../../domain/domain.dart';
+import 'providers.dart';
 
-final sucursalesProvider = StateNotifierProvider<SucursalesNotifier,SucursalesState>((ref) {
+final sucursalesProvider =
+    StateNotifierProvider<SucursalesNotifier, SucursalesState>((ref) {
   final sucursalesRepository = ref.watch(sucursalesRepositoryProvider);
   return SucursalesNotifier(
     idusuarios: ref.watch(authProvider).usuario!.id,
@@ -34,6 +35,42 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
 
     state = state.copyWith(isLoading: false, sucursales: sucursales);
   }
+
+  Future<bool> createOrUpdateSucursal(Map<String, dynamic> sucursalLike) async {
+    try {
+      final sucursal = await sucursalesRepository.createUpdateSucursal(sucursalLike);
+      final isSucursalInList =
+          state.sucursales.any((element) => element.id == sucursal.id);
+
+      if (!isSucursalInList) {
+        state = state.copyWith(sucursales: [...state.sucursales, sucursal]);
+        return true;
+      }
+
+      state = state.copyWith(
+          sucursales: state.sucursales
+              .map(
+                (element) => (element.id == sucursal.id) ? sucursal : element,
+              )
+              .toList());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteSucursal(int id) async {
+    try {
+      sucursalesRepository.deleteSucursal(id);
+      state = state.copyWith(
+          sucursales: state.sucursales
+              .where((element) => element.id != id)
+              .toList());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 class SucursalesState {
@@ -43,7 +80,6 @@ class SucursalesState {
   SucursalesState({this.isLoading = false, this.sucursales = const []});
 
   SucursalesState copyWith({bool? isLoading, List<Sucursal>? sucursales}) {
-    //SI HAY PROBLEMAS ES AQUI
     return SucursalesState(
       isLoading: isLoading ?? this.isLoading,
       sucursales: sucursales ?? this.sucursales,
