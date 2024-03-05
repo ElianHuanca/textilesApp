@@ -7,3 +7,4 @@ export 'geometrical_background.dart';
 export 'side_menu.dart';
 export 'itemDashboard.dart';
 export 'material_button_widget.dart';
+export 'showSnackbar.dart';

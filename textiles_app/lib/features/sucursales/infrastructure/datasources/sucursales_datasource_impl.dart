@@ -50,7 +50,7 @@ class SucursalesDatasourceImpl implements SucursalesDatasource {
   }
   
   @override
-  void deleteSucursal(int id) async{    
+  Future<void> deleteSucursal(int id) async{    
       try{
         await dio.delete('/sucursales/$id');
       }catch(e){

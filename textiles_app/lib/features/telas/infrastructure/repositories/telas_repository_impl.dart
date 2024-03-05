@@ -16,8 +16,7 @@ class TelasRepositoryImpl implements TelasRepository {
   }
   
   @override
-  Future<bool> deleteTela(int id) {
-    // TODO: implement deleteTela
-    throw UnimplementedError();
+  Future<void> deleteTela(int id) {   
+    return datasource.deleteTela(id);
   }
 }

@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
-final telaProvider =
-    StateNotifierProvider<TelaNotifier, TelaState>((ref) {
+final telaProvider = StateNotifierProvider<TelaNotifier, TelaState>((ref) {
   final telasRepository = ref.watch(telasRepositoryProvider);
 
   return TelaNotifier(telasRepository: telasRepository);
@@ -28,19 +27,13 @@ class TelaNotifier extends StateNotifier<TelaState> {
   }
 
   Future<void> nuevaTela() async {
-    try {
-      state = state.copyWith(
-        isLoading: false,
-        tela: newEmptyTela(),
-      );
-      return;
-    } catch (e) {
-      // 404 tela not found
-      print(e);
-    }
+    state = state.copyWith(
+      isLoading: false,
+      tela: newEmptyTela(),
+    );
   }
 
-  Future setTela(Tela tela) async {
+  Future<void> setTela(Tela tela) async {
     state = state.copyWith(isLoading: false, tela: tela);
   }
 }

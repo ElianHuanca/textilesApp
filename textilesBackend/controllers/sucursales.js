@@ -1,7 +1,7 @@
 const pool = require('../database/database');
 const Sucursal = require('../models/sucursal');
 
-const ObtenerSucursalesXUsuario = async (req, res) => {
+const ObtenerSucursales = async (req, res) => {
     try {
         const { idusuarios } = req.params;
         const sucursales = await Sucursal.findAll({ where: { idusuarios } });
@@ -12,9 +12,10 @@ const ObtenerSucursalesXUsuario = async (req, res) => {
     }    
 };
 
-const RegistrarSucursalXUsuario = async (req, res) => {
+const RegistrarSucursal = async (req, res) => {
     try {
-        const { idusuarios, nombre } = req.body;        
+        const { idusuarios } = req.params;
+        const { nombre } = req.body;        
         const nuevaSucursal = await Sucursal.create({ idusuarios, nombre });
         res.json(nuevaSucursal);
     } catch (error) {
@@ -24,8 +25,31 @@ const RegistrarSucursalXUsuario = async (req, res) => {
 
 }
 
+const ActualizarSucursal = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre } = req.body;
+        const sucursal = await Sucursal.update({ nombre }, { where: { id } });
+        res.json(sucursal);
+    } catch (error) {
+        console.error('Error al actualizar sucursal:', error);
+        res.status(500).json({ error: 'Error al actualizar sucursal', message: error.message });
+    }
+}
 
+const EliminarSucursal = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const sucursal = await Sucursal.destroy({ where: { id } });
+        res.json(sucursal);
+    } catch (error) {
+        console.error('Error al eliminar sucursal:', error);
+        res.status(500).json({ error: 'Error al eliminar sucursal', message: error.message });
+    }
+}
 module.exports = {
-    ObtenerSucursalesXUsuario,
-    RegistrarSucursalXUsuario
+    ObtenerSucursales,
+    RegistrarSucursal,
+    ActualizarSucursal,
+    EliminarSucursal
 }

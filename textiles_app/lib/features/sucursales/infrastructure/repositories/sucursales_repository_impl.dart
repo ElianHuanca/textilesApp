@@ -16,7 +16,7 @@ class SucursalesRepositoryImpl implements SucursalesRepository {
   }
   
   @override
-  void deleteSucursal(int id) {
-    datasource.deleteSucursal(id);
+  Future<void> deleteSucursal(int id) {
+    return datasource.deleteSucursal(id);
   }
 }

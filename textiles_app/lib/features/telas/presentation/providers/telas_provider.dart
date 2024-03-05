@@ -18,10 +18,10 @@ class TelasNotifier extends StateNotifier<TelasState> {
   TelasNotifier(
       {required this.idusuarios, required this.telasRepository})
       : super(TelasState()) {
-    getTelaes(idusuarios);
+    getTelas(idusuarios);
   }
 
-  Future getTelaes(int idusuarios) async {
+  Future getTelas(int idusuarios) async {
     if (state.isLoading) return;
 
     state = state.copyWith(isLoading: true);
@@ -58,7 +58,21 @@ class TelasNotifier extends StateNotifier<TelasState> {
       return false;
     }
   }
+
+  Future<bool> deleteTela(int id) async {
+    try {
+      telasRepository.deleteTela(id);
+      state = state.copyWith(
+          telas: state.telas
+              .where((element) => element.id != id)
+              .toList());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
+
 
 class TelasState {
   final bool isLoading;

@@ -5,11 +5,12 @@ class Screen1 extends StatelessWidget {
   final List<Widget> widget;
   final String title;
   final bool isGridview;
+  final FloatingActionButton? floatingActionButton;
   const Screen1(
       {required this.widget,
       super.key,
       required this.title,
-      required this.isGridview});
+      required this.isGridview, this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,7 @@ class Screen1 extends StatelessWidget {
                       ),
                       ...widget
                     ],
-                  )));
+                  )),
+        floatingActionButton: floatingActionButton);
   }
 }

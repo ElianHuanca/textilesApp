@@ -1,6 +1,6 @@
 const Venta = require('../models/venta');
 
-const ObtenerVentasXSuc = async (req, res) => {
+const ObtenerVentas = async (req, res) => {
     try {
         const { idsucursales } = req.params;
         const ventas = await Venta.findAll({ where: { idsucursales } });
@@ -55,9 +55,31 @@ const RegistrarVentaAhora = async (req, res) => {
     }
 };
 
+const EliminarVenta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const venta = await Venta.destroy({ where: { id } });
+        res.json(venta);
+    } catch (error) {
+        console.error('Error al eliminar venta:', error);
+        res.status(500).json({ error: 'Error al eliminar venta', message: error.message });
+    }
+}
+
+const EliminarVenta0 = async (req, res) => {
+    try {
+        const venta = await Venta.destroy({ where: { total : 0 } });
+        res.json(venta);
+    } catch (error) {
+        console.error('Error al eliminar venta:', error);
+        res.status(500).json({ error: 'Error al eliminar venta', message: error.message });
+    }
+}
 
 module.exports = {
-    ObtenerVentasXSuc,
+    ObtenerVentas,
     RegistrarVenta,
-    RegistrarVentaAhora
+    RegistrarVentaAhora,
+    EliminarVenta,
+    EliminarVenta0
 }

@@ -6,7 +6,7 @@ import '../../domain/domain.dart';
 import '../providers/providers.dart';
 
 class SucursalScreen extends ConsumerWidget {
-  const SucursalScreen({super.key});
+  const SucursalScreen({super.key});  
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {    
@@ -65,14 +65,14 @@ class SucursalScreen extends ConsumerWidget {
 
   Function _onSubmit(BuildContext context, WidgetRef ref, Sucursal sucursal) {
     return () {      
-      ref.read(sucursalFormProvider(sucursal).notifier).onFormSubmit();
+      ref.read(sucursalFormProvider(sucursal).notifier).onFormSubmit().then((value) => value ?  showSnackbar(context, sucursal.id==0 ? 'Guardado' : 'Editado') : showSnackbar(context, 'Hubo Un Error'));
       context.go('/sucursales');
     };
   }
 
   Function _onDelete(BuildContext context, WidgetRef ref, Sucursal sucursal) {
     return () {
-      ref.read(sucursalFormProvider(sucursal).notifier).onFormDelete();
+      ref.read(sucursalFormProvider(sucursal).notifier).onFormDelete().then((value) => value ?  showSnackbar(context, 'Eliminado') : showSnackbar(context, 'Hubo Un Error'));
       context.go('/sucursales');
     };
   }

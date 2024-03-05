@@ -14,17 +14,18 @@ class TelasScreen extends ConsumerWidget {
       widget: _buildBody(telasState.telas, context, ref),
       title: 'Telas',
       isGridview: false,
+      floatingActionButton: _floatingActionButton(context, ref),
     );
   }
 
   List<Widget> _buildBody(
       List<Tela> telas, BuildContext context, WidgetRef ref) {
     return telas.map((tela) {
-      return _telaCard(tela, context);
+      return _telaCard(tela, context,ref);
     }).toList();
   }
 
-  Card _telaCard(Tela tela, BuildContext context) {
+  Card _telaCard(Tela tela, BuildContext context, WidgetRef ref) {
     return Card(
       child: ListTile(
         title: Text(tela.nombre),
@@ -38,9 +39,21 @@ class TelasScreen extends ConsumerWidget {
           ],
         ),
         onTap: () {
-          GoRouter.of(context).go('/telas/${tela.id}');
+          ref.read(telaProvider.notifier).setTela(tela);
+          context.go('/tela');
         },
       ),
+    );
+  }
+
+  FloatingActionButton _floatingActionButton(BuildContext context, WidgetRef ref) {
+    return FloatingActionButton.extended(
+      label: const Text('Agregar Tela'),
+      onPressed: () {
+        ref.read(telaProvider.notifier).nuevaTela();
+        context.go('/tela');
+      },
+      icon: const Icon(Icons.add),
     );
   }
 }

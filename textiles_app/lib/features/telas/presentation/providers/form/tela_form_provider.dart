@@ -9,10 +9,11 @@ final telaFormProvider = StateNotifierProvider.autoDispose.family<TelaFormNotifi
   (ref, tela) {
 
     final createUpdateCallback = ref.watch( telasProvider.notifier ).createOrUpdateTela;
-
+    final deleteCallback = ref.watch( telasProvider.notifier ).deleteTela;
     return TelaFormNotifier(
       tela: tela,
       onSubmitCallback: createUpdateCallback,
+      onDeleteCallback: deleteCallback,
     );
   }
 );
@@ -24,10 +25,11 @@ final telaFormProvider = StateNotifierProvider.autoDispose.family<TelaFormNotifi
 class  TelaFormNotifier extends StateNotifier<TelaFormState> {
 
   final Future<bool> Function( Map<String,dynamic> telaLike )? onSubmitCallback;
-
+  final Future<bool> Function( int id )? onDeleteCallback;
    TelaFormNotifier({
     this.onSubmitCallback,
     required Tela tela,
+    this.onDeleteCallback,
   }): super(
     TelaFormState(
       id: tela.id,
@@ -61,6 +63,16 @@ class  TelaFormNotifier extends StateNotifier<TelaFormState> {
       return false;
     }
 
+  }
+
+  Future<bool> onFormDelete() async {
+    if (onDeleteCallback == null) return false;
+
+    try {
+      return await onDeleteCallback!(state.id!);
+    } catch (e) {
+      return false;
+    }
   }
 
 

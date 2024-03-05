@@ -24,23 +24,13 @@ class SucursalNotifier extends StateNotifier<SucursalState> {
   }
 
   Future<void> nuevaSucursal() async {
-    try {
-      state = state.copyWith(
-        isLoading: false,
-        sucursal: newEmptySucursal(),
-      );
-      return;
-    } catch (e) {
-      // 404 sucursal not found
-      print(e);
-    }
+    state = state.copyWith(
+      isLoading: false,
+      sucursal: newEmptySucursal(),
+    );
   }
 
-  bool isNull() {
-    return state.sucursal == null;
-  }
-
-  Future setSucursal(Sucursal sucursal) async {
+  Future<void> setSucursal(Sucursal sucursal) async {
     state = state.copyWith(isLoading: false, sucursal: sucursal);
   }
 }

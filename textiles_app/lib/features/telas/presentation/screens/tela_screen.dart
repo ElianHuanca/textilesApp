@@ -1,48 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/shared/shared.dart';
-import 'package:textiles_app/features/sucursales/domain/domain.dart';
-import 'package:textiles_app/features/sucursales/presentation/providers/providers.dart';
+import '../../domain/domain.dart';
+import '../providers/providers.dart';
+import 'package:go_router/go_router.dart';
 
-class SucursalScreen extends ConsumerWidget {
-  final bool b;
-  const SucursalScreen({super.key, required this.b});
+class TelaScreen extends ConsumerWidget {
+  const TelaScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (b) {
-      ref.read(sucursalProvider.notifier).nuevaSucursal();
-    }
-    final sucursalState = ref.watch(sucursalProvider);
+    final telaState = ref.watch(telaProvider);
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: sucursalState.isLoading
+        child: telaState.isLoading
             ? const FullScreenLoader()
             : Screen1(
-                widget: _sucursalView(sucursalState.sucursal!, context, ref),
-                title: b ? 'Crear Sucursal' : 'Editar Sucursal',
-                isGridview: false));
+                widget: _telaView(telaState.tela!, context, ref),
+                title: telaState.tela!.id == 0 ? 'Crear Tela' : 'Editar Tela',
+                isGridview: false,
+              ));
   }
 
-  List<Widget> _sucursalView(
-      Sucursal sucursal, BuildContext context, WidgetRef ref) {
-    final sucursalForm = ref.watch(sucursalFormProvider(sucursal));
+  List<Widget> _telaView(Tela tela, BuildContext context, WidgetRef ref) {
+    final telaForm = ref.watch(telaFormProvider(tela));
     final textStyles = Theme.of(context).textTheme;
     return ([
       Center(
           child: Text(
-        sucursalForm.nombre.value,
+        telaForm.nombre.value,
         style: textStyles.titleSmall,
         textAlign: TextAlign.center,
       )),
       const SizedBox(height: 10),
-      _sucursalInformation(sucursal, context, ref),
+      _telaInformation(tela, context, ref),
     ]);
   }
 
-  Widget _sucursalInformation(
-      Sucursal sucursal, BuildContext context, WidgetRef ref) {
-    final sucursalForm = ref.watch(sucursalFormProvider(sucursal));
+  Widget _telaInformation(Tela tela, BuildContext context, WidgetRef ref) {
+    final telaForm = ref.watch(telaFormProvider(tela));
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -50,36 +46,70 @@ class SucursalScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomProductField(
+              isTopField: true,
               label: 'Nombre',
-              initialValue: sucursalForm.nombre.value,
-              onChanged: ref
-                  .read(sucursalFormProvider(sucursal).notifier)
-                  .onNombreChanged,
-              errorMessage: sucursalForm.nombre.errorMessage,
+              initialValue: telaForm.nombre.value,
+              onChanged:
+                  ref.read(telaFormProvider(tela).notifier).onNombreChanged,
+              errorMessage: telaForm.nombre.errorMessage,
             ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              color: Theme.of(context).primaryColor,
-              onPressed: () {                
-                ref.read(sucursalFormProvider(sucursal).notifier).onFormSubmit();
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 10),
-                    Text(
-                      'Guardar',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ],
-                ),
-              ),
+
+            CustomProductField(
+              label: 'Precio X Menor',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              initialValue: telaForm.precxmen.value.toString(),
+              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxmenChanged(double.tryParse(value) ?? -1),
+              errorMessage: telaForm.precxmen.errorMessage,
             ),
+            
+            CustomProductField(
+              label: 'Precio X Mayor',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              initialValue: telaForm.precxmay.value.toString(),
+              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxmayChanged(double.tryParse(value) ?? -1),
+              errorMessage: telaForm.precxmay.errorMessage,
+            ),
+
+            CustomProductField(
+              label: 'Precio X Rollo',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              initialValue: telaForm.precxrollo.value.toString(),
+              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxrolloChanged(double.tryParse(value) ?? -1),
+              errorMessage: telaForm.precxrollo.errorMessage,
+            ),
+
+            CustomProductField(
+              label: 'Precio Compra',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              initialValue: telaForm.precxcompra.value.toString(),
+              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxcompraChanged(double.tryParse(value) ?? -1),
+              errorMessage: telaForm.precxcompra.errorMessage,
+            ),
+
+            const SizedBox(height: 15),
+            MaterialButtonWidget(
+              ontap: _onSubmit(context, ref, tela),
+              texto: tela.id == 0 ? 'Guardar' : 'Modificar',
+            ),
+            tela.id == 0
+                ? MaterialButtonWidget(
+                    ontap: _onDelete(context, ref, tela), texto: 'Eliminar')
+                : const SizedBox(),
           ],
         ));
+  }
+
+  Function _onSubmit(BuildContext context, WidgetRef ref, Tela tela) {
+    return () {      
+      ref.read(telaFormProvider(tela).notifier).onFormSubmit().then((value) => value ?  showSnackbar(context, tela.id==0 ? 'Guardado' : 'Editado') : showSnackbar(context, 'Hubo Un Error'));
+      context.go('/telas');
+    };
+  }
+
+  Function _onDelete(BuildContext context, WidgetRef ref, Tela tela) {
+    return () {
+      ref.read(telaFormProvider(tela).notifier).onFormDelete().then((value) => value ?  showSnackbar(context, 'Eliminado') : showSnackbar(context, 'Hubo Un Error'));
+      context.go('/telas');
+    };
   }
 }

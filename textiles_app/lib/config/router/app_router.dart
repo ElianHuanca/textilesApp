@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/auth.dart';
 //import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/sucursales/sucursales.dart';
+import 'package:textiles_app/features/telas/telas.dart';
 import 'package:textiles_app/features/ventas/ventas.dart';
 import 'app_router_notifier.dart';
 
@@ -16,7 +17,7 @@ final goRouterProvider = Provider((ref) {
       ///* Primera pantalla
       GoRoute(
         path: '/splash',
-        builder: (context, state) => const CheckAuthStatusScreen(),        
+        builder: (context, state) => const CheckAuthStatusScreen(),
       ),
 
       ///* Auth Routes
@@ -41,7 +42,13 @@ final goRouterProvider = Provider((ref) {
 
       GoRoute(
         path: '/sucursal', // /product/new
-        builder: (context, state) => SucursalScreen(
+        builder: (context, state) => const SucursalScreen(),
+      ),
+
+      GoRoute(
+        path: '/telas', // /product/new
+        builder: (context, state) => const TelasScreen(
+          
         ),
       ),
 
@@ -51,7 +58,6 @@ final goRouterProvider = Provider((ref) {
           idsucursales: int.parse(state.pathParameters['id'] ?? '0'),
         ),
       ),
-      
     ],
     /* redirect: (context, state) {
       final isGoingTo = state.matchedLocation;

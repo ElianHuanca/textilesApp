@@ -11,6 +11,44 @@ const ObtenerTelasXUsu = async (req, res) => {
     }    
 };
 
+const RegistrarTela = async (req, res) => {
+    try {
+        const { idusuarios } = req.params;
+        const { nombre, precxmen,precxmay,precxrollo,precxcompra } = req.body;
+        const tela = await Tela.create({ idusuarios, nombre, precxmen,precxmay,precxrollo,precxcompra });
+        res.json(tela);
+    } catch (error) {
+        console.error('Error al registrar tela:', error);
+        res.status(500).json({ error: 'Error al registrar tela', message: error.message });
+    }
+};
+
+const ActualizarTela = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, precxmen,precxmay,precxrollo,precxcompra } = req.body;
+        const tela = await Tela.update({ nombre, precxmen,precxmay,precxrollo,precxcompra }, { where: { id } });
+        res.json(tela);
+    } catch (error) {
+        console.error('Error al actualizar tela:', error);
+        res.status(500).json({ error: 'Error al actualizar tela', message: error.message });
+    }
+}
+
+const EliminarTela = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const tela = await Tela.destroy({ where: { id } });
+        res.json(tela);
+    } catch (error) {
+        console.error('Error al eliminar tela:', error);
+        res.status(500).json({ error: 'Error al eliminar tela', message: error.message });
+    }
+}
+
 module.exports = {
-    ObtenerTelasXUsu
+    ObtenerTelasXUsu,
+    RegistrarTela,
+    ActualizarTela,
+    EliminarTela
 }
