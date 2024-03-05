@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/ventas/domain/domain.dart';
-import 'package:textiles_app/features/ventas/presentation/providers/providers.dart';
+import '../../domain/domain.dart';
+import 'providers.dart';
 
 final detalleVentasProvider =
     StateNotifierProvider<DetalleVentasNotifier, DetalleVentasState>((ref) {
@@ -39,16 +39,10 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   Future<bool> createDetVenta(
       List<Map<String, dynamic>> detalleVentasLike) async {
     try {
-      if (state.isLoading) return false;
-
-      state = state.copyWith(isLoading: true);
-
       final result =
           await detalleVentasRepository.createDetalleVenta(detalleVentasLike);
-
-      state = state.copyWith(isLoading: false);
-
-      return result.isNotEmpty;
+      state = state.copyWith(detalleVentas: [...state.detalleVentas,...result]);
+      return true;
     } catch (e) {
       return false;
     }

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/ventas/domain/domain.dart';
-import 'package:textiles_app/features/ventas/infrastructure/infrastructure.dart';
+import '../../domain/domain.dart';
+import '../../infrastructure/infrastructure.dart';
 
 
 final ventasRepositoryProvider = Provider<VentasRepository>((ref) {

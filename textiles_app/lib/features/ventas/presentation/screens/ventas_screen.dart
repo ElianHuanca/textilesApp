@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/shared/shared.dart';
-import 'package:textiles_app/features/ventas/domain/domain.dart';
-import 'package:textiles_app/features/ventas/presentation/providers/providers.dart';
+import '../../domain/domain.dart';
+import '../providers/providers.dart';
 
 class VentasScreen extends ConsumerWidget {
-  final int idsucursales;
-  const VentasScreen({super.key, required this.idsucursales});
+  const VentasScreen({super.key});
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final ventasState = ref.watch(ventasProvider(idsucursales));    
-    return Screen1(widget: _buildBody(ventasState.ventas,context,ref), title: 'Ventas', isGridview: true,);
-    
+    final ventasState = ref.watch(ventasProvider);    
+    return Screen1(widget: _buildBody(ventasState.ventas,context,ref), title: 'Ventas', isGridview: true,);    
   }
 
   List<Widget> _buildBody(List<Venta> ventas, BuildContext context,WidgetRef ref) {

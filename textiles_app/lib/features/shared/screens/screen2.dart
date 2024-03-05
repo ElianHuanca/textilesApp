@@ -36,7 +36,7 @@ class Screen2 extends StatelessWidget {
                       .textTheme
                       .titleSmall
                       ?.copyWith(color: Colors.white)),
-              subtitle: Text('subtitle',
+              subtitle: Text(subtitle,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall
@@ -48,7 +48,7 @@ class Screen2 extends StatelessWidget {
                   backgroundColor: Colors.white,
                   elevation: 4,
                   onPressed: () {
-                    context.push('/det_ventas_form');
+                    context.push('/det_venta');
                   },
                   child: const Icon(Icons.add),
                 ),

@@ -11,7 +11,7 @@ final goRouterProvider = Provider((ref) {
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/det_venta',
     refreshListenable: goRouterNotifier,
     routes: [
       ///* Primera pantalla
@@ -41,22 +41,29 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
-        path: '/sucursal', // /product/new
+        path: '/sucursal', 
         builder: (context, state) => const SucursalScreen(),
       ),
 
       GoRoute(
-        path: '/telas', // /product/new
-        builder: (context, state) => const TelasScreen(
-          
+        path: '/telas', 
+        builder: (context, state) => const TelasScreen(          
         ),
       ),
 
       GoRoute(
-        path: '/ventas/:id', // /product/new
-        builder: (context, state) => VentasScreen(
-          idsucursales: int.parse(state.pathParameters['id'] ?? '0'),
-        ),
+        path: '/ventas',
+        builder: (context, state) => const VentasScreen(),
+      ),
+
+      GoRoute(
+        path: '/det_ventas',
+        builder: (context, state) => const DetVentas(),
+      ),
+
+      GoRoute(
+        path: '/det_venta',
+        builder: (context, state) => const DetVenta(),
       ),
     ],
     /* redirect: (context, state) {

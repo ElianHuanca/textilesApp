@@ -17,14 +17,17 @@ class MaterialButtonWidget extends StatelessWidget {
       case 'Modificar':
         color = Colors.blue;
         break;
-      default:
+      case 'Eliminar':
         color = Colors.red;
+        break;
+      default:
+        color = Colors.black;
     }
     return MaterialButton(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      color: Theme.of(context).primaryColor,
+      color: color, //Theme.of(context).primaryColor,
       onPressed: () => ontap(),
       child: Padding(
         padding: const EdgeInsets.all(15),
@@ -34,7 +37,7 @@ class MaterialButtonWidget extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               texto,
-              style: TextStyle(color: color, fontSize: 20),
+              style: const TextStyle(color: Colors.white, fontSize: 20),
             ),
           ],
         ),

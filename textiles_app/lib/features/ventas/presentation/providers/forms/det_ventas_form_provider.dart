@@ -1,34 +1,28 @@
-/* import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:textiles_app/features/shared/infrastructure/inputs/inputs.dart';
-import 'package:textiles_app/features/ventas/domain/domain.dart';
-import 'package:textiles_app/features/ventas/presentation/providers/providers.dart';
+//import '../../providers/providers.dart';
 
-final detalleVentaFormProvider = StateNotifierProvider.autoDispose
-    .family<DetalleVentaFormNotifier, DetalleVentaFormState, DetalleVenta>(
-        (ref, detalleVenta) {
-  final createCallback = ref.watch(detalleVentasProvider.notifier).createDetVenta(detalleVentasLike);
+final detalleVentaFormProvider =
+    StateNotifierProvider<DetalleVentaFormNotifier, DetalleVentaFormState>(
+        (ref) {
+  /* final createCallback =
+      ref.watch(detalleVentasProvider.notifier).createDetVenta; */
 
   return DetalleVentaFormNotifier(
-    onSubmitCallback: createCallback,
-    detalleVenta: detalleVenta,
-  );
+      //onSubmitCallback: createCallback,
+      );
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(Map<String, dynamic> detVentaLike)?
+  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
       onSubmitCallback;
 
   DetalleVentaFormNotifier({
     this.onSubmitCallback,
-    required DetalleVenta detalleVenta,
-  }) : super(DetalleVentaFormState(
-          idtelas: detalleVenta.idtelas,
-          cantidad: detalleVenta.cantidad,
-          precio: Price.dirty(detalleVenta.precio),
-        ));
+  }) : super(DetalleVentaFormState());
 
-  Future<bool> onFormSubmit() async {
+  Future<bool> addDetalleVenta() async {
     _touchedEverything();
     if (!state.isFormValid) return false;
 
@@ -38,10 +32,18 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
       'idtelas': state.idtelas,
       'cantidad': state.cantidad,
       'precio': state.precio.value,
+      'total': state.cantidad.value * state.precio.value,
     };
 
+    state = state.copyWith(
+      detVentas: [...state.detVentas, detVentaLike],
+    );
+    return true;
+  }
+
+  Future<bool> onFormSubmit() async {
     try {
-      return await onSubmitCallback!(detVentaLike);
+      return await onSubmitCallback!(state.detVentas);
     } catch (e) {
       return false;
     }
@@ -61,6 +63,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
       precio: precio,
       isFormValid: Formz.validate([
         precio,
+        Price.dirty(state.cantidad.value),
       ]),
     );
   }
@@ -72,8 +75,18 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   }
 
   void onCantidadChanged(double value) {
+    final cantidad = Price.dirty(value);
     state = state.copyWith(
-      cantidad: value,
+        cantidad: cantidad,
+        isFormValid: Formz.validate([
+          cantidad,
+          Price.dirty(state.precio.value),
+        ]));
+  }
+
+  void onNombreChanged(String value) {
+    state = state.copyWith(
+      nombre: value,
     );
   }
 }
@@ -81,26 +94,38 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
 class DetalleVentaFormState {
   final bool isFormValid;
   final int idtelas;
-  final double cantidad;
+  final String nombre;
+  final Price cantidad;
   final Price precio;
+  //final Price total;
+  final List<Map<String, dynamic>> detVentas;
+
   DetalleVentaFormState({
     this.isFormValid = false,
     this.idtelas = 0,
-    this.cantidad = 0,
+    this.cantidad = const Price.dirty(0),
     this.precio = const Price.dirty(0),
+    this.nombre = '',
+    //this.total = const Price.dirty(0),
+    this.detVentas = const [],
   });
 
   DetalleVentaFormState copyWith({
     bool? isFormValid,
     int? idtelas,
-    double? cantidad,
+    Price? cantidad,
     Price? precio,
+    String? nombre,
+    //Price? total,
+    List<Map<String, dynamic>>? detVentas,
   }) =>
       DetalleVentaFormState(
         isFormValid: isFormValid ?? this.isFormValid,
         idtelas: idtelas ?? this.idtelas,
         cantidad: cantidad ?? this.cantidad,
         precio: precio ?? this.precio,
+        detVentas: detVentas ?? this.detVentas,
+        nombre: nombre ?? this.nombre,
+        //total: total ?? this.total,
       );
 }
- */

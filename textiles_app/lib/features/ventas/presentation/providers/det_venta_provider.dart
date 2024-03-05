@@ -1,15 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/ventas/domain/domain.dart';
+import 'providers.dart';
+import '../../domain/domain.dart';
+
+final detalleVentaProvider =
+    StateNotifierProvider<DetalleVentaNotifier, DetalleVentaState>((ref) {
+        final detalleVentasRepository = ref.watch(detalleVentasRepositoryProvider);
+        return DetalleVentaNotifier(detalleVentasRepository: detalleVentasRepository);
+    });
 
 class DetalleVentaNotifier extends StateNotifier<DetalleVentaState> {
   final DetalleVentasRepository detalleVentasRepository;
 
   DetalleVentaNotifier({required this.detalleVentasRepository})
       : super(DetalleVentaState()) {
-    cargarDetalleVenta();
+    nuevoDetVenta();
   }
 
-  DetalleVenta nuevoDetalleVenta() {
+  DetalleVenta newEmptyDetVenta() {
     return DetalleVenta(
       idtelas: 0,
       cantidad: 0,
@@ -17,11 +24,11 @@ class DetalleVentaNotifier extends StateNotifier<DetalleVentaState> {
     );
   }
 
-  Future<void> cargarDetalleVenta() async {
+  Future<void> nuevoDetVenta() async {
     state = state.copyWith(
       isLoading: false,
-      detalleVenta: nuevoDetalleVenta(),
-    );    
+      detalleVenta: newEmptyDetVenta(),
+    );
   }
 }
 
