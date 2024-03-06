@@ -14,7 +14,7 @@ final detalleVentaFormProvider =
       );
 });
 
-class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState>  {
+class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
       onSubmitCallback;
 
@@ -22,23 +22,56 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState>  {
     this.onSubmitCallback,
   }) : super(DetalleVentaFormState());
 
-  Future<bool> addDetalleVenta() async {
+  addDetalleVenta() {
     _touchedEverything();
-    if (!state.isFormValid) return false;
+    if (!state.isFormValid) return;
 
-    if (onSubmitCallback == null) return false;
+    //if (onSubmitCallback == null) return false;
 
-    final detVentaLike = {
-      'idtelas': state.idtelas,
-      'cantidad': state.cantidad,
-      'precio': state.precio.value,
-      'total': state.cantidad.value * state.precio.value,
-    };
+    if (state.idtelas == 0) return;
+    if (state.cantidad.value <= 0) return;
+    if (state.precio.value <= 0) return;
+
+    final index = state.detVentas
+        .indexWhere((element) => element['idtelas'] == state.idtelas);
+
+    if (index != -1) {
+      // Si el idtelas está en la lista, reemplazar cantidad, precio y total
+      final detVentaToUpdate = state.detVentas[index];
+      state = state.copyWith(
+        total: state.total - detVentaToUpdate['cantidad'] * detVentaToUpdate['precio'],
+      );
+      final updatedDetVenta = {
+        ...detVentaToUpdate,
+        'cantidad': state.cantidad.value,
+        'precio': state.precio.value,
+        'total': state.cantidad.value * state.precio.value,
+      };
+      // Reemplazar el elemento en la lista
+      state.detVentas[index] = updatedDetVenta;
+    } else {
+      // Si el idtelas no está en la lista, agregar un nuevo elemento
+      final detVentaLike = {
+        'idtelas': state.idtelas,
+        'nombre': state.nombre,
+        'cantidad': state.cantidad.value,
+        'precio': state.precio.value,
+        'total': state.cantidad.value * state.precio.value,
+      };
+      state = state.copyWith(
+        detVentas: [...state.detVentas, detVentaLike],        
+      );
+    }
 
     state = state.copyWith(
-      detVentas: [...state.detVentas, detVentaLike],
+      total: state.total + state.cantidad.value * state.precio.value,
+      //idtelas: 0,
+      //nombre: '',
+      cantidad: const Price.dirty(0),
+      precio: const Price.dirty(0),
     );
-    return true;
+
+    return;
   }
 
   Future<bool> onFormSubmit() async {
@@ -53,6 +86,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState>  {
     state = state.copyWith(
       isFormValid: Formz.validate([
         Price.dirty(state.precio.value),
+        Price.dirty(state.cantidad.value),
       ]),
     );
   }
@@ -89,14 +123,6 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState>  {
       nombre: value,
     );
   }
-
-  Future<void> onDropdownValueChanged(Map<String,dynamic> value)async{
-    state = state.copyWith(
-      dropdownValue: value,
-    );
-  }
-  
-  
 }
 
 class DetalleVentaFormState {
@@ -105,7 +131,7 @@ class DetalleVentaFormState {
   final String nombre;
   final Price cantidad;
   final Price precio;
-  final Map<String, dynamic> dropdownValue;
+  final double total;
   final List<Map<String, dynamic>> detVentas;
 
   DetalleVentaFormState({
@@ -114,11 +140,8 @@ class DetalleVentaFormState {
     this.cantidad = const Price.dirty(0),
     this.precio = const Price.dirty(0),
     this.nombre = '',
-    this.dropdownValue = const {
-      'id': 0,
-      'nombre': 'Seleccione una tela',      
-    },
     this.detVentas = const [],
+    this.total = 0,
   });
 
   DetalleVentaFormState copyWith({
@@ -127,7 +150,7 @@ class DetalleVentaFormState {
     Price? cantidad,
     Price? precio,
     String? nombre,
-    Map<String, dynamic>? dropdownValue,
+    double? total,
     List<Map<String, dynamic>>? detVentas,
   }) =>
       DetalleVentaFormState(
@@ -137,6 +160,6 @@ class DetalleVentaFormState {
         precio: precio ?? this.precio,
         detVentas: detVentas ?? this.detVentas,
         nombre: nombre ?? this.nombre,
-        dropdownValue: dropdownValue ?? this.dropdownValue,
+        total: total ?? this.total,
       );
 }

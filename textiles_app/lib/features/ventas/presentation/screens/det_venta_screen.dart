@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textiles_app/features/shared/shared.dart';
+import 'package:textiles_app/features/telas/domain/domain.dart';
+import 'package:textiles_app/features/telas/presentation/providers/providers.dart';
 import '../providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,30 +10,17 @@ class DetVenta extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final telas = [
-      {
-        'id': 1,
-        'nombre': 'Lino',
-      },
-      {
-        'id': 2,
-        'nombre': 'Coshibo',
-      },
-      {
-        'id': 3,
-        'nombre': 'Dipiur',
-      }
-    ];
     return Screen1(
-      widget: _widget(context, ref, telas),
+      widget: _widget(context, ref),
       title: 'Registro de Ventas',
       isGridview: false,
     );
   }
 
-  List<Widget> _widget(
-      BuildContext context, WidgetRef ref, List<Map<String, dynamic>> telas) {
+  List<Widget> _widget(BuildContext context, WidgetRef ref) {
+    final telasState = ref.watch(telasProvider);
     final detalleVentaForm = ref.watch(detalleVentaFormProvider);
+
     return [
       Padding(
         padding: const EdgeInsets.all(2.0),
@@ -47,19 +36,22 @@ class DetVenta extends ConsumerWidget {
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: DropdownMenu<Map<String, dynamic>>(
+                    child: DropdownMenu<Tela>(
                       width: double.maxFinite,
                       hintText: 'Seleccione una Tela',
                       onSelected: (value) {
                         ref
                             .read(detalleVentaFormProvider.notifier)
-                            .onDropdownValueChanged(value!);
+                            .onNombreChanged(value!.nombre);
+                        ref
+                            .read(detalleVentaFormProvider.notifier)
+                            .onIdTelasChanged(value.id);
                       },
-                      dropdownMenuEntries:telas
-                          .map<DropdownMenuEntry<Map<String, dynamic>>>((e) {
-                        return DropdownMenuEntry<Map<String, dynamic>>(
+                      dropdownMenuEntries:
+                          telasState.telas.map<DropdownMenuEntry<Tela>>((e) {
+                        return DropdownMenuEntry<Tela>(
                           value: e,
-                          label: e['nombre'] as String,
+                          label: e.nombre,
                         );
                       }).toList(),
                     ),
@@ -72,37 +64,40 @@ class DetVenta extends ConsumerWidget {
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _expanded(
-                    3,
-                    'Precio',
-                    (p0) => ref
-                        .read(detalleVentaFormProvider.notifier)
-                        .onPrecioChanged,
-                    detalleVentaForm.precio.errorMessage),
-                _expanded(
-                    3,
-                    'Cantidad',
-                    (p0) => ref
-                        .read(detalleVentaFormProvider.notifier)
-                        .onCantidadChanged,
-                    detalleVentaForm.cantidad.errorMessage),
+                  3,
+                  'Precio',
+                  (String p1) => ref
+                      .read(detalleVentaFormProvider.notifier)
+                      .onPrecioChanged(double.parse(p1)),
+                  detalleVentaForm.precio.errorMessage,
+                ),
+                _expanded(3, 'Cantidad', (String p1) {
+                  ref
+                      .read(detalleVentaFormProvider.notifier)
+                      .onCantidadChanged(double.parse(p1));
+                }, detalleVentaForm.cantidad.errorMessage),
               ],
             ),
             const SizedBox(height: 15),
-            MaterialButtonWidget(ontap: _onAdd(), texto: 'Añadir'),
+            MaterialButtonWidget(ontap: _onAdd(ref), texto: 'Añadir'),
           ],
         ),
       ),
       const Divider(
         thickness: 1,
       ),
+      dataTableMap(context, detalleVentaForm.detVentas, detalleVentaForm.total)
     ];
   }
 
-  Function _onAdd() {
-    return () {};
+  Function _onAdd(WidgetRef ref) {
+    return () {
+      ref.read(detalleVentaFormProvider.notifier).addDetalleVenta();
+      print(ref.watch(detalleVentaFormProvider).detVentas);
+    };
   }
 
-  Expanded _expanded(int flex, String texto, Function(String) onChanged,
+  Expanded _expanded(int flex, String texto, Function(String)? onChanged,
       String? errorMessage) {
     return Expanded(
       flex: flex,
@@ -114,9 +109,7 @@ class DetVenta extends ConsumerWidget {
             decoration: InputDecoration(
               label: Text(texto),
               errorText: errorMessage,
-              suffixText: texto == 'Precio'
-                  ? 'Bs'
-                  : (texto == 'Cantidad' ? 'mts' : null),
+              suffixText: texto == 'Precio' ? 'Bs' : 'mts',
               suffixStyle: const TextStyle(fontSize: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -127,46 +120,7 @@ class DetVenta extends ConsumerWidget {
   }
 }
 
-class DropdownMenuWidget extends StatefulWidget {
-  final List<Map<String, dynamic>> telas;
-  const DropdownMenuWidget({super.key, required this.telas});
 
-  @override
-  State<DropdownMenuWidget> createState() => _DropdownMenuWidgetState();
-}
-
-class _DropdownMenuWidgetState extends State<DropdownMenuWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(builder: (context, ref, _) {
-      return Expanded(
-        flex: 1,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: DropdownMenu<Map<String, dynamic>>(
-            width: double.maxFinite,
-            hintText: 'Seleccione una Tela',
-            onSelected: (value) {
-              ref
-                  .read(detalleVentaFormProvider.notifier)
-                  .onDropdownValueChanged(value!);
-            },
-            dropdownMenuEntries:
-                widget.telas.map<DropdownMenuEntry<Map<String, dynamic>>>((e) {
-              return DropdownMenuEntry<Map<String, dynamic>>(
-                value: e,
-                label: e['nombre'] as String,
-              );
-            }).toList(),
-          ),
-        ),
-      );
-    });
-  }
-}
 
 
 /* DropdownButton<Map<String, dynamic>>(
@@ -188,3 +142,18 @@ class _DropdownMenuWidgetState extends State<DropdownMenuWidget> {
               });
             },
           ) */
+
+          /* TextFormField(
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              label: Text(texto),
+              errorText: errorMessage,
+              suffixText: texto == 'Precio'
+                  ? 'Bs'
+                  : (texto == 'Cantidad' ? 'mts' : null),
+              suffixStyle: const TextStyle(fontSize: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            )), */

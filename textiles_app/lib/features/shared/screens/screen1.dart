@@ -33,7 +33,7 @@ class Screen1 extends StatelessWidget {
         body: Container(
             /* color: Colors.white,
             constraints: const BoxConstraints.expand(), */
-            padding: const EdgeInsets.all(30),
+            padding: const EdgeInsets.all(10),
             child: isGridview
                 ? GridView.count(
                     shrinkWrap: true,
@@ -49,7 +49,7 @@ class Screen1 extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       ...widget
                     ],
