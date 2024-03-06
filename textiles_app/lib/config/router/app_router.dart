@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/auth.dart';
-//import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/sucursales/sucursales.dart';
 import 'package:textiles_app/features/telas/telas.dart';
 import 'package:textiles_app/features/ventas/ventas.dart';
@@ -11,7 +11,7 @@ final goRouterProvider = Provider((ref) {
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
-    initialLocation: '/det_venta',
+    initialLocation: '/splash',
     refreshListenable: goRouterNotifier,
     routes: [
       ///* Primera pantalla
@@ -66,7 +66,7 @@ final goRouterProvider = Provider((ref) {
         builder: (context, state) => const DetVenta(),
       ),
     ],
-    /* redirect: (context, state) {
+    redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
 
@@ -89,6 +89,6 @@ final goRouterProvider = Provider((ref) {
       }
 
       return null;
-    }, */
+    },
   );
 });

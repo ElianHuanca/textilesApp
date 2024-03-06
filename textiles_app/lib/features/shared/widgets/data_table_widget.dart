@@ -6,9 +6,7 @@ import 'package:textiles_app/features/ventas/domain/domain.dart';
 DataTable dataTableWidget(
     BuildContext context, List<DetalleVenta> detalleVentas) {
   return DataTable(
-      columns: _columns(context),
-      columnSpacing: 10,
-      rows: _rows(detalleVentas));
+      columns: _columns(context), columnSpacing: 8, rows: _rows(detalleVentas));
 }
 
 List<DataColumn> _columns(BuildContext context) => <DataColumn>[
@@ -21,9 +19,9 @@ List<DataColumn> _columns(BuildContext context) => <DataColumn>[
 DataColumn _column(BuildContext context, String texto) => DataColumn(
       label: Text(
         texto,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
-          color: Theme.of(context).primaryColor,
+          color: Colors.black,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -34,6 +32,9 @@ List<DataRow> _rows(List<DetalleVenta> detalleVentas) {
           const DataRow(cells: <DataCell>[
             DataCell(Text('Lista vacía',
                 style: TextStyle(fontStyle: FontStyle.italic))),
+            DataCell(Text('')),
+            DataCell(Text('')),
+            DataCell(Text('')),
           ])
         ]
       : detalleVentas.map((det) {

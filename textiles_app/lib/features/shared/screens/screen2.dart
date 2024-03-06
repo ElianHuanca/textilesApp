@@ -10,10 +10,8 @@ class Screen2 extends StatelessWidget {
       {super.key,
       required this.title,
       required this.subtitle,
-      //required this.route, 
-      required this.dataTable
-      }
-  );
+      //required this.route,
+      required this.dataTable});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +19,11 @@ class Screen2 extends StatelessWidget {
         body: ListView(padding: EdgeInsets.zero, children: [
       Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.only(
-            bottomRight: Radius.circular(50),
-          ),
+          color: Theme.of(context).primaryColor,          
         ),
         child: Column(
           children: [
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 30),
               title: Text(title,
@@ -54,12 +49,14 @@ class Screen2 extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-            ListView(
+            Container(
+              color: Colors.white,
+              child: ListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: [dataTable],
-            )
+                children: [dataTable, const SizedBox(height: 20)],
+              ),
+            ),
           ],
         ),
       ),

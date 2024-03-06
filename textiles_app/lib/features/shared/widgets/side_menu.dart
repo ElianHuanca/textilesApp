@@ -44,7 +44,7 @@ class SideMenuState extends ConsumerState<SideMenu> {
           ),
           const NavigationDrawerDestination(
             icon: Icon(Icons.add_shopping_cart_rounded),
-            label: Text('Ventas'),
+            label: Text('Ventas'),            
           ),
           const NavigationDrawerDestination(
             icon: Icon(Icons.add_business_rounded),
