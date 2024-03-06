@@ -9,9 +9,18 @@ class DetVenta extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final telas = [
-      {'nombre': 'Tela 1', 'cantidad': 10, 'precio': 100, 'total': 1000},
-      {'nombre': 'Tela 2', 'cantidad': 20, 'precio': 200, 'total': 4000},
-      {'nombre': 'Tela 3', 'cantidad': 30, 'precio': 300, 'total': 9000}
+      {
+        'id': 1,
+        'nombre': 'Lino',
+      },
+      {
+        'id': 2,
+        'nombre': 'Coshibo',
+      },
+      {
+        'id': 3,
+        'nombre': 'Dipiur',
+      }
     ];
     return Screen1(
       widget: _widget(context, ref, telas),
@@ -25,7 +34,7 @@ class DetVenta extends ConsumerWidget {
     final detalleVentaForm = ref.watch(detalleVentaFormProvider);
     return [
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(2.0),
         child: Column(
           children: [
             Row(
@@ -33,32 +42,34 @@ class DetVenta extends ConsumerWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: DropdownButton<Map<String, dynamic>>(
-                      value: telas[0],
-                      items: telas.map<DropdownMenuItem<Map<String, dynamic>>>(
-                          (Map<String, dynamic> value) {
-                        return DropdownMenuItem<Map<String, dynamic>>(
-                          value: value,
-                          child: Text(value['nombre']),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownMenu<Map<String, dynamic>>(
+                      width: double.maxFinite,
+                      hintText: 'Seleccione una Tela',
+                      onSelected: (value) {
+                        ref
+                            .read(detalleVentaFormProvider.notifier)
+                            .onDropdownValueChanged(value!);
+                      },
+                      dropdownMenuEntries:telas
+                          .map<DropdownMenuEntry<Map<String, dynamic>>>((e) {
+                        return DropdownMenuEntry<Map<String, dynamic>>(
+                          value: e,
+                          label: e['nombre'] as String,
                         );
                       }).toList(),
-                      onChanged: (Map<String, dynamic>? value) {
-                        ref
-                            .read(detalleVentaFormProvider.notifier)
-                            .onIdTelasChanged(value!['idtelas']);
-                        ref
-                            .read(detalleVentaFormProvider.notifier)
-                            .onNombreChanged(value['nombre']);
-                      },
                     ),
                   ),
-                ),
+                )
               ],
             ),
+            const SizedBox(height: 15),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _expanded(
                     3,
@@ -76,6 +87,7 @@ class DetVenta extends ConsumerWidget {
                     detalleVentaForm.cantidad.errorMessage),
               ],
             ),
+            const SizedBox(height: 15),
             MaterialButtonWidget(ontap: _onAdd(), texto: 'Añadir'),
           ],
         ),
@@ -94,8 +106,8 @@ class DetVenta extends ConsumerWidget {
       String? errorMessage) {
     return Expanded(
       flex: flex,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: TextFormField(
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: onChanged,
@@ -115,12 +127,64 @@ class DetVenta extends ConsumerWidget {
   }
 }
 
+class DropdownMenuWidget extends StatefulWidget {
+  final List<Map<String, dynamic>> telas;
+  const DropdownMenuWidget({super.key, required this.telas});
+
+  @override
+  State<DropdownMenuWidget> createState() => _DropdownMenuWidgetState();
+}
+
+class _DropdownMenuWidgetState extends State<DropdownMenuWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, ref, _) {
+      return Expanded(
+        flex: 1,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: DropdownMenu<Map<String, dynamic>>(
+            width: double.maxFinite,
+            hintText: 'Seleccione una Tela',
+            onSelected: (value) {
+              ref
+                  .read(detalleVentaFormProvider.notifier)
+                  .onDropdownValueChanged(value!);
+            },
+            dropdownMenuEntries:
+                widget.telas.map<DropdownMenuEntry<Map<String, dynamic>>>((e) {
+              return DropdownMenuEntry<Map<String, dynamic>>(
+                value: e,
+                label: e['nombre'] as String,
+              );
+            }).toList(),
+          ),
+        ),
+      );
+    });
+  }
+}
 
 
-        /* child: CustomTextFormField(
-          label: texto,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          onChanged:
-              onChanged, 
-          errorMessage: errorMessage,
-        ), */
+/* DropdownButton<Map<String, dynamic>>(
+            value: widget.telas[0],
+            items: widget.telas.map<DropdownMenuItem<Map<String, dynamic>>>(
+              (Map<String, dynamic> value) {
+                return DropdownButtonItem<Map<String, dynamic>>(
+                  value: value,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(value['nombre']),
+                  ),
+                );
+              },
+            ).toList(),
+            onChanged: (Map<String, dynamic>? value) {
+              setState(() {
+                widget.telas[0] = value!;
+              });
+            },
+          ) */

@@ -14,7 +14,7 @@ final detalleVentaFormProvider =
       );
 });
 
-class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
+class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState>  {
   final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
       onSubmitCallback;
 
@@ -89,6 +89,14 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
       nombre: value,
     );
   }
+
+  Future<void> onDropdownValueChanged(Map<String,dynamic> value)async{
+    state = state.copyWith(
+      dropdownValue: value,
+    );
+  }
+  
+  
 }
 
 class DetalleVentaFormState {
@@ -97,7 +105,7 @@ class DetalleVentaFormState {
   final String nombre;
   final Price cantidad;
   final Price precio;
-  //final Price total;
+  final Map<String, dynamic> dropdownValue;
   final List<Map<String, dynamic>> detVentas;
 
   DetalleVentaFormState({
@@ -106,7 +114,10 @@ class DetalleVentaFormState {
     this.cantidad = const Price.dirty(0),
     this.precio = const Price.dirty(0),
     this.nombre = '',
-    //this.total = const Price.dirty(0),
+    this.dropdownValue = const {
+      'id': 0,
+      'nombre': 'Seleccione una tela',      
+    },
     this.detVentas = const [],
   });
 
@@ -116,7 +127,7 @@ class DetalleVentaFormState {
     Price? cantidad,
     Price? precio,
     String? nombre,
-    //Price? total,
+    Map<String, dynamic>? dropdownValue,
     List<Map<String, dynamic>>? detVentas,
   }) =>
       DetalleVentaFormState(
@@ -126,6 +137,6 @@ class DetalleVentaFormState {
         precio: precio ?? this.precio,
         detVentas: detVentas ?? this.detVentas,
         nombre: nombre ?? this.nombre,
-        //total: total ?? this.total,
+        dropdownValue: dropdownValue ?? this.dropdownValue,
       );
 }
