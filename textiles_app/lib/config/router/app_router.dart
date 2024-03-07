@@ -41,14 +41,13 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
-        path: '/sucursal', 
+        path: '/sucursal',
         builder: (context, state) => const SucursalScreen(),
       ),
 
       GoRoute(
-        path: '/telas', 
-        builder: (context, state) => const TelasScreen(          
-        ),
+        path: '/telas',
+        builder: (context, state) => const TelasScreen(),
       ),
 
       GoRoute(
@@ -63,7 +62,7 @@ final goRouterProvider = Provider((ref) {
 
       GoRoute(
         path: '/det_venta',
-        builder: (context, state) => const DetVenta(),
+        builder: (context, state) => DetVenta(),
       ),
     ],
     /* redirect: (context, state) {

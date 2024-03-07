@@ -6,8 +6,9 @@ import '../providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetVenta extends ConsumerWidget {
-  const DetVenta({super.key});
-
+  DetVenta({super.key});
+  final TextEditingController precioController = TextEditingController();
+  final TextEditingController cantidadController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Screen1(
@@ -64,18 +65,26 @@ class DetVenta extends ConsumerWidget {
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _expanded(
-                  3,
-                  'Precio',
-                  (String p1) => ref
-                      .read(detalleVentaFormProvider.notifier)
-                      .onPrecioChanged(double.parse(p1)),
-                  detalleVentaForm.precio.errorMessage,
-                ),
-                _expanded(3, 'Cantidad', (String p1) {
+                    ref,
+                    3,
+                    'Precio',
+                    detalleVentaForm.precio,
+                    precioController,
+                    (String p1) => {
+                          ref
+                              .read(detalleVentaFormProvider.notifier)
+                              .onPrecioChanged(p1),
+                          //_precioController.text = p1
+                        },
+                    ''
+                    //detalleVentaForm.precio.errorMessage,
+                    ),
+                _expanded(ref, 3, 'Cantidad', detalleVentaForm.cantidad,
+                    cantidadController, (String p1) {
                   ref
                       .read(detalleVentaFormProvider.notifier)
-                      .onCantidadChanged(double.parse(p1));
-                }, detalleVentaForm.cantidad.errorMessage),
+                      .onCantidadChanged(p1);
+                }, ''), //detalleVentaForm.cantidad.errorMessage, cantidadController),
               ],
             ),
             const SizedBox(height: 15),
@@ -94,18 +103,31 @@ class DetVenta extends ConsumerWidget {
     return () {
       ref.read(detalleVentaFormProvider.notifier).addDetalleVenta();
       print(ref.watch(detalleVentaFormProvider).detVentas);
+      cantidadController.clear();
     };
   }
 
-  Expanded _expanded(int flex, String texto, Function(String)? onChanged,
+  Expanded _expanded(
+      WidgetRef ref,
+      int flex,
+      String texto,
+      String value,
+      TextEditingController controller,
+      Function(String)? onChanged,
       String? errorMessage) {
+    controller.text = value;
     return Expanded(
       flex: flex,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: TextFormField(
+            controller: controller,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: onChanged,
+            onTap: () {
+              ref.read(detalleVentaFormProvider.notifier).onPrecioChanged('');
+              controller.clear();
+            },
             decoration: InputDecoration(
               label: Text(texto),
               errorText: errorMessage,
@@ -120,30 +142,7 @@ class DetVenta extends ConsumerWidget {
   }
 }
 
-
-
-
-/* DropdownButton<Map<String, dynamic>>(
-            value: widget.telas[0],
-            items: widget.telas.map<DropdownMenuItem<Map<String, dynamic>>>(
-              (Map<String, dynamic> value) {
-                return DropdownButtonItem<Map<String, dynamic>>(
-                  value: value,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(value['nombre']),
-                  ),
-                );
-              },
-            ).toList(),
-            onChanged: (Map<String, dynamic>? value) {
-              setState(() {
-                widget.telas[0] = value!;
-              });
-            },
-          ) */
-
-          /* TextFormField(
+/* TextFormField(
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: onChanged,
             decoration: InputDecoration(
@@ -157,3 +156,48 @@ class DetVenta extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             )), */
+
+class MiTextField extends StatelessWidget {
+  final String texto;
+  final String value;
+  final Function(String)? onChanged;
+  final String? errorMessage;
+  final TextEditingController controller;
+
+  const MiTextField(
+      {Key? key,
+      required this.texto,
+      required this.value,
+      required this.onChanged,
+      required this.errorMessage,
+      required this.controller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    controller.text = value;
+    return Expanded(
+      flex: 3,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: TextFormField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: onChanged,
+            onTap: () {
+              // ref.read(detalleVentaFormProvider.notifier).onPrecioChanged(0);
+              // controller.clear();
+            },
+            decoration: InputDecoration(
+              label: Text(texto),
+              errorText: errorMessage,
+              suffixText: texto == 'Precio' ? 'Bs' : 'mts',
+              suffixStyle: const TextStyle(fontSize: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            )),
+      ),
+    );
+  }
+}
