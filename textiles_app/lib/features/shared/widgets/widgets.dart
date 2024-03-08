@@ -9,3 +9,5 @@ export 'itemDashboard.dart';
 export 'material_button_widget.dart';
 export 'showSnackbar.dart';
 export 'data_table_widget.dart';
+export 'data_table_map.dart';
+export 'my_text_form.dart';

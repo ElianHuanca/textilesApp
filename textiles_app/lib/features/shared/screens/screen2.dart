@@ -19,7 +19,7 @@ class Screen2 extends StatelessWidget {
         body: ListView(padding: EdgeInsets.zero, children: [
       Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,          
+          color: Theme.of(context).primaryColor,
         ),
         child: Column(
           children: [

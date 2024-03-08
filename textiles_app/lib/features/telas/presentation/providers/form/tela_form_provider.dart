@@ -34,10 +34,10 @@ class  TelaFormNotifier extends StateNotifier<TelaFormState> {
     TelaFormState(
       id: tela.id,
       nombre: Title.dirty(tela.nombre),      
-      precxmen: Price.dirty(tela.precxmen),
-      precxmay: Price.dirty(tela.precxmay),
-      precxrollo: Price.dirty(tela.precxrollo),
-      precxcompra: Price.dirty(tela.precxcompra),
+      precxmen: Price.dirty(tela.precxmen!),
+      precxmay: Price.dirty(tela.precxmay!),
+      precxrollo: Price.dirty(tela.precxrollo!),
+      precxcompra: Price.dirty(tela.precxcompra!),
     )
   );
 

@@ -14,6 +14,7 @@ class TelasDatasourceImpl implements TelasDatasource {
   @override
   Future<List<Tela>> getTelas(int idusuarios) async {
     final response = await dio.get<List>('/telas/$idusuarios');
+    print(response.data);
     final List<Tela> telas = [];
     for (final tela in response.data ?? []) {
       telas.add(TelaMapper.jsonToEntity(tela));

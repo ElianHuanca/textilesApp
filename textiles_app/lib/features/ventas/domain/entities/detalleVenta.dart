@@ -13,4 +13,15 @@ class DetalleVenta {
       required this.cantidad,
       this.total,
       required this.idtelas});
+
+  toJson() {
+    return {
+      'id': id,
+      'nombre': nombre,
+      'precio': precio,
+      'cantidad': cantidad,
+      'total': total,
+      'idtelas': idtelas
+    };
+  }
 }

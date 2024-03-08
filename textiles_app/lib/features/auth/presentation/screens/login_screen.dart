@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/auth/presentation/providers/providers.dart';
 import 'package:textiles_app/features/shared/shared.dart';
@@ -102,8 +101,8 @@ class _LoginForm extends ConsumerWidget {
                   onPressed: loginForm.isPosting
                       ? null
                       : ref.read(loginFormProvider.notifier).onFormSubmit)),
-          const Spacer(flex: 2),
-          Row(
+          //const Spacer(flex: 2),
+          /* Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('¿No tienes cuenta?'),
@@ -111,8 +110,8 @@ class _LoginForm extends ConsumerWidget {
                   onPressed: () => context.push('/register'),
                   child: const Text('Click aquí'))
             ],
-          ),
-          const Spacer(flex: 1),
+          ), */
+          //const Spacer(flex: 1),
         ],
       ),
     );
