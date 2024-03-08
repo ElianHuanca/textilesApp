@@ -1,20 +1,21 @@
-import 'dart:math';
+//import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const colorSeed = Color(0xff424CB8);
 const scaffoldBackgroundColor = Color(0xFFF8F7F7);
+/* const colorSeed = Color(0xff424CB8);
 final Random _random = Random();
 final List<Color> _colors = [
   const Color(0xFF4276AD),
   const Color(0xFF9ACD32),
   const Color(0xFFCC3CCC),
   const Color(0xFF47B9B9),
-  const Color(0xFFE2725B)
+  
 ];
-final _color = _colors[_random.nextInt(_colors.length)];
+final _color = _colors[_random.nextInt(_colors.length)]; */
 //final _color = _colors[3];
+ const Color _color = Color(0xFFE2725B);
 
 class AppTheme {
   ThemeData getTheme() => ThemeData(

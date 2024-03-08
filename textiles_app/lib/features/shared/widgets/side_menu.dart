@@ -1,9 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/shared/shared.dart';
+
+/* class MenuItem {
+  final String label;
+  final String link;
+
+  MenuItem({required this.label, required this.link});
+} */
 
 class SideMenu extends ConsumerStatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -16,7 +22,7 @@ class SideMenu extends ConsumerStatefulWidget {
 
 class SideMenuState extends ConsumerState<SideMenu> {
   int navDrawerIndex = 0;
-
+  final appLinkItems = ['/', '/sucursales', '/telas'];
   @override
   Widget build(BuildContext context) {
     final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
@@ -26,12 +32,12 @@ class SideMenuState extends ConsumerState<SideMenu> {
         elevation: 1,
         selectedIndex: navDrawerIndex,
         onDestinationSelected: (value) {
-          setState(() {
-            navDrawerIndex = value;
-          });
-
-          // final menuItem = appMenuItems[value];
-          // context.push( menuItem.link );
+          if (value != navDrawerIndex) {
+            setState(() {
+              navDrawerIndex = value;
+            });            
+            context.push(appLinkItems[value]);
+          }
           widget.scaffoldKey.currentState?.closeDrawer();
         },
         children: [
@@ -45,44 +51,19 @@ class SideMenuState extends ConsumerState<SideMenu> {
                 style: textStyles.titleSmall),
           ),
           const NavigationDrawerDestination(
+            icon: Icon(Icons.add_shopping_cart_rounded),
+            label: Text('Ventas'),
+          ),
+          const NavigationDrawerDestination(
             icon: Icon(Icons.add_business_rounded),
             label: Text('Sucursales'),
           ),
-          CupertinoButton(
-            onPressed: () {
-              context.go('/det_ventas');
-            },
-            child: const NavigationDrawerDestination(
-              icon: Icon(Icons.add_shopping_cart_rounded),
-              label: Text('Ventas'),
-            ),
-          ),
-          /* GestureDetector(
-            onTap: () {
-              context.go('/sucursales');
-            },
-            child: const NavigationDrawerDestination(
-              icon: Icon(Icons.add_business_rounded),
-              label: Text('Sucursales'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              context.go('/telas');
-            },
-            child: const NavigationDrawerDestination(
-              icon: Icon(Icons.add_box_rounded),
-              label: Text('Telas'),
-            ),
-          ), */
+          const NavigationDrawerDestination(
+              icon: Icon(Icons.playlist_add), label: Text('Telas')),
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
             child: Divider(),
           ),
-          /* const Padding(
-            padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
-            child: Text('Otras opciones'),
-          ), */
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: CustomFilledButton(

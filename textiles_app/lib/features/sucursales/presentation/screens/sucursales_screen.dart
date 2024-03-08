@@ -32,7 +32,7 @@ class SucursalesScreen extends ConsumerWidget {
           ? ItemDashboard(
               title: 'Agregar Sucusal',
               iconData: Icons.add_business_rounded,
-              onTap: _onTap2)
+              onTap: _onTap2(context,ref))
           : const SizedBox(),
     ]);
   }

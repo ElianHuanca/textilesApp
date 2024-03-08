@@ -36,9 +36,9 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
     state = state.copyWith(isLoading: false, sucursales: sucursales);
   }
 
-  Future<bool> createOrUpdateSucursal(Map<String, dynamic> sucursalLike) async {
+  Future<bool> createOrUpdateSucursal(Map<String, dynamic> sucursalLike,int idusuarios) async {
     try {
-      final sucursal = await sucursalesRepository.createUpdateSucursal(sucursalLike);
+      final sucursal = await sucursalesRepository.createUpdateSucursal(sucursalLike, idusuarios);
       final isSucursalInList =
           state.sucursales.any((element) => element.id == sucursal.id);
 

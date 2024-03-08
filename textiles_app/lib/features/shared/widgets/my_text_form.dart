@@ -3,36 +3,38 @@ import 'package:flutter/material.dart';
 class MiTextField extends StatelessWidget {
   final int? flex;
   final String label;
-  final String value;
+  final String? value;
   final Function(String)? onChanged;
   final String? errorMessage;
   final TextEditingController? controller;
-
+  final TextInputType? keyboardType;
   const MiTextField(
       {Key? key,
       required this.label,
-      required this.value,
+      this.value,
       required this.onChanged,
       this.errorMessage,
       this.controller,
-      this.flex
-      })
+      this.flex,
+      this.keyboardType})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //final TextEditingController controller=TextEditingController(text: value);
     return Expanded(
-      flex: 3,
+      flex: flex ?? 1,
       child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: TextFormField(
+            initialValue: value ?? '',
             controller: controller,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: keyboardType ?? TextInputType.text,
             onChanged: onChanged,
-            onTap: () {
-              controller?.clear();
-            },
+            onTap: () => controller?.clear(),
+            validator: (value) =>
+                controller!.text.isEmpty ? 'Campo Requerido' : null,
             decoration: InputDecoration(
               label: Text(label),
               errorText: errorMessage,

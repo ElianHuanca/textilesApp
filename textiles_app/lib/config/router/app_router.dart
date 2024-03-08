@@ -42,12 +42,17 @@ final goRouterProvider = Provider((ref) {
 
       GoRoute(
         path: '/sucursal',
-        builder: (context, state) => const SucursalScreen(),
+        builder: (context, state) =>  const SucursalScreen(),
       ),
 
       GoRoute(
         path: '/telas',
         builder: (context, state) => const TelasScreen(),
+      ),
+
+      GoRoute(
+        path: '/tela',
+        builder: (context, state) => const TelaScreen(),
       ),
 
       GoRoute(

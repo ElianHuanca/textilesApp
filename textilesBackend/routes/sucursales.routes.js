@@ -5,8 +5,10 @@ const Sucursales = require("../controllers/sucursales");
 
 router.get('/:idusuarios', Sucursales.ObtenerSucursales);
 
-router.post('/idusuarios', Sucursales.RegistrarSucursal);
+router.post('/:idusuarios', Sucursales.RegistrarSucursal);
 
+router.put('/:id', Sucursales.ActualizarSucursal);
 
+router.delete('/:id', Sucursales.EliminarSucursal);
 
 module.exports = router;

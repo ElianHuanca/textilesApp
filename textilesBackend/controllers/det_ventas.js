@@ -22,23 +22,36 @@ const ObtenerDetVentas = async (req, res) => {
 
 const RegistrarDetVentas = async (req, res) => {
     try {
-        const { idventas } = req.params;
-        const { ventas } = req.body;
-
-        // Aquí puedes procesar la lista de ventas como desees
-        ventas.forEach(venta => {
-            // Realizar alguna operación con cada venta
-            console.log(`Venta${idventas}: idproductos=${venta.idproductos}, cantidad=${venta.cantidad}, precio=${venta.precio}`);
-        });
-
-
+        const { idventas } = req.params;        
+        const ventas = req.body;
+        ventas.forEach(async venta => {
+            await DetVenta.create({
+                idventas: idventas,
+                idtelas: venta.idtelas,
+                cantidad: venta.cantidad,
+                precio: venta.precio,
+                total: venta.total
+            });
+        });    
     } catch (error) {
         console.error('Error al registrar detalle venta:', error);
         res.status(500).json({ error: 'Error al registrar detalle venta', message: error.message });
     }
 };
 
+const eliminarDetVenta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await DetVenta.destroy({ where: { id } });
+        res.json({ message: 'Detalle de venta eliminado correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar detalle de venta:', error);
+        res.status(500).json({ error: 'Error al eliminar detalle de venta', message: error.message });
+    }
+
+}
 module.exports = {
     ObtenerDetVentas,
-    RegistrarDetVentas
+    RegistrarDetVentas,
+    eliminarDetVenta
 }

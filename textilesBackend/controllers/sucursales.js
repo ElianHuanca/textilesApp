@@ -29,19 +29,34 @@ const ActualizarSucursal = async (req, res) => {
     try {
         const { id } = req.params;
         const { nombre } = req.body;
-        const sucursal = await Sucursal.update({ nombre }, { where: { id } });
-        res.json(sucursal);
+        
+        // Actualiza la sucursal
+        const [numRowsUpdated, updatedSucursal] = await Sucursal.update({ nombre }, { 
+            where: { id },
+            returning: true, // Devuelve los datos actualizados de la sucursal
+        });
+
+        if (numRowsUpdated === 1) {            
+            res.json(updatedSucursal[0] );            
+        } else {
+            res.status(404).json({ error: 'No se encontró la sucursal' });
+        }  
     } catch (error) {
         console.error('Error al actualizar sucursal:', error);
         res.status(500).json({ error: 'Error al actualizar sucursal', message: error.message });
     }
 }
 
+
 const EliminarSucursal = async (req, res) => {
     try {
         const { id } = req.params;
         const sucursal = await Sucursal.destroy({ where: { id } });
-        res.json(sucursal);
+        if (sucursal === 1) {
+            res.json({ message: 'Sucursal eliminada correctamente' });            
+        }else{
+            res.status(404).json({ error: 'No se encontró la sucursal' });
+        }        
     } catch (error) {
         console.error('Error al eliminar sucursal:', error);
         res.status(500).json({ error: 'Error al eliminar sucursal', message: error.message });

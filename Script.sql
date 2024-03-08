@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS det_ventas (
 );
 
 INSERT INTO usuarios(nombre,correo,password) VALUES 
-('Isela Huanca','ise250395@gmail.com','$2a$10$xo3thy528awEhg.oq9aQGemdeiMTeTD70mE..Lx5PW8w4IMFo6C4u'),
-('Mary Choque','mary@gmail.com','$2a$10$z8RpPMFeYh2IP/2vkM3Y7OFqxfIw5VK5QsayKtbdhfW6n65qUZVXa');
+('Isela Huanca','isela@gmail.com','$2a$10$qAVkPAIHnamNzbDeMb94t.em.plQpqP8s/Bwy.LrZsCOqnWveg7He'),
+('Mary Choque','mary@gmail.com','$2a$10$pyLUOKvtKEgB2PUyvCT.VO0Sm/2Lf3Y9zroRBg2ET8L6t5ja1n0rS');
 
 
 INSERT INTO sucursales (nombre,idusuarios) VALUES 
@@ -104,15 +104,22 @@ DECLARE
 BEGIN
     SELECT telas.precxcompra INTO precioxcompra FROM telas WHERE id = NEW.idtelas;
     
-    UPDATE ventas
+    /*UPDATE ventas
     SET total = total + (NEW.cantidad * NEW.precio),
         ganancias = ganancias + ((NEW.precio - precioxcompra) * NEW.cantidad)
     WHERE id = NEW.idventas;
    
     update det_ventas
     set total = NEW.cantidad * NEW.precio
-	WHERE id = NEW.id;
-  
+	WHERE id = NEW.id;*/
+-- 	PRODUCCION
+ 	 UPDATE ventas
+    SET total = total + NEW.total,
+        ganancias = ganancias + ((NEW.precio - precioxcompra) * NEW.cantidad)
+    WHERE id = NEW.idventas;
+ 	  
+ 	 
+		
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -121,6 +128,27 @@ CREATE or replace TRIGGER det_venta_after_insert
 AFTER INSERT ON det_ventas
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_total_ingresos();
+
+CREATE OR REPLACE FUNCTION eliminar_total_ingresos()
+RETURNS TRIGGER AS $$
+DECLARE
+    precioxcompra numeric;
+BEGIN
+    SELECT telas.precxcompra INTO precioxcompra FROM telas WHERE id = OLD.idtelas;
+    
+    UPDATE ventas
+    SET total = total - old.total,
+        ganancias = ganancias - ((OLD.precio - precioxcompra) * OLD.cantidad)
+    WHERE id = OLD.idventas;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER det_venta_after_delete
+AFTER DELETE ON det_ventas
+FOR EACH ROW
+EXECUTE FUNCTION eliminar_total_ingresos();
 
 
 --14/06/23

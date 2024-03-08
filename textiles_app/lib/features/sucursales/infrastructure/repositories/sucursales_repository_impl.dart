@@ -11,8 +11,8 @@ class SucursalesRepositoryImpl implements SucursalesRepository {
   }
   
   @override
-  Future<Sucursal> createUpdateSucursal(Map<String, dynamic> sucursalLike) {
-    return datasource.createUpdateSucursal(sucursalLike);
+  Future<Sucursal> createUpdateSucursal(Map<String, dynamic> sucursalLike,int idusuarios) {
+    return datasource.createUpdateSucursal(sucursalLike, idusuarios);
   }
   
   @override

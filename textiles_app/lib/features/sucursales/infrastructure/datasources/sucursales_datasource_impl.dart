@@ -24,12 +24,12 @@ class SucursalesDatasourceImpl implements SucursalesDatasource {
   }
   
   @override
-  Future<Sucursal> createUpdateSucursal(Map<String, dynamic> sucursalLike) async{
+  Future<Sucursal> createUpdateSucursal(Map<String, dynamic> sucursalLike,int idusuarios) async{
     try {
       
       final int? sucursalId = sucursalLike['id'];
       final String method = (sucursalId == 0) ? 'POST' : 'PUT';
-      final String url = (sucursalId == 0) ? '/sucursales' : '/sucursales/$sucursalId';
+      final String url = (sucursalId == 0) ? '/sucursales/$idusuarios' : '/sucursales/$sucursalId';
 
       sucursalLike.remove('id');
 

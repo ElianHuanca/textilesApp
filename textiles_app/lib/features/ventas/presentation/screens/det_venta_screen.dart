@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 import 'package:textiles_app/features/telas/domain/domain.dart';
 import 'package:textiles_app/features/telas/presentation/providers/providers.dart';
@@ -34,7 +35,7 @@ class DetVenta extends ConsumerWidget {
                       Expanded(
                         flex: 1,
                         child: DropdownMenu<Tela>(
-                          width: MediaQuery.of(context).size.width * 0.9,
+                          width: MediaQuery.of(context).size.width * 0.93,
                           hintText: 'Seleccione una Tela',
                           onSelected: (value) {
                             ref
@@ -94,7 +95,12 @@ class DetVenta extends ConsumerWidget {
       dataTableMap(context, detalleVentaForm.detVentas, detalleVentaForm.total),
       Container(
           padding: const EdgeInsets.all(12.0),
-          child: MaterialButtonWidget(ontap: () => null, texto: 'Guardar'))
+          child: MaterialButtonWidget(
+              ontap: () => {
+                    ref.read(detalleVentaFormProvider.notifier).onFormSubmit(),
+                    context.go('/det_ventas')
+                  },
+              texto: 'Guardar'))
     ];
   }
 

@@ -31,9 +31,11 @@ class DetVentas extends ConsumerWidget {
         .detalleVentas
         .map((detalleVenta) => detalleVenta.toJson() as Map<String, dynamic>)
         .toList();
+    DateTime date = DateTime.parse(venta!.fecha);
+    String fecha = "${date.day}-${date.month}-${date.year}";
     return Screen1(
-        widget: [dataTableMap(context, detalleVentas, venta!.total)],
-        title: venta.fecha,
+        widget: [dataTableMap(context, detalleVentas, venta.total)],
+        title: fecha,
         isGridview: false);
   }
 }
