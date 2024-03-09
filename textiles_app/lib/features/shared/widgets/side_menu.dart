@@ -4,13 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 
-/* class MenuItem {
-  final String label;
-  final String link;
-
-  MenuItem({required this.label, required this.link});
-} */
-
 class SideMenu extends ConsumerStatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
