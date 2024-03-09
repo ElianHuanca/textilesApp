@@ -21,7 +21,6 @@ class MiTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final TextEditingController controller=TextEditingController(text: value);
     return Expanded(
       flex: flex ?? 1,
       child: Container(
@@ -38,7 +37,9 @@ class MiTextField extends StatelessWidget {
             decoration: InputDecoration(
               label: Text(label),
               errorText: errorMessage,
-              suffixText: label == 'Precio' ? 'Bs' : 'mts',
+              suffixText: label == 'Cantidad'
+                  ? ' mts'
+                  : (label == 'Precio' ? ' Bs' : ''),
               suffixStyle: const TextStyle(fontSize: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

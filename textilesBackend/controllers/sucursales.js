@@ -28,16 +28,11 @@ const RegistrarSucursal = async (req, res) => {
 const ActualizarSucursal = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre } = req.body;
-        
-        // Actualiza la sucursal
-        const [numRowsUpdated, updatedSucursal] = await Sucursal.update({ nombre }, { 
-            where: { id },
-            returning: true, // Devuelve los datos actualizados de la sucursal
-        });
+        const { nombre } = req.body;            
+        const sucursal = await Sucursal.update({ nombre }, {where: { id }});
 
-        if (numRowsUpdated === 1) {            
-            res.json(updatedSucursal[0] );            
+        if (sucursal === 1) {            
+            res.json({message:'Sucursal Actualizado Correctamente'} );            
         } else {
             res.status(404).json({ error: 'No se encontró la sucursal' });
         }  

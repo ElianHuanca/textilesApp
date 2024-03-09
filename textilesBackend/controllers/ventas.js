@@ -3,7 +3,10 @@ const Venta = require('../models/venta');
 const ObtenerVentas = async (req, res) => {
     try {
         const { idsucursales } = req.params;
-        const ventas = await Venta.findAll({ where: { idsucursales } });
+        const ventas = await Venta.findAll({
+            where: { idsucursales },
+            order: [['fecha', 'DESC']] 
+        });
         res.json(ventas);
     } catch (error) {
         console.error('Error al obtener ventas:', error);
@@ -16,12 +19,12 @@ const RegistrarVenta = async (req, res) => {
         const { idsucursales, fecha } = req.body;
 
         const ventaExistente = await Venta.findOne({ where: { idsucursales, fecha } });
-        
+
         if (!ventaExistente) {
             const nuevaVenta = await Venta.create({ idsucursales, fecha });
             return res.json(nuevaVenta);
         }
-        
+
         return res.json({ message: 'Venta ya creada para esa sucursal y fecha' });
     } catch (error) {
         console.error('Error al crear venta:', error);
@@ -33,12 +36,12 @@ const RegistrarVenta = async (req, res) => {
 const RegistrarVentaAhora = async (req, res) => {
     try {
         const { idsucursales } = req.params;
-        const fechaActual = new Date(); 
+        const fechaActual = new Date();
 
         const ventaExistente = await Venta.findOne({
             where: {
                 idsucursales,
-                fecha: fechaActual 
+                fecha: fechaActual
             }
         });
 
@@ -68,7 +71,7 @@ const EliminarVenta = async (req, res) => {
 
 const EliminarVenta0 = async (req, res) => {
     try {
-        const venta = await Venta.destroy({ where: { total : 0 } });
+        const venta = await Venta.destroy({ where: { total: 0 } });
         res.json(venta);
     } catch (error) {
         console.error('Error al eliminar venta:', error);

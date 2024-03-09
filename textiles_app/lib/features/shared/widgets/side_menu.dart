@@ -4,34 +4,50 @@ import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 
-class SideMenu extends ConsumerStatefulWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
+final menuIndexProvider =
+    StateNotifierProvider<MenuIndexNotifier, MenuIndexState>(
+        (ref) => MenuIndexNotifier());
 
-  const SideMenu({super.key, required this.scaffoldKey});
+class MenuIndexNotifier extends StateNotifier<MenuIndexState> {
+  MenuIndexNotifier() : super(MenuIndexState());
 
-  @override
-  SideMenuState createState() => SideMenuState();
+  void setIndex(int index) {
+    state = state.copyWith(index: index);
+  }
 }
 
-class SideMenuState extends ConsumerState<SideMenu> {
-  int navDrawerIndex = 0;
+class MenuIndexState {
+  final int index;
+
+  MenuIndexState({
+    this.index = 0,
+  });
+
+  MenuIndexState copyWith({
+    int? index,
+  }) =>
+      MenuIndexState(
+        index: index ?? this.index,
+      );
+}
+
+class SideMenu extends ConsumerWidget {
   final appLinkItems = ['/', '/sucursales', '/telas'];
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  SideMenu({required this.scaffoldKey, super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final textStyles = Theme.of(context).textTheme;
-
+    final menuIndexState = ref.watch(menuIndexProvider);
+    //scaffoldKey.currentState?.closeDrawer();
     return NavigationDrawer(
         elevation: 1,
-        selectedIndex: navDrawerIndex,
+        selectedIndex: menuIndexState.index,
         onDestinationSelected: (value) {
-          if (value != navDrawerIndex) {
-            setState(() {
-              navDrawerIndex = value;
-            });            
-            context.push(appLinkItems[value]);
-          }
-          widget.scaffoldKey.currentState?.closeDrawer();
+          ref.read(menuIndexProvider.notifier).setIndex(value);
+          context.push(appLinkItems[value]);
+          scaffoldKey.currentState?.closeDrawer();
         },
         children: [
           Padding(

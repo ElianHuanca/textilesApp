@@ -36,24 +36,23 @@ class Screen1 extends StatelessWidget {
                 icon: const Icon(Icons.search_rounded))
           ],
         ),
-        body: Container(
-            /* color: Colors.white,
-            constraints: const BoxConstraints.expand(), */
-            //padding: EdgeInsets.all(16),
-            child: isGridview
-                ? GridView.count(
-                    shrinkWrap: true,
-                    //physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 40,
-                    mainAxisSpacing: 30,
-                    children: widget,
-                  )
-                : ListView(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [...widget],
-                  )),
+        body: isGridview
+            ? Container(
+                padding: const EdgeInsets.all(10),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  //physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 30,
+                  mainAxisSpacing: 30,
+                  children: widget,
+                ),
+              )
+            : ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [...widget],
+              ),
         floatingActionButton: floatingActionButton);
   }
 }
