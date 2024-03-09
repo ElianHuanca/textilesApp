@@ -10,7 +10,6 @@ final menuIndexProvider =
 
 class MenuIndexNotifier extends StateNotifier<MenuIndexState> {
   MenuIndexNotifier() : super(MenuIndexState());
-
   void setIndex(int index) {
     state = state.copyWith(index: index);
   }
@@ -18,11 +17,9 @@ class MenuIndexNotifier extends StateNotifier<MenuIndexState> {
 
 class MenuIndexState {
   final int index;
-
   MenuIndexState({
     this.index = 0,
   });
-
   MenuIndexState copyWith({
     int? index,
   }) =>
@@ -33,14 +30,13 @@ class MenuIndexState {
 
 class SideMenu extends ConsumerWidget {
   final appLinkItems = ['/', '/sucursales', '/telas'];
-  final GlobalKey<ScaffoldState> scaffoldKey;
-  SideMenu({required this.scaffoldKey, super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  SideMenu({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final textStyles = Theme.of(context).textTheme;
     final menuIndexState = ref.watch(menuIndexProvider);
-    //scaffoldKey.currentState?.closeDrawer();
     return NavigationDrawer(
         elevation: 1,
         selectedIndex: menuIndexState.index,

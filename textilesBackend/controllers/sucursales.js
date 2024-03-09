@@ -32,7 +32,7 @@ const ActualizarSucursal = async (req, res) => {
         const sucursal = await Sucursal.update({ nombre }, {where: { id }});
 
         if (sucursal === 1) {            
-            res.json({message:'Sucursal Actualizado Correctamente'} );            
+            res.status(200).json({message:'Sucursal Actualizado Correctamente'} );            
         } else {
             res.status(404).json({ error: 'No se encontró la sucursal' });
         }  

@@ -36,7 +36,7 @@ class MiTextField extends StatelessWidget {
                 controller!.text.isEmpty ? 'Campo Requerido' : null,
             decoration: InputDecoration(
               label: Text(label),
-              errorText: errorMessage,
+              //errorText: errorMessage,
               suffixText: label == 'Cantidad'
                   ? ' mts'
                   : (label == 'Precio' ? ' Bs' : ''),

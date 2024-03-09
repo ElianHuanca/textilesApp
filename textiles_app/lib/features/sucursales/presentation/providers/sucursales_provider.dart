@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:textiles_app/features/sucursales/infrastructure/infrastructure.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
@@ -36,17 +37,23 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
     state = state.copyWith(isLoading: false, sucursales: sucursales);
   }
 
-  Future<bool> createOrUpdateSucursal(Map<String, dynamic> sucursalLike,int idusuarios) async {
+  Future<bool> createSucursal(
+      Map<String, dynamic> sucursalLike, int idusuarios) async {
     try {
-      final sucursal = await sucursalesRepository.createUpdateSucursal(sucursalLike, idusuarios);
-      final isSucursalInList =
-          state.sucursales.any((element) => element.id == sucursal.id);
+      final sucursal =
+          await sucursalesRepository.createSucursal(sucursalLike, idusuarios);
 
-      if (!isSucursalInList) {
-        state = state.copyWith(sucursales: [...state.sucursales, sucursal]);
-        return true;
-      }
+      state = state.copyWith(sucursales: [...state.sucursales, sucursal]);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
+  Future<bool> updateSucursal(Map<String, dynamic> sucursalLike) async {
+    try {
+      await sucursalesRepository.updateSucursal(sucursalLike, sucursalLike['id']);
+      final Sucursal sucursal = SucursalMapper.jsonToEntity(sucursalLike);
       state = state.copyWith(
           sucursales: state.sucursales
               .map(
@@ -63,9 +70,8 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
     try {
       sucursalesRepository.deleteSucursal(id);
       state = state.copyWith(
-          sucursales: state.sucursales
-              .where((element) => element.id != id)
-              .toList());
+          sucursales:
+              state.sucursales.where((element) => element.id != id).toList());
       return true;
     } catch (e) {
       return false;

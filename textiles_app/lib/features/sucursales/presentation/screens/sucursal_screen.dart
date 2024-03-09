@@ -16,12 +16,13 @@ class SucursalScreen extends ConsumerWidget {
         child: sucursalState.isLoading
             ? const FullScreenLoader()
             : Screen1(
+                backRoute: '/sucursales',
                 widget: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    _sucursalInformation(sucursalState.sucursal!, context, ref)
-                  ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _sucursalInformation(sucursalState.sucursal!, context, ref)
+                ],
                 title: sucursalState.sucursal!.id == 0
                     ? 'Crear Sucursal'
                     : 'Editar Sucursal',
@@ -40,7 +41,7 @@ class SucursalScreen extends ConsumerWidget {
             Row(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                MiTextField(                  
+                MiTextField(
                   label: 'Nombre',
                   value: sucursalForm.nombre,
                   onChanged: (value) => ref
@@ -49,7 +50,7 @@ class SucursalScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
             MaterialButtonWidget(
               ontap: _onSubmit(context, ref, sucursal),
               texto: sucursal.id == 0 ? 'Guardar' : 'Modificar',
@@ -65,10 +66,15 @@ class SucursalScreen extends ConsumerWidget {
 
   Function _onSubmit(BuildContext context, WidgetRef ref, Sucursal sucursal) {
     return () {
-      ref.read(sucursalFormProvider(sucursal).notifier).onFormSubmit().then(
-          (value) => value
-              ? showSnackbar(context, sucursal.id == 0 ? 'Guardado' : 'Editado')
-              : showSnackbar(context, 'Hubo Un Error'));
+      sucursal.id == 0
+          ? {
+              ref.read(sucursalFormProvider(sucursal).notifier).onFormCreate(),
+              showSnackbar(context, 'Guardado Correctamente')
+            }
+          : {
+              ref.read(sucursalFormProvider(sucursal).notifier).onFormUpdate(),
+              showSnackbar(context, 'Editado Correctamente')
+            };
       context.go('/sucursales');
     };
   }
@@ -77,7 +83,7 @@ class SucursalScreen extends ConsumerWidget {
     return () {
       ref.read(sucursalFormProvider(sucursal).notifier).onFormDelete().then(
           (value) => value
-              ? showSnackbar(context, 'Eliminado')
+              ? showSnackbar(context, 'Eliminado Correctamente')
               : showSnackbar(context, 'Hubo Un Error'));
       context.go('/sucursales');
     };

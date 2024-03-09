@@ -22,8 +22,8 @@ class AppTheme {
 
       ///* General
       useMaterial3: true,
-      //colorSchemeSeed: colorSeed,
-      primaryColor: _color,
+      colorSchemeSeed: _color,
+      //primaryColor: _color,
 
       ///* Texts
       textTheme: TextTheme(
@@ -35,14 +35,13 @@ class AppTheme {
               GoogleFonts.montserratAlternates().copyWith(fontSize: 20)),
 
       ///* Scaffold Background Color
-      //scaffoldBackgroundColor: scaffoldBackgroundColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
 
       ///* Buttons
       filledButtonTheme: FilledButtonThemeData(
           style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.resolveWith((states) => _color),
+              /* backgroundColor:
+                  MaterialStateProperty.resolveWith((states) => _color), */
               textStyle: MaterialStatePropertyAll(
                   GoogleFonts.montserratAlternates()
                       .copyWith(fontWeight: FontWeight.w700)))),
