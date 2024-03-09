@@ -20,8 +20,7 @@ class SucursalesScreen extends ConsumerWidget {
 
   List<Widget> _buildBody(List<Sucursal> sucursales, BuildContext context,
       WidgetRef ref, bool gSucursales) {
-    return ([
-      //Padding(padding: EdgeInsets.all(10)child: ),
+    return ([      
       ...sucursales.map((sucursal) {
         return ItemDashboard(
             title: sucursal.nombre,

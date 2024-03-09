@@ -40,7 +40,7 @@ class SucursalScreen extends ConsumerWidget {
             Row(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                MiTextField(
+                MiTextField(                  
                   label: 'Nombre',
                   value: sucursalForm.nombre,
                   onChanged: (value) => ref
