@@ -7,19 +7,21 @@ import '../providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetVenta extends ConsumerWidget {
-  DetVenta({super.key});
-  final TextEditingController precioController = TextEditingController();
-  final TextEditingController cantidadController = TextEditingController();
+  const DetVenta({super.key});
+  
+  //final TextEditingController cantidadController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Screen1(
       widget: _widget(context, ref),
       title: 'Registro Ventas',
       isGridview: false,
+      backRoute: '/det_ventas',
     );
   }
 
   List<Widget> _widget(BuildContext context, WidgetRef ref) {
+    final TextEditingController precioController = TextEditingController();
     final telasState = ref.watch(telasProvider);
     final detalleVentaForm = ref.watch(detalleVentaFormProvider);
     return [
@@ -61,9 +63,11 @@ class DetVenta extends ConsumerWidget {
                     //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       MiTextField(
-                        flex: 3,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        //flex: 3,
                         label: 'Precio',
-                        value: detalleVentaForm.precio,
+                        initialValue: '',
                         onChanged: (String p1) => {
                           ref
                               .read(detalleVentaFormProvider.notifier)
@@ -71,7 +75,8 @@ class DetVenta extends ConsumerWidget {
                         },
                         controller: precioController,
                       ),
-                      MiTextField(
+                      /* MiTextField(
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         flex: 3,
                         label: 'Cantidad',
                         value: detalleVentaForm.cantidad,
@@ -81,7 +86,7 @@ class DetVenta extends ConsumerWidget {
                               .onCantidadChanged(p1);
                         },
                         controller: cantidadController,
-                      ),
+                      ), */
                     ],
                   ),
                   const SizedBox(height: 15),
@@ -92,7 +97,8 @@ class DetVenta extends ConsumerWidget {
       const Divider(
         thickness: 1,
       ),
-      dataTableMap(context, detalleVentaForm.detVentas, detalleVentaForm.total),
+      DataTableMap(
+          list: detalleVentaForm.detVentas, total: detalleVentaForm.total),
       Container(
           padding: const EdgeInsets.all(12.0),
           child: MaterialButtonWidget(
@@ -107,8 +113,13 @@ class DetVenta extends ConsumerWidget {
   Function _onAdd(WidgetRef ref) {
     return () {
       ref.read(detalleVentaFormProvider.notifier).addDetalleVenta();
-      cantidadController.clear();
-      precioController.clear();
+      /* cantidadController.clear();
+      precioController.clear(); */
     };
   }
 }
+
+/*
+isela@gmail.com
+Huanca1962
+*/

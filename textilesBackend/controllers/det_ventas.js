@@ -1,6 +1,7 @@
 const DetVenta = require('../models/det_venta');
 const Tela = require('../models/tela');
-const pool = require('../database/database');
+const sequelize = require('../database/database');
+/* const pool = require('../database/database');
 const ObtenerDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
@@ -8,17 +9,41 @@ const ObtenerDetVentas = async (req, res) => {
         SELECT det_ventas.*, telas.nombre
         FROM det_ventas
         INNER JOIN telas ON det_ventas.idtelas = telas.id
-        WHERE det_ventas.idventas = @idventas
+        WHERE det_ventas.idventas = $1
         ORDER BY det_ventas.id DESC;
         `;
-        const response = await pool.query(query, { idventas });
+        const response = await pool.query(query, [idventas]); // Pasar los parámetros como un array
         res.json(response[0]);
     } catch (error) {
         console.error('Error al obtener detalle venta:', error);
         res.status(500).json({ error: 'Error al obtener detalle venta', message: error.message });
     }
-};
+}; */
 
+
+const ObtenerDetVentas = async (req, res) => {
+    try {
+        const { idventas } = req.params;
+
+        const detallesVenta = await DetVenta.findAll({
+            where: { idventas },
+            include: { 
+                model: Tela, 
+                attributes: [], // Excluir todos los atributos de Tela
+            }, 
+            attributes: ['id', 'cantidad', 'precio', 'total', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
+            order: [['id', 'DESC']],
+            raw: true // Obtener resultados en formato plano (JSON)
+        });
+        
+
+
+        res.json(detallesVenta);
+    } catch (error) {
+        console.error('Error al obtener detalle venta:', error);
+        res.status(500).json({ error: 'Error al obtener detalle venta', message: error.message });
+    }
+};
 
 
 const RegistrarDetVentas = async (req, res) => {

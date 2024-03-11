@@ -31,7 +31,7 @@ const ActualizarTela = async (req, res) => {
         const { id } = req.params;
         const { nombre, precxmen, precxmay, precxrollo, precxcompra } = req.body;
         const tela = await Tela.update({ nombre, precxmen, precxmay, precxrollo, precxcompra }, { where: { id } });
-        if (tela === 1) {
+        if (tela == 1) {
             res.json({ message: 'Tela actualizada correctamente' });
         } else {
             res.status(404).json({ error: 'No se encontró la tela' });
@@ -46,7 +46,7 @@ const EliminarTela = async (req, res) => {
     try {
         const { id } = req.params;
         const tela = await Tela.destroy({ where: { id } });
-        if (tela === 1) {
+        if (tela == 1) {
             res.json({ message: 'Tela eliminada correctamente' });
         } else {
             res.status(404).json({ error: 'No se encontró la tela' });

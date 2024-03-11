@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MiTextField extends StatelessWidget {
   final int? flex;
   final String label;
-  final String? value;
+  final String? initialValue;
   final Function(String)? onChanged;
   final String? errorMessage;
   final TextEditingController? controller;
@@ -11,7 +11,7 @@ class MiTextField extends StatelessWidget {
   const MiTextField(
       {Key? key,
       required this.label,
-      this.value,
+      this.initialValue,
       required this.onChanged,
       this.errorMessage,
       this.controller,
@@ -27,19 +27,19 @@ class MiTextField extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: TextFormField(
-            initialValue: value ?? '',
+            initialValue: initialValue ?? '',
             controller: controller,
             keyboardType: keyboardType ?? TextInputType.text,
             onChanged: onChanged,
-            onTap: () => controller?.clear(),
-            validator: (value) =>
-                controller!.text.isEmpty ? 'Campo Requerido' : null,
+            //onTap: () => controller?.clear(),
+            /* validator: (initialValue) =>
+                controller!.text.isEmpty ? 'Campo Requerido' : null, */
             decoration: InputDecoration(
               label: Text(label),
               //errorText: errorMessage,
               suffixText: label == 'Cantidad'
                   ? ' mts'
-                  : (label == 'Precio' ? ' Bs' : ''),
+                  : (label.contains('Precio') ? ' Bs' : ''),
               suffixStyle: const TextStyle(fontSize: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -49,3 +49,5 @@ class MiTextField extends StatelessWidget {
     );
   }
 }
+/* isela@gmail.com
+Huanca1962 */

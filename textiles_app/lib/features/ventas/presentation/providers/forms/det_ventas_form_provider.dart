@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import 'package:formz/formz.dart';
-//import 'package:textiles_app/features/shared/infrastructure/inputs/inputs.dart';
 import '../../providers/providers.dart';
 
 final detalleVentaFormProvider =
@@ -12,16 +10,16 @@ final detalleVentaFormProvider =
   final idventas = ref.watch(ventaProvider).venta?.id ?? 0;
   return DetalleVentaFormNotifier(
     onSubmitCallback: createCallback,
-    idventas  : idventas,
+    idventas: idventas,
   );
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike,int)?
+  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike, int)?
       onSubmitCallback;
   final int? idventas;
-  DetalleVentaFormNotifier({
-    this.onSubmitCallback, this.idventas  }) : super(DetalleVentaFormState());
+  DetalleVentaFormNotifier({this.onSubmitCallback, this.idventas})
+      : super(DetalleVentaFormState());
 
   addDetalleVenta() {
     if (state.idtelas == 0) return;
@@ -53,7 +51,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
         'total': double.parse(state.cantidad) * double.parse(state.precio),
       };
       state = state.copyWith(
-        detVentas: [...state.detVentas, detVentaLike],
+        detVentas: [detVentaLike,...state.detVentas],
       );
     }
 
@@ -80,10 +78,10 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   }
 
   Future<bool> onFormSubmit() async {
-    try {      
+    try {
       if (onSubmitCallback == null) return false;
-      if(state.detVentas.isEmpty) return false;
-      return await onSubmitCallback!(state.detVentas,idventas!);
+      if (state.detVentas.isEmpty) return false;
+      return await onSubmitCallback!(state.detVentas, idventas!);
     } catch (e) {
       return false;
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 import '../providers/providers.dart';
 
@@ -31,11 +32,38 @@ class DetVentas extends ConsumerWidget {
         .detalleVentas
         .map((detalleVenta) => detalleVenta.toJson() as Map<String, dynamic>)
         .toList();
-    DateTime date = DateTime.parse(venta!.fecha);
-    String fecha = "${date.day}-${date.month}-${date.year}";
+    String fecha = changeFormatDate(venta!.fecha);
     return Screen1(
-        widget: [dataTableMap(context, detalleVentas, venta.total)],
-        title: fecha,
-        isGridview: false);
+      widget: [
+        container(
+            context,
+            DataTableMap(
+                list: detalleVentas,
+                total: venta.total,
+                ganancias: venta.ganancias))
+      ],
+      title: fecha,
+      isGridview: false,
+      backRoute: '/ventas',
+      onTap: () => {context.go('/det_venta'), print('clickeo')},
+    );
+  }
+
+  Container container(BuildContext context, Widget widget) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 5),
+            color: Theme.of(context).primaryColor.withOpacity(.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: widget,
+    );
   }
 }

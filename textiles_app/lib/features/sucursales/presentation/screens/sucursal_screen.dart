@@ -43,7 +43,7 @@ class SucursalScreen extends ConsumerWidget {
               children: [
                 MiTextField(
                   label: 'Nombre',
-                  value: sucursalForm.nombre,
+                  initialValue: sucursalForm.nombre,
                   onChanged: (value) => ref
                       .read(sucursalFormProvider(sucursal).notifier)
                       .onNombreChanged(value),
@@ -68,12 +68,20 @@ class SucursalScreen extends ConsumerWidget {
     return () {
       sucursal.id == 0
           ? {
-              ref.read(sucursalFormProvider(sucursal).notifier).onFormCreate(),
-              showSnackbar(context, 'Guardado Correctamente')
+              ref
+                  .read(sucursalFormProvider(sucursal).notifier)
+                  .onFormCreate()
+                  .then((value) => value
+                      ? showSnackbar(context, 'Guardado Correctamente')
+                      : showSnackbar(context, 'Hubo Un Error')),
             }
           : {
-              ref.read(sucursalFormProvider(sucursal).notifier).onFormUpdate(),
-              showSnackbar(context, 'Editado Correctamente')
+              ref
+                  .read(sucursalFormProvider(sucursal).notifier)
+                  .onFormUpdate()
+                  .then((value) => value
+                      ? showSnackbar(context, 'Modificado Correctamente')
+                      : showSnackbar(context, 'Hubo Un Error')),
             };
       context.go('/sucursales');
     };

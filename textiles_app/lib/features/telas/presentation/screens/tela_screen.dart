@@ -16,14 +16,14 @@ class TelaScreen extends ConsumerWidget {
         child: telaState.isLoading
             ? const FullScreenLoader()
             : Screen1(
-                widget: _telaView(telaState.tela!, context, ref),
+                widget: [_telaInformation(telaState.tela!, context, ref)],
                 title: telaState.tela!.id == 0 ? 'Crear Tela' : 'Editar Tela',
                 isGridview: false,
                 backRoute: '/telas',
               ));
   }
 
-  List<Widget> _telaView(Tela tela, BuildContext context, WidgetRef ref) {
+  /* List<Widget> _telaView(Tela tela, BuildContext context, WidgetRef ref) {
     final telaForm = ref.watch(telaFormProvider(tela));
     final textStyles = Theme.of(context).textTheme;
     return ([
@@ -36,7 +36,7 @@ class TelaScreen extends ConsumerWidget {
       const SizedBox(height: 10),
       _telaInformation(tela, context, ref),
     ]);
-  }
+  } */
 
   Widget _telaInformation(Tela tela, BuildContext context, WidgetRef ref) {
     final telaForm = ref.watch(telaFormProvider(tela));
@@ -46,53 +46,70 @@ class TelaScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomProductField(
-              isTopField: true,
-              label: 'Nombre',
-              initialValue: telaForm.nombre.value,
-              onChanged:
-                  ref.read(telaFormProvider(tela).notifier).onNombreChanged,
-              errorMessage: telaForm.nombre.errorMessage,
+            SizedBox(height: 15),
+            Row(
+              children: [
+                MiTextField(
+                  label: 'Nombre',
+                  initialValue: telaForm.nombre,
+                  onChanged:
+                      ref.read(telaFormProvider(tela).notifier).onNombreChanged,
+                )
+              ],
             ),
-
-            CustomProductField(
-              label: 'Precio X Menor',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              initialValue: telaForm.precxmen.value.toString(),
-              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxmenChanged(double.tryParse(value) ?? -1),
-              errorMessage: telaForm.precxmen.errorMessage,
+            const SizedBox(height: 15),
+            Row(
+              children: [
+                MiTextField(
+                  label: 'Precio X Menor',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  initialValue: telaForm.precxmen,
+                  onChanged: (value) => ref
+                      .read(telaFormProvider(tela).notifier)
+                      .onPrecxmenChanged(value),
+                ),
+                MiTextField(
+                  label: 'Precio X Mayor',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  initialValue: telaForm.precxmay,
+                  onChanged: (value) => ref
+                      .read(telaFormProvider(tela).notifier)
+                      .onPrecxmayChanged(value),
+                ),
+              ],
             ),
-            
-            CustomProductField(
-              label: 'Precio X Mayor',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              initialValue: telaForm.precxmay.value.toString(),
-              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxmayChanged(double.tryParse(value) ?? -1),
-              errorMessage: telaForm.precxmay.errorMessage,
+            const SizedBox(height: 15),
+            Row(
+              children: [
+                MiTextField(
+                  label: 'Precio X Rollo',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  initialValue: telaForm.precxrollo,
+                  onChanged: (value) => ref
+                      .read(telaFormProvider(tela).notifier)
+                      .onPrecxrolloChanged(value),
+                ),
+                MiTextField(
+                  label: 'Precio Compra',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  initialValue: telaForm.precxcompra,
+                  onChanged: (value) => ref
+                      .read(telaFormProvider(tela).notifier)
+                      .onPrecxcompraChanged(value),
+                ),
+              ],
             ),
-
-            CustomProductField(
-              label: 'Precio X Rollo',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              initialValue: telaForm.precxrollo.value.toString(),
-              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxrolloChanged(double.tryParse(value) ?? -1),
-              errorMessage: telaForm.precxrollo.errorMessage,
-            ),
-
-            CustomProductField(
-              label: 'Precio Compra',
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              initialValue: telaForm.precxcompra.value.toString(),
-              onChanged: (value) => ref.read(telaFormProvider(tela).notifier).onPrecxcompraChanged(double.tryParse(value) ?? -1),
-              errorMessage: telaForm.precxcompra.errorMessage,
-            ),
-
             const SizedBox(height: 15),
             MaterialButtonWidget(
               ontap: _onSubmit(context, ref, tela),
               texto: tela.id == 0 ? 'Guardar' : 'Modificar',
             ),
-            tela.id == 0
+            const SizedBox(height: 15),
+            tela.id != 0
                 ? MaterialButtonWidget(
                     ontap: _onDelete(context, ref, tela), texto: 'Eliminar')
                 : const SizedBox(),
@@ -101,15 +118,30 @@ class TelaScreen extends ConsumerWidget {
   }
 
   Function _onSubmit(BuildContext context, WidgetRef ref, Tela tela) {
-    return () {      
-      ref.read(telaFormProvider(tela).notifier).onFormSubmit().then((value) => value ?  showSnackbar(context, tela.id==0 ? 'Guardado' : 'Editado') : showSnackbar(context, 'Hubo Un Error'));
+    return () {
+      tela.id == 0
+          ? {
+              ref.read(telaFormProvider(tela).notifier).onCreateSubmit().then(
+                  (value) => value
+                      ? showSnackbar(context, 'Creado Correctamente')
+                      : showSnackbar(context, 'Hubo Un Error'))
+            }
+          : {
+              ref.read(telaFormProvider(tela).notifier).onUpdateSubmit().then(
+                  (value) => value
+                      ? showSnackbar(context, 'Modificado Correctamente')
+                      : showSnackbar(context, 'Hubo Un Error'))
+            };
       context.go('/telas');
     };
   }
 
   Function _onDelete(BuildContext context, WidgetRef ref, Tela tela) {
     return () {
-      ref.read(telaFormProvider(tela).notifier).onFormDelete().then((value) => value ?  showSnackbar(context, 'Eliminado') : showSnackbar(context, 'Hubo Un Error'));
+      ref.read(telaFormProvider(tela).notifier).onDeleteSubmit().then((value) =>
+          value
+              ? showSnackbar(context, 'Eliminado Correctamente')
+              : showSnackbar(context, 'Hubo Un Error'));
       context.go('/telas');
     };
   }

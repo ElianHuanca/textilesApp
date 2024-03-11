@@ -26,7 +26,6 @@ class TelasDatasourceImpl implements TelasDatasource {
     try {
       telaLike.remove('id');
       final response = await dio.post('/telas/$idusuarios', data: telaLike);
-
       final tela = TelaMapper.jsonToEntity(response.data);
       return tela;
     } catch (e) {

@@ -50,7 +50,7 @@ const RegistrarVentaAhora = async (req, res) => {
             return res.json(nuevaVenta);
         }
 
-        return res.json({ message: 'Venta ya creada para hoy' });
+        return res.status(404).json({ message: 'Venta ya creada para hoy' });
 
     } catch (error) {
         console.error('Error al crear venta:', error);

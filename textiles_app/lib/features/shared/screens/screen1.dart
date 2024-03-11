@@ -8,13 +8,16 @@ class Screen1 extends StatelessWidget {
   final bool isGridview;
   final FloatingActionButton? floatingActionButton;
   final String? backRoute;
+  final Function? onTap;
   const Screen1(
       {required this.widget,
       super.key,
       required this.title,
       required this.isGridview,
       this.floatingActionButton,
-      this.backRoute});
+      this.backRoute,
+      this.onTap
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +41,12 @@ class Screen1 extends StatelessWidget {
               ),
             ),
             actions: [
+              onTap != null
+                  ?
               IconButton(
-                  onPressed: () {
-                    context.go('/det_venta');
-                  },
-                  icon: const Icon(Icons.search_rounded))
+                  onPressed: () => onTap!(),
+                  icon: const Icon(Icons.add))
+                  : const SizedBox(),
             ],
           ),
           body: isGridview
@@ -58,7 +62,7 @@ class Screen1 extends StatelessWidget {
                 )
               : ListView(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                  //physics: const NeverScrollableScrollPhysics(),
                   children: [...widget],
                 ),
           floatingActionButton: floatingActionButton),

@@ -47,7 +47,7 @@ const EliminarSucursal = async (req, res) => {
     try {
         const { id } = req.params;
         const sucursal = await Sucursal.destroy({ where: { id } });
-        if (sucursal === 1) {
+        if (sucursal == 1) {
             res.json({ message: 'Sucursal eliminada correctamente' });            
         }else{
             res.status(404).json({ error: 'No se encontró la sucursal' });

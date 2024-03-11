@@ -14,28 +14,42 @@ class TelasScreen extends ConsumerWidget {
       widget: _buildBody(telasState.telas, context, ref),
       title: 'Telas',
       isGridview: false,
-      floatingActionButton: _floatingActionButton(context, ref),
+      onTap: _onTap(context, ref),
+      //floatingActionButton: _floatingActionButton(context, ref),
     );
   }
 
   List<Widget> _buildBody(
       List<Tela> telas, BuildContext context, WidgetRef ref) {
     return telas.map((tela) {
-      return _telaCard(tela, context,ref);
+      return _telaCard(tela, context, ref);
     }).toList();
   }
 
-  Card _telaCard(Tela tela, BuildContext context, WidgetRef ref) {
-    return Card(
+  Container _telaCard(Tela tela, BuildContext context, WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 5),
+            color: Theme.of(context).primaryColor.withOpacity(.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+          ),
+        ],
+      ),
       child: ListTile(
         title: Text(tela.nombre),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Precio por metro: ${tela.precxmen}'),
-            Text('Precio por mayor: ${tela.precxmay}'),
-            Text('Precio por rollo: ${tela.precxrollo}'),
-            Text('Precio de compra: ${tela.precxcompra}'),
+            Text('Precio por metro: ${tela.precxmen}Bs'),
+            Text('Precio por mayor: ${tela.precxmay}Bs'),
+            Text('Precio por rollo: ${tela.precxrollo}Bs'),
+            Text('Precio de compra: ${tela.precxcompra}Bs'),
           ],
         ),
         onTap: () {
@@ -46,7 +60,14 @@ class TelasScreen extends ConsumerWidget {
     );
   }
 
-  FloatingActionButton _floatingActionButton(BuildContext context, WidgetRef ref) {
+  Function _onTap(BuildContext context, WidgetRef ref) {
+    return () {
+      ref.read(telaProvider.notifier).nuevaTela();
+        context.go('/tela');
+    };
+  }
+  /* FloatingActionButton _floatingActionButton(
+      BuildContext context, WidgetRef ref) {
     return FloatingActionButton.extended(
       label: const Text('Agregar Tela'),
       onPressed: () {
@@ -55,5 +76,5 @@ class TelasScreen extends ConsumerWidget {
       },
       icon: const Icon(Icons.add),
     );
-  }
+  } */
 }

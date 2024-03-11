@@ -14,7 +14,7 @@ class SucursalesScreen extends ConsumerWidget {
     return Screen1(
       widget: _buildBody(sucursalesState.sucursales, context, ref, gSucursales),
       title: 'Sucursales',
-      isGridview: true,
+      isGridview: true,      
     );
   }
 

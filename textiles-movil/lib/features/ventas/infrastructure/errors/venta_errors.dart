@@ -1,4 +1,0 @@
-
-
-
-class VentaNotFound implements Exception {}

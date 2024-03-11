@@ -1,1 +1,0 @@
-export 'telas_repository_provider.dart';

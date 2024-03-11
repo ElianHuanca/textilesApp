@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
-//import 'package:textiles_app/features/telas/infrastructure/infrastructure.dart';
+import '../../infrastructure/infrastructure.dart';
 import '../../domain/domain.dart';
-import '../providers/providers.dart';
+import 'providers.dart';
 
 final telasProvider = StateNotifierProvider<TelasNotifier, TelasState>((ref) {
   final telasRepository = ref.watch(telasRepositoryProvider);
@@ -17,7 +17,7 @@ class TelasNotifier extends StateNotifier<TelasState> {
   final int idusuarios;
   TelasNotifier({required this.idusuarios, required this.telasRepository})
       : super(TelasState()) {
-    getTelas(idusuarios);
+    //getTelas(idusuarios);
   }
 
   Future getTelas(int idusuarios) async {
@@ -38,7 +38,26 @@ class TelasNotifier extends StateNotifier<TelasState> {
   Future<bool> createTela(Map<String, dynamic> telaLike) async {
     try {
       final tela = await telasRepository.createTela(telaLike, idusuarios);
-      state = state.copyWith(telas: [tela,...state.telas]);
+      state = state.copyWith(telas: [tela, ...state.telas]);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> updateTela(Map<String, dynamic> telaLike) async {
+    try {
+      final response =
+          await telasRepository.updateTela(telaLike, telaLike['id']);
+      if (!response) return false;
+      final Tela tela = TelaMapper.jsonToEntity(telaLike);
+      state = state.copyWith(
+          telas: state.telas
+              .map(
+                (element) => (element.id == tela.id) ? tela : element,
+              )
+              .toList());
+
       return true;
     } catch (e) {
       return false;
@@ -47,7 +66,8 @@ class TelasNotifier extends StateNotifier<TelasState> {
 
   Future<bool> deleteTela(int id) async {
     try {
-      telasRepository.deleteTela(id);
+      final response = await telasRepository.deleteTela(id);
+      if (!response) return false;
       state = state.copyWith(
           telas: state.telas.where((element) => element.id != id).toList());
       return true;
@@ -63,8 +83,8 @@ class TelasState {
 
   TelasState({
     this.isLoading = false,
-    this.telas = const [], // Quitamos la asignación aquí
-  }); /* : telas = telas ??
+    List<Tela>? telas, // Quitamos la asignación aquí
+  }) : telas = telas ??
             [              
               Tela(id: 1, nombre: 'Coshibo'),
               Tela(id: 2, nombre: 'Lino'),
@@ -76,7 +96,7 @@ class TelasState {
               Tela(id: 8, nombre: 'Licra'),
               Tela(id: 9, nombre: 'Spandex'),
               Tela(id: 10, nombre: 'Rayón'),
-            ];  */
+            ]; 
 
   TelasState copyWith({bool? isLoading, List<Tela>? telas}) {
     return TelasState(

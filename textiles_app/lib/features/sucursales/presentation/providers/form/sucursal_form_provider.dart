@@ -44,7 +44,7 @@ class SucursalFormNotifier extends StateNotifier<SucursalFormState> {
   }
 
   bool validador() {
-    return state.nombre == '' ? true : false;      
+    return state.nombre.isEmpty;      
   }
 
   Map<String, dynamic> stateToMap() {

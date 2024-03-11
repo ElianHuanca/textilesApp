@@ -1,16 +1,26 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 
-DataTable dataTableMap(
-    BuildContext context, List<Map<String, dynamic>> list, double total) {
-  return DataTable(
-      columns: _columns(context), columnSpacing: 8, rows: _rows(list, total));
+class DataTableMap extends StatelessWidget {
+  final List<Map<String, dynamic>> list;
+  final double total;
+  final double? ganancias;
+  const DataTableMap(
+      {super.key, required this.list, required this.total, this.ganancias});
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+        columns: _columns(context),
+        columnSpacing: 8,
+        rows: _rows(list, total, ganancias));
+  }
 }
 
 List<DataColumn> _columns(BuildContext context) => <DataColumn>[
       _column(context, 'Producto'),
-      _column(context, 'Cantidad'),
       _column(context, 'Precio'),
+      _column(context, 'Cantidad'),      
       _column(context, 'Total'),
     ];
 
@@ -24,7 +34,7 @@ DataColumn _column(BuildContext context, String texto) => DataColumn(
         ),
       ),
     );
-List<DataRow> _rows(List<Map<String, dynamic>> list, double total) {
+List<DataRow> _rows(List<Map<String, dynamic>> list, double total, double? ganancias) {
   return list.isEmpty
       ? [
           const DataRow(cells: <DataCell>[
@@ -39,16 +49,22 @@ List<DataRow> _rows(List<Map<String, dynamic>> list, double total) {
           ...list.map((det) {
             return DataRow(cells: <DataCell>[
               _cell(det['nombre'] ?? ''),
-              _cell('${det['cantidad']}mts'),
               _cell('${det['precio']}Bs'),
+              _cell('${det['cantidad']}mts'),              
               _cell('${det['total']}Bs'),
             ]);
           }).toList(),
-          DataRow(cells: <DataCell>[
+          DataRow(cells: <DataCell>[            
+            _cell(''),
+            _cell(''),
             _cellTotal('Total'),
-            _cell(''),
-            _cell(''),
             _cellTotal('$total Bs'),
+          ]),
+          DataRow(cells: <DataCell>[            
+            _cell(''),
+            _cell(''),
+            _cellTotal('Ganancias'),
+            _cellTotal('$ganancias Bs'),
           ])
         ];
 }

@@ -9,16 +9,23 @@ class VentasScreen extends ConsumerWidget {
   const VentasScreen({super.key});
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    final ventasState = ref.watch(ventasProvider);    
-    return Screen1(widget: _buildBody(ventasState.ventas,context,ref), title: 'Ventas', isGridview: true,);    
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ventasState = ref.watch(ventasProvider);
+    return Screen1(
+      widget: _buildBody(ventasState.ventas, context, ref),
+      title: 'Ventas',
+      isGridview: true,
+      backRoute: '/',
+    );
   }
 
-  List<Widget> _buildBody(List<Venta> ventas, BuildContext context,WidgetRef ref) {
+  List<Widget> _buildBody(
+      List<Venta> ventas, BuildContext context, WidgetRef ref) {
     return ([
       ...ventas.map((venta) {
+        final String fecha = changeFormatDate(venta.fecha);
         return ItemDashboard(
-          title: venta.fecha,
+          title: fecha,
           iconData: Icons.calendar_month_rounded,
           onTap: _onTap(context, ref, venta),
         );
@@ -26,7 +33,7 @@ class VentasScreen extends ConsumerWidget {
     ]);
   }
 
-  Function _onTap(BuildContext context,WidgetRef ref, Venta venta) {
+  Function _onTap(BuildContext context, WidgetRef ref, Venta venta) {
     return () {
       ref.read(ventaProvider.notifier).setVenta(venta);
       context.go('/det_ventas');
