@@ -38,7 +38,7 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
   }
 
   Future<bool> createSucursal(
-      Map<String, dynamic> sucursalLike, int idusuarios) async {
+      Map<String, dynamic> sucursalLike) async {
     try {
       final sucursal =
           await sucursalesRepository.createSucursal(sucursalLike, idusuarios);
@@ -52,15 +52,18 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
 
   Future<bool> updateSucursal(Map<String, dynamic> sucursalLike) async {
     try {
-      await sucursalesRepository.updateSucursal(sucursalLike, sucursalLike['id']);
-      final Sucursal sucursal = SucursalMapper.jsonToEntity(sucursalLike);
-      state = state.copyWith(
-          sucursales: state.sucursales
-              .map(
-                (element) => (element.id == sucursal.id) ? sucursal : element,
-              )
-              .toList());
-      return true;
+      final response =await sucursalesRepository.updateSucursal(sucursalLike, sucursalLike['id']);
+      if (response) {
+        final Sucursal sucursal = SucursalMapper.jsonToEntity(sucursalLike);
+        state = state.copyWith(
+            sucursales: state.sucursales
+                .map(
+                  (element) => (element.id == sucursal.id) ? sucursal : element,
+                )
+                .toList());
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }

@@ -24,9 +24,10 @@ class SucursalesDatasourceImpl implements SucursalesDatasource {
   @override
   Future<Sucursal> createSucursal(
       Map<String, dynamic> sucursalLike, int idusuarios) async {
-    try {      
+    try {
       sucursalLike.remove('id');
-      final response = await dio.post('/sucursales/$idusuarios', data: sucursalLike);
+      final response =
+          await dio.post('/sucursales/$idusuarios', data: sucursalLike);
       final sucursal = SucursalMapper.jsonToEntity(response.data);
       return sucursal;
     } catch (e) {
@@ -35,18 +36,20 @@ class SucursalesDatasourceImpl implements SucursalesDatasource {
   }
 
   @override
-  Future<void> updateSucursal(Map<String, dynamic> sucursalLike, int id) async{
+  Future<bool> updateSucursal(Map<String, dynamic> sucursalLike, int id) async {
     try {
-      await dio.put('/sucursales/$id', data: sucursalLike);            
+      final response = await dio.put('/sucursales/$id', data: sucursalLike);
+      return response.statusCode == 200;
     } catch (e) {
-      throw Exception();
+      throw Exception();      
     }
   }
 
   @override
-  Future<void> deleteSucursal(int id) async {
+  Future<bool> deleteSucursal(int id) async {
     try {
-      await dio.delete('/sucursales/$id');
+      final response= await dio.delete('/sucursales/$id');
+      return response.statusCode == 200;
     } catch (e) {
       throw Exception();
     }

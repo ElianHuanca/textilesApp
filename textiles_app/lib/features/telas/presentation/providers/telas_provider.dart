@@ -7,7 +7,7 @@ import '../providers/providers.dart';
 final telasProvider = StateNotifierProvider<TelasNotifier, TelasState>((ref) {
   final telasRepository = ref.watch(telasRepositoryProvider);
   return TelasNotifier(
-    idusuarios: ref.watch(authProvider).usuario?.id ?? 0,
+    idusuarios: ref.watch(authProvider).usuario!.id,
     telasRepository: telasRepository,
   );
 });
@@ -35,22 +35,10 @@ class TelasNotifier extends StateNotifier<TelasState> {
     state = state.copyWith(isLoading: false, telas: telas);
   }
 
-  Future<bool> createOrUpdateTela(Map<String, dynamic> telaLike) async {
+  Future<bool> createTela(Map<String, dynamic> telaLike) async {
     try {
-      final tela = await telasRepository.createUpdateTela(telaLike);
-      final isTelaInList = state.telas.any((element) => element.id == tela.id);
-
-      if (!isTelaInList) {
-        state = state.copyWith(telas: [...state.telas, tela]);
-        return true;
-      }
-
-      state = state.copyWith(
-          telas: state.telas
-              .map(
-                (element) => (element.id == tela.id) ? tela : element,
-              )
-              .toList());
+      final tela = await telasRepository.createTela(telaLike, idusuarios);
+      state = state.copyWith(telas: [tela,...state.telas]);
       return true;
     } catch (e) {
       return false;
@@ -75,7 +63,7 @@ class TelasState {
 
   TelasState({
     this.isLoading = false,
-    this.telas = const[], // Quitamos la asignación aquí
+    this.telas = const [], // Quitamos la asignación aquí
   }); /* : telas = telas ??
             [              
               Tela(id: 1, nombre: 'Coshibo'),

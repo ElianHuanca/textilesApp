@@ -19,6 +19,7 @@ class TelaScreen extends ConsumerWidget {
                 widget: _telaView(telaState.tela!, context, ref),
                 title: telaState.tela!.id == 0 ? 'Crear Tela' : 'Editar Tela',
                 isGridview: false,
+                backRoute: '/telas',
               ));
   }
 

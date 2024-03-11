@@ -1,31 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import '../../../domain/domain.dart';
 import '../providers.dart';
 
 final sucursalFormProvider = StateNotifierProvider.autoDispose
     .family<SucursalFormNotifier, SucursalFormState, Sucursal>((ref, sucursal) {
   final createCallback =ref.watch(sucursalesProvider.notifier).createSucursal;
+  final updateCallback = ref.watch(sucursalesProvider.notifier).updateSucursal;
   final deleteCallback = ref.watch(sucursalesProvider.notifier).deleteSucursal;
-  final int idusuarios = ref.watch(authProvider).usuario!.id;
+  //final int idusuarios = ref.watch(authProvider).usuario!.id;
   return SucursalFormNotifier(
     sucursal: sucursal,
     onCreateCallback: createCallback,
+    onUpdateCallback: updateCallback,
     onDeleteCallback: deleteCallback,
-    idusuarios: idusuarios,
+    //idusuarios: idusuarios,
   );
 });
 class SucursalFormNotifier extends StateNotifier<SucursalFormState> {
-  final Future<bool> Function(Map<String, dynamic>,int)?onCreateCallback;
+  final Future<bool> Function(Map<String, dynamic>)?onCreateCallback;
   final Future<bool> Function(Map<String, dynamic>)? onUpdateCallback;
   final Future<bool> Function(int id)? onDeleteCallback;
-  final int idusuarios;
+  //final int idusuarios;
   SucursalFormNotifier({
     this.onCreateCallback,
     this.onUpdateCallback,
     this.onDeleteCallback,
     required Sucursal sucursal,
-    required this.idusuarios,
+    //required this.idusuarios,
   }) : super(SucursalFormState(
           id: sucursal.id,
           nombre: sucursal.nombre,
@@ -36,7 +37,7 @@ class SucursalFormNotifier extends StateNotifier<SucursalFormState> {
     if(validador()) return false;
     final sucursalLike = stateToMap();
     try {
-      return await onCreateCallback!(sucursalLike, idusuarios);
+      return await onCreateCallback!(sucursalLike);
     } catch (e) {
       return false;
     }
@@ -52,7 +53,7 @@ class SucursalFormNotifier extends StateNotifier<SucursalFormState> {
       'nombre': state.nombre,
     };
   }
-  Future<bool> onFormUpdate() async {
+  Future<bool> onFormUpdate() async{
     if (onUpdateCallback == null) return false;
     if(validador()) return false;
     final sucursalLike = stateToMap();

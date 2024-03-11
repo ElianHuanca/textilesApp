@@ -14,7 +14,6 @@ class TelasDatasourceImpl implements TelasDatasource {
   @override
   Future<List<Tela>> getTelas(int idusuarios) async {
     final response = await dio.get<List>('/telas/$idusuarios');
-    print(response.data);
     final List<Tela> telas = [];
     for (final tela in response.data ?? []) {
       telas.add(TelaMapper.jsonToEntity(tela));
@@ -23,16 +22,10 @@ class TelasDatasourceImpl implements TelasDatasource {
   }
 
   @override
-  Future<Tela> createUpdateTela(Map<String, dynamic> telaLike) async {
+  Future<Tela> createTela(Map<String, dynamic> telaLike, int idusuarios) async {
     try {
-      final int? telaId = telaLike['id'];
-      final String method = (telaId == 0) ? 'POST' : 'PUT';
-      final String url = (telaId == 0) ? '/telas' : '/telas/$telaId';
-
       telaLike.remove('id');
-
-      final response = await dio.request(url,
-          data: telaLike, options: Options(method: method));
+      final response = await dio.post('/telas/$idusuarios', data: telaLike);
 
       final tela = TelaMapper.jsonToEntity(response.data);
       return tela;
@@ -42,12 +35,22 @@ class TelasDatasourceImpl implements TelasDatasource {
   }
 
   @override
-  Future<void> deleteTela(int id) async {
+  Future<bool> updateTela(Map<String, dynamic> telaLike, int id) async {
     try {
-      await dio.delete('/telas/$id');
+      final response = await dio.put('/telas/$id', data: telaLike);
+      return response.statusCode == 200;
     } catch (e) {
       throw Exception();
     }
   }
-  
+
+  @override
+  Future<bool> deleteTela(int id) async {
+    try {
+      final response = await dio.delete('/telas/$id');
+      return response.statusCode == 200;
+    } catch (e) {
+      throw Exception();
+    }
+  }
 }

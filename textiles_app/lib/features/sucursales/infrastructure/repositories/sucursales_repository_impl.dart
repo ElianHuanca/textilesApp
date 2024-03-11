@@ -16,12 +16,12 @@ class SucursalesRepositoryImpl implements SucursalesRepository {
   }
 
   @override
-  Future<void> updateSucursal(Map<String, dynamic> sucursalLike, int id) {
+  Future<bool> updateSucursal(Map<String, dynamic> sucursalLike, int id) {
     return datasource.updateSucursal(sucursalLike, id);
   }
   
   @override
-  Future<void> deleteSucursal(int id) {
+  Future<bool> deleteSucursal(int id) {
     return datasource.deleteSucursal(id);
   }
   

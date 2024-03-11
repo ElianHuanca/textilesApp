@@ -11,12 +11,17 @@ class TelasRepositoryImpl implements TelasRepository {
   }
   
   @override
-  Future<Tela> createUpdateTela(Map<String, dynamic> telaLike) {
-    return datasource.createUpdateTela(telaLike);
+  Future<Tela> createTela(Map<String, dynamic> telaLike,int idusuarios) {
+    return datasource.createTela(telaLike, idusuarios);
   }
   
   @override
-  Future<void> deleteTela(int id) {   
+  Future<bool> updateTela(Map<String, dynamic> telaLike,int id) {   
+    return datasource.updateTela(telaLike,id);
+  }
+
+  @override
+  Future<bool> deleteTela(int id) {   
     return datasource.deleteTela(id);
   }
 }
