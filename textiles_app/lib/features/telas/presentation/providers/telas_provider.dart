@@ -17,7 +17,7 @@ class TelasNotifier extends StateNotifier<TelasState> {
   final int idusuarios;
   TelasNotifier({required this.idusuarios, required this.telasRepository})
       : super(TelasState()) {
-    //getTelas(idusuarios);
+    getTelas(idusuarios);
   }
 
   Future getTelas(int idusuarios) async {
@@ -81,10 +81,10 @@ class TelasState {
   final bool isLoading;
   final List<Tela> telas;
 
-  TelasState({
-    this.isLoading = false,
-    List<Tela>? telas, // Quitamos la asignación aquí
-  }) : telas = telas ??
+  TelasState(
+      {this.isLoading = false,
+      this.telas = const [] // Quitamos la asignación aquí
+      }); /* : telas = telas ??
             [              
               Tela(id: 1, nombre: 'Coshibo'),
               Tela(id: 2, nombre: 'Lino'),
@@ -96,7 +96,7 @@ class TelasState {
               Tela(id: 8, nombre: 'Licra'),
               Tela(id: 9, nombre: 'Spandex'),
               Tela(id: 10, nombre: 'Rayón'),
-            ]; 
+            ];  */
 
   TelasState copyWith({bool? isLoading, List<Tela>? telas}) {
     return TelasState(

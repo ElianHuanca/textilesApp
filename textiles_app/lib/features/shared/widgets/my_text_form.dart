@@ -21,13 +21,14 @@ class MiTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //controller?.text = initialValue ?? '';
     return Expanded(
       flex: flex ?? 1,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: TextFormField(
-            initialValue: initialValue ?? '',
+            initialValue: initialValue,
             controller: controller,
             keyboardType: keyboardType ?? TextInputType.text,
             onChanged: onChanged,

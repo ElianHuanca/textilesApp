@@ -67,7 +67,7 @@ final goRouterProvider = Provider((ref) {
 
       GoRoute(
         path: '/det_venta',
-        builder: (context, state) => const DetVenta(),
+        builder: (context, state) => DetVenta(),
       ),
     ],
     redirect: (context, state) {

@@ -20,7 +20,7 @@ class DataTableMap extends StatelessWidget {
 List<DataColumn> _columns(BuildContext context) => <DataColumn>[
       _column(context, 'Producto'),
       _column(context, 'Precio'),
-      _column(context, 'Cantidad'),      
+      _column(context, 'Cantidad'),
       _column(context, 'Total'),
     ];
 
@@ -34,7 +34,8 @@ DataColumn _column(BuildContext context, String texto) => DataColumn(
         ),
       ),
     );
-List<DataRow> _rows(List<Map<String, dynamic>> list, double total, double? ganancias) {
+List<DataRow> _rows(
+    List<Map<String, dynamic>> list, double total, double? ganancias) {
   return list.isEmpty
       ? [
           const DataRow(cells: <DataCell>[
@@ -50,22 +51,23 @@ List<DataRow> _rows(List<Map<String, dynamic>> list, double total, double? ganan
             return DataRow(cells: <DataCell>[
               _cell(det['nombre'] ?? ''),
               _cell('${det['precio']}Bs'),
-              _cell('${det['cantidad']}mts'),              
+              _cell('${det['cantidad']}mts'),
               _cell('${det['total']}Bs'),
             ]);
           }).toList(),
-          DataRow(cells: <DataCell>[            
+          DataRow(cells: <DataCell>[
             _cell(''),
             _cell(''),
             _cellTotal('Total'),
             _cellTotal('$total Bs'),
           ]),
-          DataRow(cells: <DataCell>[            
-            _cell(''),
-            _cell(''),
-            _cellTotal('Ganancias'),
-            _cellTotal('$ganancias Bs'),
-          ])
+          if (ganancias != null) // Agregar las ganancias solo si no son nulas
+            DataRow(cells: <DataCell>[
+              _cell(''),
+              _cell(''),
+              _cellTotal('Ganancias'),
+              _cellTotal('$ganancias Bs'),
+            ]),
         ];
 }
 

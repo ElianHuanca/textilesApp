@@ -27,15 +27,15 @@ const ObtenerDetVentas = async (req, res) => {
 
         const detallesVenta = await DetVenta.findAll({
             where: { idventas },
-            include: { 
-                model: Tela, 
+            include: {
+                model: Tela,
                 attributes: [], // Excluir todos los atributos de Tela
-            }, 
+            },
             attributes: ['id', 'cantidad', 'precio', 'total', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
             order: [['id', 'DESC']],
             raw: true // Obtener resultados en formato plano (JSON)
         });
-        
+
 
 
         res.json(detallesVenta);
@@ -50,20 +50,24 @@ const RegistrarDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
         const ventas = req.body;
-        ventas.forEach(async venta => {
-            await DetVenta.create({
+        const detallesVentasCreados = [];
+        for (const venta of ventas) {
+            const detVenta = await DetVenta.create({
                 idventas: idventas,
                 idtelas: venta.idtelas,
                 cantidad: venta.cantidad,
                 precio: venta.precio,
                 total: venta.total
             });
-        });
+            detallesVentasCreados.push(detVenta); 
+        }        
+        res.status(200).json(detallesVentasCreados);
     } catch (error) {
         console.error('Error al registrar detalle venta:', error);
         res.status(500).json({ error: 'Error al registrar detalle venta', message: error.message });
     }
 };
+
 
 const eliminarDetVenta = async (req, res) => {
     try {

@@ -67,13 +67,13 @@ class _LoginForm extends ConsumerWidget {
 
     final textStyles = Theme.of(context).textTheme;
 
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
           const SizedBox(height: 50),
           Text('Login', style: textStyles.titleLarge),
-          const SizedBox(height: 90),
+          const SizedBox(height: 50),
           CustomTextFormField(
             label: 'Correo',
             keyboardType: TextInputType.emailAddress,

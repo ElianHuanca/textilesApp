@@ -7,18 +7,15 @@ final detalleVentaFormProvider =
         (ref) {
   final createCallback =
       ref.watch(detalleVentasProvider.notifier).createDetVenta;
-  final idventas = ref.watch(ventaProvider).venta?.id ?? 0;
   return DetalleVentaFormNotifier(
-    onSubmitCallback: createCallback,
-    idventas: idventas,
+    onSubmitCallback: createCallback
   );
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike, int)?
-      onSubmitCallback;
-  final int? idventas;
-  DetalleVentaFormNotifier({this.onSubmitCallback, this.idventas})
+  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
+      onSubmitCallback;  
+  DetalleVentaFormNotifier({this.onSubmitCallback, })
       : super(DetalleVentaFormState());
 
   addDetalleVenta() {
@@ -81,7 +78,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     try {
       if (onSubmitCallback == null) return false;
       if (state.detVentas.isEmpty) return false;
-      return await onSubmitCallback!(state.detVentas, idventas!);
+      return await onSubmitCallback!(state.detVentas);
     } catch (e) {
       return false;
     }

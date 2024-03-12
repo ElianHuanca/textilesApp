@@ -7,17 +7,17 @@ final detalleVentasProvider =
   final detalleVentasRepository = ref.watch(detalleVentasRepositoryProvider);
   return DetalleVentasNotifier(
       detalleVentasRepository: detalleVentasRepository,
-      idVentas: ref.watch(ventaProvider).venta?.id ?? 0);
+      idventas: ref.watch(ventaProvider).venta?.id ?? 0);
 });
 
 class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   final DetalleVentasRepository detalleVentasRepository;
-  final int idVentas;
+  final int idventas;
 
   DetalleVentasNotifier(
-      {required this.idVentas, required this.detalleVentasRepository})
+      {required this.idventas, required this.detalleVentasRepository})
       : super(DetalleVentasState()) {
-    getDetVenta(idVentas);
+    getDetVenta(idventas);
   }
 
   Future getDetVenta(int idVenta) async {
@@ -36,7 +36,7 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
     state = state.copyWith(isLoading: false, detalleVentas: detalleVentas);
   }
 
-  Future<bool> createDetVenta(List<Map<String, dynamic>> detalleVentasLike, int idventas) async {
+  Future<bool> createDetVenta(List<Map<String, dynamic>> detalleVentasLike) async {
     try {
       final result =
           await detalleVentasRepository.createDetalleVenta(detalleVentasLike, idventas);
