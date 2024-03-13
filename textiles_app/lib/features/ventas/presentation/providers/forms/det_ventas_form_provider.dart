@@ -71,8 +71,8 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     final detVentaToRemove = state.detVentas[index];
     state = state.copyWith(
         total: state.total -
-            double.parse(detVentaToRemove['cantidad']) *
-                double.parse(detVentaToRemove['precio']));
+            detVentaToRemove['cantidad'] *
+                detVentaToRemove['precio']);
     state.detVentas.removeAt(index);
   }
 

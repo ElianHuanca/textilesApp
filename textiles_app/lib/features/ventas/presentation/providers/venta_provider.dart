@@ -22,7 +22,7 @@ class VentaNotifier extends StateNotifier<VentaState> {
 
   Future<void> actualizarVenta() async {
     final venta = await onGetVenta!(state.venta!.id);
-    setVenta(venta);
+    await setVenta(venta);
   }
 }
 

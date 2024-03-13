@@ -43,8 +43,8 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
     try {
       //final result =
           await detalleVentasRepository.createDetalleVenta(detalleVentasLike, idventas);
-      getDetVenta(idventas);
-      actualizarVenta!();
+      await getDetVenta(idventas);
+      await actualizarVenta!();
       return true;
     } catch (e) {
       return false;

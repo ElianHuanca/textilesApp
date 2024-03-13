@@ -3,7 +3,7 @@ const Venta = require('../models/venta');
 const ObtenerVenta = async (req, res) => {
     try {
         const { id } = req.params;
-        const venta = await Venta.findAll({
+        const venta = await Venta.findOne({
             where: { id },            
         });
         res.json(venta);
@@ -49,8 +49,7 @@ const RegistrarVenta = async (req, res) => {
 const RegistrarVentaAhora = async (req, res) => {
     try {
         const { idsucursales } = req.params;
-        const fechaActual = new Date();
-
+        const fechaActual = new Date();        
         const ventaExistente = await Venta.findOne({
             where: {
                 idsucursales,

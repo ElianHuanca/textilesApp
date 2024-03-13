@@ -46,9 +46,31 @@ class VentasNotifier extends StateNotifier<VentasState> {
     state = state.copyWith(isLoading: false, ventas: ventas);
   }
 
-  Future<Venta> getVenta(int id)async{      
+  Future<Venta> getVenta(int id) async {
     final venta = await ventasRepository.getVenta(id);
+    actualizarVenta(venta);
     return venta;
+  }
+
+  actualizarVenta(Venta ventaActualizada) async {
+    // Encuentra el índice de la venta correspondiente en la lista de ventas
+    int indice =
+        state.ventas.indexWhere((venta) => venta.id == ventaActualizada.id);
+
+    // Verifica si se encontró la venta
+    if (indice != -1) {
+      // Crea una copia de la lista de ventas
+      List<Venta> nuevasVentas = List.from(state.ventas);
+
+      // Reemplaza la venta existente con la venta actualizada
+      nuevasVentas[indice] = ventaActualizada;
+
+      // Actualiza el estado con la nueva lista de ventas
+      state = state.copyWith(ventas: nuevasVentas);
+    } else {
+      // Maneja el caso donde no se encontró la venta
+      print('Venta con ID ${ventaActualizada.id} no encontrada');
+    }
   }
 }
 
