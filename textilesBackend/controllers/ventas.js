@@ -1,5 +1,18 @@
 const Venta = require('../models/venta');
 
+const ObtenerVenta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const venta = await Venta.findAll({
+            where: { id },            
+        });
+        res.json(venta);
+    } catch (error) {
+        console.error('Error al obtener ventas:', error);
+        res.status(500).json({ error: 'Error al obtener ventas', message: error.message });
+    }
+};
+
 const ObtenerVentas = async (req, res) => {
     try {
         const { idsucursales } = req.params;
@@ -80,6 +93,7 @@ const EliminarVenta0 = async (req, res) => {
 }
 
 module.exports = {
+    ObtenerVenta,
     ObtenerVentas,
     RegistrarVenta,
     RegistrarVentaAhora,

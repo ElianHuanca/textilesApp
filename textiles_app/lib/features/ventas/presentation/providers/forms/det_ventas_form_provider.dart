@@ -7,15 +7,17 @@ final detalleVentaFormProvider =
         (ref) {
   final createCallback =
       ref.watch(detalleVentasProvider.notifier).createDetVenta;
+  
   return DetalleVentaFormNotifier(
     onSubmitCallback: createCallback
+    
   );
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
-      onSubmitCallback;  
-  DetalleVentaFormNotifier({this.onSubmitCallback, })
+  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?onSubmitCallback;  
+  
+  DetalleVentaFormNotifier({this.onSubmitCallback })
       : super(DetalleVentaFormState());
 
   addDetalleVenta() {

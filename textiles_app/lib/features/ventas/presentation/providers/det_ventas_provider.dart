@@ -5,17 +5,20 @@ import 'providers.dart';
 final detalleVentasProvider =
     StateNotifierProvider<DetalleVentasNotifier, DetalleVentasState>((ref) {
   final detalleVentasRepository = ref.watch(detalleVentasRepositoryProvider);
+  final actualizarVenta = ref.watch(ventaProvider.notifier).actualizarVenta;
   return DetalleVentasNotifier(
       detalleVentasRepository: detalleVentasRepository,
-      idventas: ref.watch(ventaProvider).venta?.id ?? 0);
+      idventas: ref.watch(ventaProvider).venta?.id ?? 0
+      ,actualizarVenta: actualizarVenta);
 });
 
 class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
+  final Future<void> Function()? actualizarVenta;      
   final DetalleVentasRepository detalleVentasRepository;
   final int idventas;
 
   DetalleVentasNotifier(
-      {required this.idventas, required this.detalleVentasRepository})
+      {required this.idventas, required this.detalleVentasRepository,this.actualizarVenta})
       : super(DetalleVentasState()) {
     getDetVenta(idventas);
   }
@@ -38,9 +41,10 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
 
   Future<bool> createDetVenta(List<Map<String, dynamic>> detalleVentasLike) async {
     try {
-      final result =
+      //final result =
           await detalleVentasRepository.createDetalleVenta(detalleVentasLike, idventas);
-      state = state.copyWith(detalleVentas: [...result,...state.detalleVentas]);
+      getDetVenta(idventas);
+      actualizarVenta!();
       return true;
     } catch (e) {
       return false;

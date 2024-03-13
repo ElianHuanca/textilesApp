@@ -4,18 +4,25 @@ import 'providers.dart';
 
 final ventaProvider = StateNotifierProvider<VentaNotifier,VentaState>((ref){
   final ventasRepository = ref.watch(ventasRepositoryProvider);
-  return VentaNotifier(ventasRepository: ventasRepository);
+  final onGetVenta = ref.watch(ventasProvider.notifier).getVenta;
+  return VentaNotifier(ventasRepository: ventasRepository, onGetVenta: onGetVenta);
 });
 
 class VentaNotifier extends StateNotifier<VentaState> {
   final VentasRepository ventasRepository;
-  VentaNotifier({required this.ventasRepository})
+  final Future<Venta> Function(int id)? onGetVenta;
+  VentaNotifier({this.onGetVenta,required this.ventasRepository})
       : super(VentaState());
 
   Future<void> setVenta( Venta venta ) async {
     state = state.copyWith(
       venta: venta
     );
+  }
+
+  Future<void> actualizarVenta() async {
+    final venta = await onGetVenta!(state.venta!.id);
+    setVenta(venta);
   }
 }
 
