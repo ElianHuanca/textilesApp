@@ -1,25 +1,6 @@
 const DetVenta = require('../models/det_venta');
 const Tela = require('../models/tela');
 const sequelize = require('../database/database');
-/* const pool = require('../database/database');
-const ObtenerDetVentas = async (req, res) => {
-    try {
-        const { idventas } = req.params;
-        const query = `
-        SELECT det_ventas.*, telas.nombre
-        FROM det_ventas
-        INNER JOIN telas ON det_ventas.idtelas = telas.id
-        WHERE det_ventas.idventas = $1
-        ORDER BY det_ventas.id DESC;
-        `;
-        const response = await pool.query(query, [idventas]); // Pasar los parámetros como un array
-        res.json(response[0]);
-    } catch (error) {
-        console.error('Error al obtener detalle venta:', error);
-        res.status(500).json({ error: 'Error al obtener detalle venta', message: error.message });
-    }
-}; */
-
 
 const ObtenerDetVentas = async (req, res) => {
     try {
