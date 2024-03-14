@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:dio/dio.dart';
 import 'package:textiles_app/config/config.dart';
 import 'package:textiles_app/features/ventas/domain/domain.dart';

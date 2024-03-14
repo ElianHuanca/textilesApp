@@ -36,8 +36,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
     DateTime today = DateTime(now.year, now.month, now.day);
     DateTime ventaDate = DateTime.parse(ventas[0].fecha);
     DateTime ventaDateOnly =
-        DateTime(ventaDate.year, ventaDate.month, ventaDate.day);
-    print(today.isAfter(ventaDateOnly));
+        DateTime(ventaDate.year, ventaDate.month, ventaDate.day);    
     if (today.isAfter(ventaDateOnly)) {
       final venta = await ventasRepository.createVentaAhora(idsucursales);
       ventas.insert(0, venta);
@@ -67,10 +66,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
       // Actualiza el estado con la nueva lista de ventas
       state = state.copyWith(ventas: nuevasVentas);
-    } else {
-      // Maneja el caso donde no se encontró la venta
-      print('Venta con ID ${ventaActualizada.id} no encontrada');
-    }
+    } 
   }
 }
 

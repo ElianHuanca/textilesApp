@@ -31,8 +31,7 @@ class SucursalNotifier extends StateNotifier<SucursalState> {
   }
 
   Future<void> setSucursal(Sucursal sucursal) async {
-    state = state.copyWith(isLoading: false, sucursal: sucursal);
-    print(state.sucursal!.nombre);
+    state = state.copyWith(isLoading: false, sucursal: sucursal);    
   }
 }
 

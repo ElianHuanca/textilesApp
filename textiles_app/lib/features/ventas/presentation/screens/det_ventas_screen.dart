@@ -47,7 +47,7 @@ class DetVentas extends ConsumerWidget {
       title: fecha,
       isGridview: false,
       backRoute: '/ventas',
-      onTap: () => {context.go('/det_venta'), print('clickeo')},
+      onTap: () => {context.go('/det_venta')},
     );
   }
 
