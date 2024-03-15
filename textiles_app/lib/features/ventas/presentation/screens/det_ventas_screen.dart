@@ -40,12 +40,14 @@ class DetVentas extends ConsumerWidget {
             DataTableMap(
                 list: detalleVentas,
                 total: venta.total,
-                ganancias: venta.ganancias))
+                ganancias: venta.ganancias, 
+                detventas: true             
+                ))
       ],
       title: fecha,
       isGridview: false,
       backRoute: '/ventas',
-      onTap: () => {context.go('/det_venta'), print('clickeo')},
+      onTap: () => {context.go('/det_venta')},
     );
   }
 

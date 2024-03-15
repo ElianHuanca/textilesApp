@@ -3,20 +3,25 @@ import '../../domain/domain.dart';
 import 'providers.dart';
 
 final ventaProvider = StateNotifierProvider<VentaNotifier,VentaState>((ref){
-  final ventasRepository = ref.watch(ventasRepositoryProvider);
+  final ventasRepository = ref.watch(ventasRepositoryProvider);  
   return VentaNotifier(ventasRepository: ventasRepository);
 });
 
 class VentaNotifier extends StateNotifier<VentaState> {
-  final VentasRepository ventasRepository;
+  final VentasRepository ventasRepository;  
   VentaNotifier({required this.ventasRepository})
       : super(VentaState());
 
-  Future<void> setVenta( Venta venta ) async {
+  Venta getVenta() {
+    return state.venta!;
+  }
+
+  void setVenta( Venta venta ) {
     state = state.copyWith(
       venta: venta
     );
   }
+
 }
 
 class VentaState {  

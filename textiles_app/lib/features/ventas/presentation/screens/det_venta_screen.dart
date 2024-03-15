@@ -96,7 +96,7 @@ class DetVenta extends ConsumerWidget {
         thickness: 1,
       ),
       DataTableMap(
-          list: detalleVentaForm.detVentas, total: detalleVentaForm.total),
+          list: detalleVentaForm.detVentas, total: detalleVentaForm.total,detventas: false),
       Container(
           padding: const EdgeInsets.all(12.0),
           child: MaterialButtonWidget(

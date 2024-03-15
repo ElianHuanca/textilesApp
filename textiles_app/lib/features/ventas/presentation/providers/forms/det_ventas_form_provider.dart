@@ -7,58 +7,44 @@ final detalleVentaFormProvider =
         (ref) {
   final createCallback =
       ref.watch(detalleVentasProvider.notifier).createDetVenta;
-  return DetalleVentaFormNotifier(
-    onSubmitCallback: createCallback
-  );
+
+  return DetalleVentaFormNotifier(onSubmitCallback: createCallback);
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
-      onSubmitCallback;  
-  DetalleVentaFormNotifier({this.onSubmitCallback, })
+      onSubmitCallback;
+
+  DetalleVentaFormNotifier({this.onSubmitCallback})
       : super(DetalleVentaFormState());
 
   addDetalleVenta() {
     if (state.idtelas == 0) return;
     if (double.tryParse(state.cantidad) == null) return;
     if (double.tryParse(state.precio) == null) return;
+    if (double.parse(state.precio) <= 0) return;
+    if (double.parse(state.precio) < state.precxcompra) return;
 
-    final index = state.detVentas
-        .indexWhere((element) => element['idtelas'] == state.idtelas);
+    final ganancias = state.precxcompra == 0
+        ? 0
+        : (double.parse(state.precio) - state.precxcompra)*double.parse(state.cantidad);
 
-    if (index != -1) {
-      final detVentaToUpdate = state.detVentas[index];
-      state = state.copyWith(
-          total: state.total -
-              double.parse(detVentaToUpdate['cantidad']) *
-                  double.parse(detVentaToUpdate['precio']));
-      final updatedDetVenta = {
-        ...detVentaToUpdate,
-        'cantidad': double.parse(state.cantidad),
-        'precio': double.parse(state.precio),
-        'total': double.parse(state.cantidad) * double.parse(state.precio),
-      };
-      state.detVentas[index] = updatedDetVenta;
-    } else {
-      final detVentaLike = {
-        'idtelas': state.idtelas,
-        'nombre': state.nombre,
-        'cantidad': double.parse(state.cantidad),
-        'precio': double.parse(state.precio),
-        'total': double.parse(state.cantidad) * double.parse(state.precio),
-      };
-      state = state.copyWith(
-        detVentas: [detVentaLike,...state.detVentas],
-      );
-    }
+    final detVentaLike = {
+      'idtelas': state.idtelas,
+      'nombre': state.nombre,
+      'cantidad': double.parse(state.cantidad),
+      'precio': double.parse(state.precio),
+      'total': double.parse(state.cantidad) * double.parse(state.precio),
+      'ganancias': ganancias
+    };
 
     state = state.copyWith(
+      detVentas: [detVentaLike, ...state.detVentas],
       total: state.total +
-          double.parse(state.cantidad) * double.parse(state.precio),
+          double.parse(state.cantidad) * double.parse(state.precio),      
+      precio: '',
+      cantidad: '',
     );
-
-    onPrecioChanged('');
-    onCantidadChanged('');
     return;
   }
 
@@ -68,9 +54,8 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     if (index == -1) return;
     final detVentaToRemove = state.detVentas[index];
     state = state.copyWith(
-        total: state.total -
-            double.parse(detVentaToRemove['cantidad']) *
-                double.parse(detVentaToRemove['precio']));
+        total: state.total - detVentaToRemove['cantidad'] * detVentaToRemove['precio']);
+        
     state.detVentas.removeAt(index);
   }
 
@@ -107,20 +92,36 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
       cantidad: value,
     );
   }
+
+  void onGananciasChanged(double value) {
+    state = state.copyWith(
+      ganancias: value,
+    );
+  }
+
+  void onPrecxCompraChanged(double value) {
+    state = state.copyWith(
+      precxcompra: value,
+    );
+  }
 }
 
 class DetalleVentaFormState {
   final bool isFormValid;
   final int idtelas;
   final String nombre;
+  final double precxcompra;
   final String cantidad;
   final String precio;
   final double total;
+  final double ganancias;
   final List<Map<String, dynamic>> detVentas;
 
   DetalleVentaFormState(
       {this.isFormValid = false,
       this.idtelas = 0,
+      this.precxcompra = 0,
+      this.ganancias = 0,
       this.cantidad = '',
       this.precio = '',
       this.nombre = '',
@@ -135,6 +136,8 @@ class DetalleVentaFormState {
           String? nombre,
           double? total,
           List<Map<String, dynamic>>? detVentas,
+          double? ganancias,
+          double? precxcompra,
           TextEditingController? controller}) =>
       DetalleVentaFormState(
         isFormValid: isFormValid ?? this.isFormValid,
@@ -144,5 +147,7 @@ class DetalleVentaFormState {
         detVentas: detVentas ?? this.detVentas,
         nombre: nombre ?? this.nombre,
         total: total ?? this.total,
+        ganancias: ganancias ?? this.ganancias,
+        precxcompra: precxcompra ?? this.precxcompra,
       );
 }

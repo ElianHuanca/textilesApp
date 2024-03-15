@@ -34,5 +34,13 @@ class VentasDatasourceImpl extends VentasDatasource {
     } catch (e) {
       throw Exception('Error al crear venta');
     }
+  }
+  
+  @override
+  Future<bool> updateVenta(Map<String, dynamic> venta, int id) {
+    try{
+    final response = dio.put('/ventas/$id', data: venta);
+    }catch{}
   }  
+  
 }

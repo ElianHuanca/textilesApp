@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:textiles_app/features/ventas/domain/domain.dart';
 
 
@@ -17,7 +19,4 @@ class DetalleVentasRepositoryImpl extends DetalleVentasRepository {
   Future<List<DetalleVenta>> createDetalleVenta(List<Map<String, dynamic>> detalleVentasLike,int idventas) {
     return datasource.createDetalleVenta(detalleVentasLike, idventas);
   }
-
-
-
 }

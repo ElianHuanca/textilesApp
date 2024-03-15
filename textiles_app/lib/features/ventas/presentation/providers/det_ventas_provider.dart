@@ -5,19 +5,34 @@ import 'providers.dart';
 final detalleVentasProvider =
     StateNotifierProvider<DetalleVentasNotifier, DetalleVentasState>((ref) {
   final detalleVentasRepository = ref.watch(detalleVentasRepositoryProvider);
+  final setVenta = ref.watch(ventaProvider.notifier).setVenta;
+  final obtenerVenta = ref.watch(ventaProvider.notifier).getVenta;
+  final actualizaVenta = ref.watch(ventasProvider.notifier).actualizarVenta;
   return DetalleVentasNotifier(
+      actualizarVenta: actualizaVenta,
       detalleVentasRepository: detalleVentasRepository,
-      idventas: ref.watch(ventaProvider).venta?.id ?? 0);
+      //idventas: ref.watch(ventaProvider).venta?.id ?? 0,
+      setVenta: setVenta,
+      getVenta: obtenerVenta);
 });
 
 class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
+  final Function(Venta)? actualizarVenta;
+  final Function(Venta)? setVenta;
+  final Function? getVenta;
+
   final DetalleVentasRepository detalleVentasRepository;
-  final int idventas;
+  //final int idventas;
 
   DetalleVentasNotifier(
-      {required this.idventas, required this.detalleVentasRepository})
+      {
+      //required this.idventas,
+      this.actualizarVenta,      
+      required this.detalleVentasRepository,
+      this.getVenta,
+      this.setVenta})
       : super(DetalleVentasState()) {
-    getDetVenta(idventas);
+    getDetVenta(getVenta!().id);
   }
 
   Future getDetVenta(int idVenta) async {
@@ -36,11 +51,23 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
     state = state.copyWith(isLoading: false, detalleVentas: detalleVentas);
   }
 
-  Future<bool> createDetVenta(List<Map<String, dynamic>> detalleVentasLike) async {
+  Future<bool> createDetVenta(
+      List<Map<String, dynamic>> detalleVentasLike) async {
     try {
-      final result =
-          await detalleVentasRepository.createDetalleVenta(detalleVentasLike, idventas);
-      state = state.copyWith(detalleVentas: [...result,...state.detalleVentas]);
+      final Venta venta = getVenta!();
+      
+      for (var detalle in detalleVentasLike) {
+        venta.total += detalle['total'] ?? 0.0;
+        venta.ganancias += detalle['ganancia'] ?? 0.0;
+      }
+      setVenta!(venta);
+      actualizarVenta!(venta);
+
+      final response = await detalleVentasRepository.createDetalleVenta(detalleVentasLike, venta.id);
+
+
+      state = state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);
+
       return true;
     } catch (e) {
       return false;
