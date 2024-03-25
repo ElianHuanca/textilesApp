@@ -122,15 +122,13 @@ class DetalleVentaFormState {
       this.detVentas = const [],
       this.total = 0});
 
-  DetalleVentaFormState copyWith({
-    bool? isFormValid,
+  DetalleVentaFormState copyWith({    
     int? idtelas,
     String? cantidad,
     String? precio,
     String? nombre,
     double? total,
     List<Map<String, dynamic>>? detVentas,
-    double? ganancias,
     double? precxcompra,
   }) =>
       DetalleVentaFormState(

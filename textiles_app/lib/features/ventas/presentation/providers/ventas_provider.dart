@@ -66,7 +66,7 @@ class VentasState {
   });
 
   VentasState copyWith(
-          {bool? isLoading, List<Venta>? ventas, Venta? selectedVenta}) =>
+          {bool? isLoading, List<Venta>? ventas}) =>
       VentasState(
         isLoading: isLoading ?? this.isLoading,
         ventas: ventas ?? this.ventas,

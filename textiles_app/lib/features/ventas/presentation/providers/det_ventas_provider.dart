@@ -10,8 +10,7 @@ final detalleVentasProvider =
   final actualizaVenta = ref.watch(ventasProvider.notifier).actualizarVenta;
   return DetalleVentasNotifier(
       actualizarVenta: actualizaVenta,
-      detalleVentasRepository: detalleVentasRepository,
-      //idventas: ref.watch(ventaProvider).venta?.id ?? 0,
+      detalleVentasRepository: detalleVentasRepository,      
       setVenta: setVenta,
       getVenta: obtenerVenta);
 });
@@ -20,14 +19,11 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   final Function(Venta)? actualizarVenta;
   final Function(Venta)? setVenta;
   final Function? getVenta;
-
-  final DetalleVentasRepository detalleVentasRepository;
-  //final int idventas;
+  final DetalleVentasRepository detalleVentasRepository;  
 
   DetalleVentasNotifier(
-      {
-      //required this.idventas,
-      this.actualizarVenta,      
+      {    
+      this.actualizarVenta,
       required this.detalleVentasRepository,
       this.getVenta,
       this.setVenta})
@@ -55,19 +51,25 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
       List<Map<String, dynamic>> detalleVentasLike) async {
     try {
       final Venta venta = getVenta!();
-      
+      double total = 0;
+      double ganancias = 0;
       for (var detalle in detalleVentasLike) {
-        venta.total += detalle['total'] ?? 0.0;
-        venta.ganancias += detalle['ganancia'] ?? 0.0;
+        total += detalle['total'] ?? 0.0;
+        ganancias += detalle['ganancia'] ?? 0.0;
       }
+      venta.total = total;
+      venta.ganancias = ganancias;
+
       setVenta!(venta);
       actualizarVenta!(venta);
 
-      final response = await detalleVentasRepository.createDetalleVenta(detalleVentasLike, venta.id);
+      final response = await detalleVentasRepository.createDetalleVenta(
+          detalleVentasLike, venta.id);
 
+      state =
+          state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);
 
-      state = state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);
-
+      //final data = {'total': total, 'ganancias': ganancias};
       return true;
     } catch (e) {
       return false;
