@@ -50,26 +50,17 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   Future<bool> createDetVenta(
       List<Map<String, dynamic>> detalleVentasLike) async {
     try {
-      final Venta venta = getVenta!();
-      double total = 0;
-      double ganancias = 0;
+      final Venta venta = getVenta!();      
       for (var detalle in detalleVentasLike) {
-        total += detalle['total'] ?? 0.0;
-        ganancias += detalle['ganancia'] ?? 0.0;
-      }
-      venta.total = total;
-      venta.ganancias = ganancias;
-
+        venta.total += detalle['total'] ?? 0.0;
+        venta.ganancias += detalle['ganancias'] ?? 0.0;
+      }      
       setVenta!(venta);
       actualizarVenta!(venta);
-
       final response = await detalleVentasRepository.createDetalleVenta(
           detalleVentasLike, venta.id);
-
       state =
-          state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);
-
-      //final data = {'total': total, 'ganancias': ganancias};
+          state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);      
       return true;
     } catch (e) {
       return false;

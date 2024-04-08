@@ -1,6 +1,7 @@
 const DetVenta = require('../models/det_venta');
 const Tela = require('../models/tela');
 const sequelize = require('../database/database');
+const Venta = require('../models/venta');
 
 const ObtenerDetVentas = async (req, res) => {
     try {
@@ -30,8 +31,9 @@ const ObtenerDetVentas = async (req, res) => {
 const RegistrarDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
-        const ventas = req.body;
+        const ventas = req.body;                
         const detallesVentasCreados = [];
+        const venta2 = await Venta.findOne({ where: { id: idventas } });
         for (const venta of ventas) {
             const detVenta= await DetVenta.create({
                 idventas: idventas,
@@ -39,10 +41,13 @@ const RegistrarDetVentas = async (req, res) => {
                 cantidad: venta.cantidad,
                 precio: venta.precio,
                 total: venta.total
-            });
-            detVenta.nombre = venta.nombre;
+            });            
+            detVenta.dataValues.nombre = venta.nombre;            
             detallesVentasCreados.push(detVenta); 
-        }        
+            venta2.total += venta.total;
+            venta2.ganancias += venta.ganancias;
+        }      
+        await venta2.save();
         res.status(200).json(detallesVentasCreados);
     } catch (error) {
         console.error('Error al registrar detalle venta:', error);

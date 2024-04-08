@@ -1,18 +1,5 @@
 const Venta = require('../models/venta');
 
-const ObtenerVenta = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const venta = await Venta.findOne({
-            where: { id },            
-        });
-        res.json(venta);
-    } catch (error) {
-        console.error('Error al obtener ventas:', error);
-        res.status(500).json({ error: 'Error al obtener ventas', message: error.message });
-    }
-};
-
 const ObtenerVentas = async (req, res) => {
     try {
         const { idsucursales } = req.params;
@@ -70,32 +57,8 @@ const RegistrarVentaAhora = async (req, res) => {
     }
 };
 
-const EliminarVenta = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const venta = await Venta.destroy({ where: { id } });
-        res.json(venta);
-    } catch (error) {
-        console.error('Error al eliminar venta:', error);
-        res.status(500).json({ error: 'Error al eliminar venta', message: error.message });
-    }
-}
-
-const EliminarVenta0 = async (req, res) => {
-    try {
-        const venta = await Venta.destroy({ where: { total: 0 } });
-        res.json(venta);
-    } catch (error) {
-        console.error('Error al eliminar venta:', error);
-        res.status(500).json({ error: 'Error al eliminar venta', message: error.message });
-    }
-}
-
 module.exports = {
-    ObtenerVenta,
     ObtenerVentas,
     RegistrarVenta,
-    RegistrarVentaAhora,
-    EliminarVenta,
-    EliminarVenta0
+    RegistrarVentaAhora    
 }

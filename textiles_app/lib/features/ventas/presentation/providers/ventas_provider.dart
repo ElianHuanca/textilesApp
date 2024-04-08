@@ -25,7 +25,6 @@ class VentasNotifier extends StateNotifier<VentasState> {
     state = state.copyWith(isLoading: true);
 
     final ventas = await ventasRepository.getVentas(idsucursales);
-
     if (ventas.isEmpty) {
       final venta = await ventasRepository.createVentaAhora(idsucursales);
       state = state.copyWith(isLoading: false, ventas: [venta]);
@@ -36,7 +35,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
     DateTime today = DateTime(now.year, now.month, now.day);
     DateTime ventaDate = DateTime.parse(ventas[0].fecha);
     DateTime ventaDateOnly =
-        DateTime(ventaDate.year, ventaDate.month, ventaDate.day);    
+        DateTime(ventaDate.year, ventaDate.month, ventaDate.day);
     if (today.isAfter(ventaDateOnly)) {
       final venta = await ventasRepository.createVentaAhora(idsucursales);
       ventas.insert(0, venta);
@@ -45,14 +44,14 @@ class VentasNotifier extends StateNotifier<VentasState> {
     state = state.copyWith(isLoading: false, ventas: ventas);
   }
 
-  void actualizarVenta(Venta ventaActualizada) {    
+  void actualizarVenta(Venta ventaActualizada) {
     int indice =
-        state.ventas.indexWhere((venta) => venta.id == ventaActualizada.id);    
+        state.ventas.indexWhere((venta) => venta.id == ventaActualizada.id);
     if (indice != -1) {
-      List<Venta> nuevasVentas = List.from(state.ventas);      
-      nuevasVentas[indice] = ventaActualizada;      
+      List<Venta> nuevasVentas = List.from(state.ventas);
+      nuevasVentas[indice] = ventaActualizada;
       state = state.copyWith(ventas: nuevasVentas);
-    } 
+    }
   }
 }
 
@@ -65,9 +64,7 @@ class VentasState {
     this.ventas = const [],
   });
 
-  VentasState copyWith(
-          {bool? isLoading, List<Venta>? ventas}) =>
-      VentasState(
+  VentasState copyWith({bool? isLoading, List<Venta>? ventas}) => VentasState(
         isLoading: isLoading ?? this.isLoading,
         ventas: ventas ?? this.ventas,
       );

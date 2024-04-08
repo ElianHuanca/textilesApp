@@ -25,8 +25,8 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     if (double.parse(state.precio) <= 0) return;
     //if (double.parse(state.precio) < state.precxcompra) return;
 
-    final ganancias = state.precxcompra == 0
-        ? 0
+    final double ganancias = state.precxcompra == 0
+        ? 0.0
         : (double.parse(state.precio) - state.precxcompra) *
             double.parse(state.cantidad);
 

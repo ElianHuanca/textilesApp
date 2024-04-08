@@ -41,6 +41,9 @@ class DetVenta extends ConsumerWidget {
                           onSelected: (value) {
                             ref
                                 .read(detalleVentaFormProvider.notifier)
+                                .onPrecxCompraChanged(value?.precxcompra ?? 0.0);
+                            ref
+                                .read(detalleVentaFormProvider.notifier)
                                 .onNombreChanged(value!.nombre);
                             ref
                                 .read(detalleVentaFormProvider.notifier)
