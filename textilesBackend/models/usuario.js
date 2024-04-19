@@ -18,6 +18,10 @@ const Usuario = sequelize.define('usuarios', {
     },
     token:{
         type: DataTypes.TEXT,            
+    },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
     }
 }, {
     timestamps: false, 

@@ -20,6 +20,10 @@ const Venta = sequelize.define('ventas', {
         type: DataTypes.DOUBLE,        
         defaultValue: 0
     },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
     idsucursales: {
         type: DataTypes.INTEGER,
         references: {

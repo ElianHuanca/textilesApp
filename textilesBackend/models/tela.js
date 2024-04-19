@@ -23,6 +23,10 @@ const Tela = sequelize.define('telas', {
     precxcompra: {
         type: DataTypes.FLOAT,        
     },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
     idusuarios: {
         type: DataTypes.INTEGER,
         references: {
