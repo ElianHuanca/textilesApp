@@ -29,8 +29,7 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
     try {            
       final response = await dio.post<List>('/det_ventas/$idventas',data: detalleVentasLike);            
       final List<DetalleVenta> detalleVentas = [];
-      for (final detalle in response.data ?? []) {
-        print(detalle);
+      for (final detalle in response.data ?? []) {        
         detalleVentas.add(DetalleVentaMapper.jsonToEntity(detalle));
       }
       return detalleVentas;

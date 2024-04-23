@@ -18,7 +18,7 @@ class MenuIndexNotifier extends StateNotifier<MenuIndexState> {
 class MenuIndexState {
   final int index;
   MenuIndexState({
-    this.index = 0,
+    this.index = 1,
   });
   MenuIndexState copyWith({
     int? index,
@@ -29,7 +29,7 @@ class MenuIndexState {
 }
 
 class SideMenu extends ConsumerWidget {
-  final appLinkItems = ['/', '/sucursales', '/telas'];
+  final appLinkItems = ['/usuarios','/', '/sucursales', '/telas'];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   SideMenu({super.key});
   @override
@@ -49,16 +49,20 @@ class SideMenu extends ConsumerWidget {
           Padding(
             padding: EdgeInsets.fromLTRB(20, hasNotch ? 0 : 20, 16, 0),
             child: Text('Saludos', style: textStyles.titleMedium),
-          ),
+          ),          
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 16, 10),
             child: Text(ref.read(authProvider).usuario!.nombre,
                 style: textStyles.titleSmall),
-          ),
+          ),     
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.person),
+            label: Text('Perfil'),
+          ),     
           const NavigationDrawerDestination(
             icon: Icon(Icons.add_shopping_cart_rounded),
             label: Text('Ventas'),
-          ),
+          ),          
           const NavigationDrawerDestination(
             icon: Icon(Icons.add_business_rounded),
             label: Text('Sucursales'),

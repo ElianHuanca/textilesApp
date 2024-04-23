@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:textiles_app/features/auth/domain/entities/usuario.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 
@@ -7,17 +8,24 @@ import 'package:textiles_app/features/shared/shared.dart';
 final loginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
   final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
-
-  return LoginFormNotifier(loginUserCallback: loginUserCallback);
+  final userCallback = ref.watch(authProvider).usuario;
+  return LoginFormNotifier(loginUserCallback: loginUserCallback,userCallback:userCallback);
 });
 
 //! 2 - Como implementamos un notifier
 class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  final Function(String, String) loginUserCallback;
-
+  final Function(String, String) loginUserCallback;  
+  final Usuario? userCallback;
   LoginFormNotifier({
     required this.loginUserCallback,
+    required this.userCallback,
   }) : super(LoginFormState());
+
+  void cargarUsuario(){
+    state = state.copyWith(
+      email: Email.dirty(userCallback!.correo),
+    );
+  }
 
   onEmailChange(String value) {
     final newEmail = Email.dirty(value);

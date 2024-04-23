@@ -49,6 +49,12 @@ CREATE TABLE IF NOT EXISTS det_ventas (
     CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+ALTER TABLE usuarios ADD estado boolean DEFAULT true;
+ALTER TABLE sucursales ADD estado boolean DEFAULT true;
+ALTER TABLE telas ADD estado boolean DEFAULT true;
+ALTER TABLE ventas ADD estado boolean DEFAULT true;
+ALTER TABLE det_ventas ADD estado boolean DEFAULT true;
+
 INSERT INTO usuarios(nombre,correo,password) VALUES 
 ('Isela Huanca','isela@gmail.com','$2a$10$qAVkPAIHnamNzbDeMb94t.em.plQpqP8s/Bwy.LrZsCOqnWveg7He'),
 ('Mary Choque','mary@gmail.com','$2a$10$pyLUOKvtKEgB2PUyvCT.VO0Sm/2Lf3Y9zroRBg2ET8L6t5ja1n0rS');

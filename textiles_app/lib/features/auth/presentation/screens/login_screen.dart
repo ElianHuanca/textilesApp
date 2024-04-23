@@ -100,18 +100,7 @@ class _LoginForm extends ConsumerWidget {
                   buttonColor: Colors.black,
                   onPressed: loginForm.isPosting
                       ? null
-                      : ref.read(loginFormProvider.notifier).onFormSubmit)),
-          //const Spacer(flex: 2),
-          /* Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('¿No tienes cuenta?'),
-              TextButton(
-                  onPressed: () => context.push('/register'),
-                  child: const Text('Click aquí'))
-            ],
-          ), */
-          //const Spacer(flex: 1),
+                      : ref.read(loginFormProvider.notifier).onFormSubmit)),          
         ],
       ),
     );

@@ -65,4 +65,26 @@ class AuthDataSourceImpl extends AuthDataSource {
     throw UnimplementedError();
   }
   
+  @override
+  Future<bool> updateUsuario(String correo, String password, String nombre) async {
+    try {
+      final response = await dio.put('/usuarios', data: {
+        'nombre': nombre,
+        'correo': correo,
+        'password': password
+      });            
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      if( e.response?.statusCode == 400 ){
+         throw CustomError(e.response?.data['message'] ?? 'Credenciales incorrectas' );
+      }
+      if ( e.type == DioExceptionType.connectionTimeout ){
+        throw CustomError('Revisar conexión a internet');
+      }
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
+  }
+  
 }
