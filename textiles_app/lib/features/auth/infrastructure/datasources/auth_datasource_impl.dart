@@ -66,14 +66,15 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
   
   @override
-  Future<bool> updateUsuario(String correo, String password, String nombre) async {
+  Future<Usuario> updateUsuario(String correo, String password, String nombre) async {
     try {
       final response = await dio.put('/usuarios', data: {
         'nombre': nombre,
         'correo': correo,
         'password': password
       });            
-      return response.statusCode == 200;
+      final user = UsuarioMapper.userJsonToEntity(response.data);
+      return user;      
     } on DioException catch (e) {
       if( e.response?.statusCode == 400 ){
          throw CustomError(e.response?.data['message'] ?? 'Credenciales incorrectas' );

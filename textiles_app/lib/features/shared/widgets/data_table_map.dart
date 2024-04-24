@@ -62,14 +62,13 @@ List<DataRow> _rows(List<Map<String, dynamic>> list, double total,
               _cell('${det['precio']}Bs'),
               _cell('${det['cantidad']}mts'),
               _cell('${det['total']}Bs'),
-              detventas ?  _cell('') :
-              _cellButton(() {
-                //print(det['id']);
+              detventas ?  _cell('') 
+              : _cellButton(() {                
                 detventas
                     ? null
                     : ref
                         .read(detalleVentaFormProvider.notifier)
-                        .removeDetalleVenta(det['idtelas']);
+                        .removeDetalleVenta(det['idtelas'],det['cantidad'],det['precio']);
               })
             ]);
           }).toList(),

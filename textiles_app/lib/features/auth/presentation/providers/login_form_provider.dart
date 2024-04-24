@@ -4,24 +4,29 @@ import 'package:textiles_app/features/auth/domain/entities/usuario.dart';
 import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 
-//! 3 - StateNotifierProvider - consume afuera
 final loginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
   final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
+  final updateUserCallback = ref.watch(authProvider.notifier).updateUser;
   final userCallback = ref.watch(authProvider).usuario;
-  return LoginFormNotifier(loginUserCallback: loginUserCallback,userCallback:userCallback);
+  return LoginFormNotifier(
+      loginUserCallback: loginUserCallback,
+      userCallback: userCallback,
+      updateUserCallback:updateUserCallback
+      );
 });
 
-//! 2 - Como implementamos un notifier
 class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  final Function(String, String) loginUserCallback;  
+  final Function(String, String) loginUserCallback;
+  final Function(String, String,String) updateUserCallback;
   final Usuario? userCallback;
   LoginFormNotifier({
     required this.loginUserCallback,
-    required this.userCallback,
+    required this.updateUserCallback,
+    this.userCallback,
   }) : super(LoginFormState());
 
-  void cargarUsuario(){
+  void cargarUsuario() {
     state = state.copyWith(
       email: Email.dirty(userCallback!.correo),
     );
@@ -33,6 +38,10 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
         email: newEmail, isValid: Formz.validate([newEmail, state.password]));
   }
 
+  void onNombreChange(String value) {
+    state = state.copyWith(nombre: value);
+  }
+
   onPasswordChanged(String value) {
     final newPassword = Password.dirty(value);
     state = state.copyWith(
@@ -41,13 +50,23 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
   }
 
   onFormSubmit() async {
-    _touchEveryField();
-
+    _touchEveryField();    
     if (!state.isValid) return;
-
+    
     state = state.copyWith(isPosting: true);
 
     await loginUserCallback(state.email.value, state.password.value);
+
+    state = state.copyWith(isPosting: false);
+  }
+
+  onFormUpdate() async {
+    _touchEveryField();    
+    if (!state.isValid) return;
+    if (state.nombre == '') return;
+    state = state.copyWith(isPosting: true);
+
+    await updateUserCallback(state.email.value, state.password.value,state.nombre!);
 
     state = state.copyWith(isPosting: false);
   }
@@ -62,22 +81,25 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
         password: password,
         isValid: Formz.validate([email, password]));
   }
+
 }
 
-//! 1 - State del provider
 class LoginFormState {
   final bool isPosting;
   final bool isFormPosted;
   final bool isValid;
   final Email email;
   final Password password;
+  final String? nombre;
 
   LoginFormState(
       {this.isPosting = false,
       this.isFormPosted = false,
       this.isValid = false,
       this.email = const Email.pure(),
-      this.password = const Password.pure()});
+      this.password = const Password.pure(),
+      this.nombre = ''
+  });
 
   LoginFormState copyWith({
     bool? isPosting,
@@ -85,6 +107,7 @@ class LoginFormState {
     bool? isValid,
     Email? email,
     Password? password,
+    String? nombre,
   }) =>
       LoginFormState(
         isPosting: isPosting ?? this.isPosting,
@@ -92,17 +115,6 @@ class LoginFormState {
         isValid: isValid ?? this.isValid,
         email: email ?? this.email,
         password: password ?? this.password,
+        nombre: nombre ?? this.nombre,
       );
-
-  @override
-  String toString() {
-    return '''
-  LoginFormState:
-    isPosting: $isPosting
-    isFormPosted: $isFormPosted
-    isValid: $isValid
-    email: $email
-    password: $password
-''';
-  }
 }

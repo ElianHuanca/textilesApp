@@ -19,7 +19,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
 
   void addDetalleVenta() {
     if (state.idtelas == 0) return;
-    if (obtenerIndex(state.idtelas) != -1) return;
+    //if (obtenerIndex(state.idtelas) != -1) return;
     if (double.tryParse(state.cantidad) == null) return;
     if (double.tryParse(state.precio) == null) return;
     if (double.parse(state.precio) <= 0) return;
@@ -30,7 +30,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
         : (double.parse(state.precio) - state.precxcompra) *
             double.parse(state.cantidad);
 
-    final detVentaLike = {
+    final detVentaLike = {      
       'idtelas': state.idtelas,
       'nombre': state.nombre,
       'cantidad': double.parse(state.cantidad),
@@ -48,13 +48,15 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     );
   }
 
-  int obtenerIndex(int idtelas) {
+  int obtenerIndex(int idtelas,double cantidad, double precio) {
     return state.detVentas
-        .indexWhere((element) => element['idtelas'] == idtelas);
+        .indexWhere((element) => element['idtelas'] == idtelas && 
+        element['cantidad'] == cantidad && 
+        element['precio'] == precio);
   }
 
-  void removeDetalleVenta(int idtelas) {
-    final index = obtenerIndex(idtelas);
+  void removeDetalleVenta(int idtelas,double cantidad, double precio) {
+    final index = obtenerIndex(idtelas,cantidad,precio);
     if (index == -1) return;
     final detVentaToRemove = state.detVentas[index];
     state = state.copyWith(
@@ -104,7 +106,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   }
 }
 
-class DetalleVentaFormState {
+class DetalleVentaFormState {  
   final int idtelas;
   final String nombre;
   final String cantidad;
@@ -114,7 +116,8 @@ class DetalleVentaFormState {
   final List<Map<String, dynamic>> detVentas;
 
   DetalleVentaFormState(
-      {this.idtelas = 0,
+      {
+      this.idtelas = 0,
       this.precxcompra = 0,
       this.cantidad = '',
       this.precio = '',
@@ -122,7 +125,7 @@ class DetalleVentaFormState {
       this.detVentas = const [],
       this.total = 0});
 
-  DetalleVentaFormState copyWith({    
+  DetalleVentaFormState copyWith({
     int? idtelas,
     String? cantidad,
     String? precio,
@@ -131,7 +134,7 @@ class DetalleVentaFormState {
     List<Map<String, dynamic>>? detVentas,
     double? precxcompra,
   }) =>
-      DetalleVentaFormState(
+      DetalleVentaFormState(        
         idtelas: idtelas ?? this.idtelas,
         cantidad: cantidad ?? this.cantidad,
         precio: precio ?? this.precio,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/auth/presentation/providers/providers.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 
@@ -49,12 +48,6 @@ class LoginScreen extends StatelessWidget {
 
 class _LoginForm extends ConsumerWidget {
   const _LoginForm();
-
-  void showSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

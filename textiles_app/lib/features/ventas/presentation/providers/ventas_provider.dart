@@ -32,11 +32,8 @@ class VentasNotifier extends StateNotifier<VentasState> {
     }
 
     DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    DateTime ventaDate = DateTime.parse(ventas[0].fecha);
-    DateTime ventaDateOnly =
-        DateTime(ventaDate.year, ventaDate.month, ventaDate.day);
-    if (today.isAfter(ventaDateOnly)) {
+    DateTime today = DateTime(now.year, now.month, now.day);    
+    if (today.isAfter(ventas[0].fecha)) {
       final venta = await ventasRepository.createVentaAhora(idsucursales);
       ventas.insert(0, venta);
     }
