@@ -6,7 +6,7 @@ class Environment {
     await dotenv.load(fileName: '.env');
   }
 
-  static String apiUrl = dotenv.env['API_URL'] ?? 'No está configurado el API_URL';
+  static String apiUrl = dotenv.env['API_URL'] ?? 'https://textilesbackend-production.up.railway.app/api';
 
 }
 
