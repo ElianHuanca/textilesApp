@@ -23,21 +23,6 @@ class TelaScreen extends ConsumerWidget {
               ));
   }
 
-  /* List<Widget> _telaView(Tela tela, BuildContext context, WidgetRef ref) {
-    final telaForm = ref.watch(telaFormProvider(tela));
-    final textStyles = Theme.of(context).textTheme;
-    return ([
-      Center(
-          child: Text(
-        telaForm.nombre.value,
-        style: textStyles.titleSmall,
-        textAlign: TextAlign.center,
-      )),
-      const SizedBox(height: 10),
-      _telaInformation(tela, context, ref),
-    ]);
-  } */
-
   Widget _telaInformation(Tela tela, BuildContext context, WidgetRef ref) {
     final telaForm = ref.watch(telaFormProvider(tela));
 

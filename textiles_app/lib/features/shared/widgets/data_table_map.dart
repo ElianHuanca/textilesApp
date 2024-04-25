@@ -13,7 +13,8 @@ class DataTableMap extends ConsumerWidget {
       required this.list,
       required this.total,
       this.ganancias,
-      required this.detventas});
+      required this.detventas,      
+      });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,15 +63,14 @@ List<DataRow> _rows(List<Map<String, dynamic>> list, double total,
               _cell('${det['precio']}Bs'),
               _cell('${det['cantidad']}mts'),
               _cell('${det['total']}Bs'),
-              detventas ?  _cell('') :
               _cellButton(() {
-                //print(det['id']);
-                detventas
-                    ? null
-                    : ref
-                        .read(detalleVentaFormProvider.notifier)
-                        .removeDetalleVenta(det['idtelas']);
-              })
+                      detventas
+                          ? null
+                          : ref
+                              .read(detalleVentaFormProvider.notifier)
+                              .removeDetalleVenta(det['idtelas'],
+                                  det['cantidad'], det['precio']);
+                    })
             ]);
           }).toList(),
           DataRow(cells: <DataCell>[

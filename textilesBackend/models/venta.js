@@ -13,12 +13,16 @@ const Venta = sequelize.define('ventas', {
         defaultValue: DataTypes.NOW       
     },
     total:{
-        type: DataTypes.FLOAT,
+        type: DataTypes.DOUBLE,
         defaultValue: 0
     },
     ganancias:{
-        type: DataTypes.FLOAT,        
+        type: DataTypes.DOUBLE,        
         defaultValue: 0
+    },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
     },
     idsucursales: {
         type: DataTypes.INTEGER,

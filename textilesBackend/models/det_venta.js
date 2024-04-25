@@ -19,6 +19,10 @@ const DetVenta = sequelize.define('det_ventas', {
         type: DataTypes.FLOAT,
         defaultValue: 0
     },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
     idtelas: {
         type: DataTypes.INTEGER,
         references: {

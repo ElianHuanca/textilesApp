@@ -10,4 +10,5 @@ router.post('/:idusuarios', Telas.RegistrarTela);
 router.put('/:id', Telas.ActualizarTela);
 
 router.delete('/:id', Telas.EliminarTela);
+
 module.exports = router;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:textiles_app/features/auth/presentation/providers/providers.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 
@@ -50,12 +49,6 @@ class LoginScreen extends StatelessWidget {
 class _LoginForm extends ConsumerWidget {
   const _LoginForm();
 
-  void showSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loginForm = ref.watch(loginFormProvider);
@@ -100,18 +93,7 @@ class _LoginForm extends ConsumerWidget {
                   buttonColor: Colors.black,
                   onPressed: loginForm.isPosting
                       ? null
-                      : ref.read(loginFormProvider.notifier).onFormSubmit)),
-          //const Spacer(flex: 2),
-          /* Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('¿No tienes cuenta?'),
-              TextButton(
-                  onPressed: () => context.push('/register'),
-                  child: const Text('Click aquí'))
-            ],
-          ), */
-          //const Spacer(flex: 1),
+                      : ref.read(loginFormProvider.notifier).onFormSubmit)),          
         ],
       ),
     );

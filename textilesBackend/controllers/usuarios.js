@@ -32,7 +32,7 @@ const actualizarUsuario = async (req, res) => {
         usuario.correo = correo;
         usuario.password = pass;
         await usuario.save();
-        res.json(usuario);
+        res.status(200).json(usuario);
     } catch (error) {
         console.error('Error al actualizar usuario:', error);
         res.status(500).json({ error: 'Error al actualizar usuario', message: error.message });

@@ -1,6 +1,6 @@
 class Venta {
   int id;
-  String fecha;
+  DateTime fecha;
   double total;
   double ganancias;
   int idsucursales;

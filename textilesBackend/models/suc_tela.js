@@ -19,6 +19,10 @@ const SucTela = sequelize.define('suc_telas', {
             key: 'id'
         }
     },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
     idtelas: {
         type: DataTypes.INTEGER,
         references: {

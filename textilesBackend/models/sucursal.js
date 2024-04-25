@@ -10,6 +10,10 @@ const Sucursal = sequelize.define('sucursales', {
     nombre: {
         type: DataTypes.STRING,        
     },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
     idusuarios: {
         type: DataTypes.INTEGER,
         references: {

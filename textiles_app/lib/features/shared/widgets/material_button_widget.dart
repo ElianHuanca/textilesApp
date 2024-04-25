@@ -11,14 +11,14 @@ class MaterialButtonWidget extends StatelessWidget {
     Color color;
 
     switch (texto) {
-      case 'Añadir':
-        color = Colors.black;
+      case 'Guardando...':
+        color = Colors.grey;
         break;
       case 'Eliminar':
         color = Colors.red;
         break;
       default:
-        color = Theme.of(context).primaryColor;
+        color = Colors.black;
     }
     return MaterialButton(
       shape: RoundedRectangleBorder(

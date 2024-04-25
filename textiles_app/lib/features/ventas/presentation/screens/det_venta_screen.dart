@@ -41,6 +41,9 @@ class DetVenta extends ConsumerWidget {
                           onSelected: (value) {
                             ref
                                 .read(detalleVentaFormProvider.notifier)
+                                .onPrecxCompraChanged(value?.precxcompra ?? 0.0);
+                            ref
+                                .read(detalleVentaFormProvider.notifier)
                                 .onNombreChanged(value!.nombre);
                             ref
                                 .read(detalleVentaFormProvider.notifier)
@@ -58,8 +61,7 @@ class DetVenta extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Row(                    
                     children: [
                       MiTextField(
                         flex: 3,
@@ -101,6 +103,7 @@ class DetVenta extends ConsumerWidget {
           padding: const EdgeInsets.all(12.0),
           child: MaterialButtonWidget(
               ontap: () => {
+                    //detalleVentaForm.isLoading ? null :
                     ref
                         .read(detalleVentaFormProvider.notifier)
                         .onFormSubmit()
@@ -109,7 +112,8 @@ class DetVenta extends ConsumerWidget {
                             : showSnackbar(context, 'Hubo Un Error')),
                     context.go('/det_ventas')
                   },
-              texto: 'Guardar'))
+              texto: 'Guardar',//detalleVentaForm.isLoading ? 'Guardando...' : 'Guardar'
+          ))
     ];
   }
 
@@ -121,8 +125,3 @@ class DetVenta extends ConsumerWidget {
     };
   }
 }
-
-/*
-isela@gmail.com
-Huanca1962
-*/
