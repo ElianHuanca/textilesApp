@@ -37,4 +37,14 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
       throw Exception();
     }
   }
+  
+  @override
+  Future<bool> deleteDetalleVenta(int id) async{
+    try {
+      final response = await dio.delete('/det_ventas/$id');
+      return response.statusCode == 200;
+    } catch (e) {
+      throw Exception();
+    }
+  }
 }

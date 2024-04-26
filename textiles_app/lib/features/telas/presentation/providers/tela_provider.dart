@@ -26,37 +26,28 @@ class TelaNotifier extends StateNotifier<TelaState> {
     );
   }
 
-  Future<void> nuevaTela() async {
-    state = state.copyWith(
-      isLoading: false,
+  void nuevaTela()  {
+    state = state.copyWith(      
       tela: newEmptyTela(),
     );
   }
 
-  Future<void> setTela(Tela tela) async {
-    state = state.copyWith(isLoading: false, tela: tela);
+  void setTela(Tela tela) {
+    state = state.copyWith( tela: tela);
   }
 }
 
 class TelaState {
-  final Tela? tela;
-  final bool isLoading;
-  final bool isSaving;
+  final Tela? tela;  
 
   TelaState({
-    this.tela,
-    this.isLoading = true,
-    this.isSaving = false,
+    this.tela,    
   });
 
   TelaState copyWith({
-    Tela? tela,
-    bool? isLoading,
-    bool? isSaving,
+    Tela? tela,    
   }) =>
       TelaState(
         tela: tela ?? this.tela,
-        isLoading: isLoading ?? this.isLoading,
-        isSaving: isSaving ?? this.isSaving,
       );
 }

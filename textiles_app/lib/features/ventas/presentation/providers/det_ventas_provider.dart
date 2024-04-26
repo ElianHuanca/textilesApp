@@ -66,7 +66,28 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
       return false;
     }
   }
+
+  Future<bool> deleteDetVenta(int id) async {
+  try {    
+    final response = await detalleVentasRepository.deleteDetalleVenta(id);
+    if (response) {
+      final Venta venta = getVenta!();
+      final detalle = state.detalleVentas.firstWhere((detalle) => detalle.id == id);
+      venta.total -= detalle.total!;
+      //venta.ganancias -= detalle.ganancias;     
+      state = state.copyWith(
+          detalleVentas: state.detalleVentas
+              .where((detalle) => detalle.id != id)
+              .toList());
+    }
+    return response;
+  } catch (e) {
+    return false;
+  }
 }
+}
+
+
 
 class DetalleVentasState {
   final bool isLoading;

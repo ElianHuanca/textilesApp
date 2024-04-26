@@ -29,7 +29,7 @@ class MenuIndexState {
 }
 
 class SideMenu extends ConsumerWidget {
-  final appLinkItems = ['/usuarios','/', '/sucursales', '/telas'];
+  final appLinkItems = ['/usuario','/', '/sucursales', '/telas'];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   SideMenu({super.key});
   @override

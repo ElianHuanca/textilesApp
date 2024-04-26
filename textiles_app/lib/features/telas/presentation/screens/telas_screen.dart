@@ -14,8 +14,7 @@ class TelasScreen extends ConsumerWidget {
       widget: _buildBody(telasState.telas, context, ref),
       title: 'Telas',
       isGridview: false,
-      onTap: _onTap(context, ref),
-      //floatingActionButton: _floatingActionButton(context, ref),
+      onTap: _onTap(context, ref),      
     );
   }
 
@@ -66,15 +65,4 @@ class TelasScreen extends ConsumerWidget {
         context.go('/tela');
     };
   }
-  /* FloatingActionButton _floatingActionButton(
-      BuildContext context, WidgetRef ref) {
-    return FloatingActionButton.extended(
-      label: const Text('Agregar Tela'),
-      onPressed: () {
-        ref.read(telaProvider.notifier).nuevaTela();
-        context.go('/tela');
-      },
-      icon: const Icon(Icons.add),
-    );
-  } */
 }

@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:textiles_app/features/auth/domain/domain.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 import '../providers/providers.dart';
 
-
-class UsuarioScreen extends StatelessWidget {
+class UsuarioScreen extends ConsumerWidget {
   const UsuarioScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Usuario usuario = ref.read(authProvider).usuario!;
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: const Screen1(
-          widget: [_PerfilForm()],
+        child: Screen1(
+            widget: [_PerfilForm(usuario: usuario)],
           title: 'Editar Perfil',
-          isGridview: false,          
+          isGridview: false,
         ));
   }
 }
 
 class _PerfilForm extends ConsumerWidget {
-  const _PerfilForm();
+  final Usuario usuario;
+  const _PerfilForm({ required this.usuario});
 
   @override
   Widget build(context, WidgetRef ref) {
-    ref.read(loginFormProvider.notifier).userCallback;
     final loginForm = ref.watch(loginFormProvider);
 
     ref.listen(authProvider, (previous, next) {
@@ -35,16 +36,17 @@ class _PerfilForm extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
-        children: [          
+        children: [
           const SizedBox(height: 30),
           CustomTextFormField(
-            label: 'Nombre',   
-            initialValue: loginForm.nombre,
-            onChanged: ref.read(loginFormProvider.notifier).onNombreChange,          
+            label: 'Nombre',
+            initialValue: usuario.nombre,
+            onChanged: ref.read(loginFormProvider.notifier).onNombreChange,
           ),
+          const SizedBox(height: 30),
           CustomTextFormField(
             label: 'Correo',
-            initialValue: loginForm.email.value,
+            initialValue: usuario.correo,
             keyboardType: TextInputType.emailAddress,
             onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
             errorMessage:
@@ -69,7 +71,7 @@ class _PerfilForm extends ConsumerWidget {
                   buttonColor: Colors.black,
                   onPressed: loginForm.isPosting
                       ? null
-                      : ref.read(loginFormProvider.notifier).onFormSubmit)),          
+                      : ref.read(loginFormProvider.notifier).onFormSubmit)),
         ],
       ),
     );

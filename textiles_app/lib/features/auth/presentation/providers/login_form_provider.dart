@@ -28,6 +28,7 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
 
   void cargarUsuario() {
     state = state.copyWith(
+      nombre: userCallback!.nombre,
       email: Email.dirty(userCallback!.correo),
     );
   }

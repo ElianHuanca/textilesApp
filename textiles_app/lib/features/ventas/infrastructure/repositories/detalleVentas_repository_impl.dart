@@ -19,4 +19,9 @@ class DetalleVentasRepositoryImpl extends DetalleVentasRepository {
   Future<List<DetalleVenta>> createDetalleVenta(List<Map<String, dynamic>> detalleVentasLike,int idventas) {
     return datasource.createDetalleVenta(detalleVentasLike, idventas);
   }
+  
+  @override
+  Future<bool> deleteDetalleVenta(int id) {
+    return datasource.deleteDetalleVenta(id);
+  }
 }

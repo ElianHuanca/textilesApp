@@ -27,6 +27,11 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
+        path: '/usuario',
+        builder: (context, state) => const UsuarioScreen(),
+      ),
+
+      GoRoute(
         path: '/',
         builder: (context, state) => const SucursalesScreen(
           false,

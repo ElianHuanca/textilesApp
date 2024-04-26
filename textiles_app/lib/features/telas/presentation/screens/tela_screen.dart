@@ -13,9 +13,9 @@ class TelaScreen extends ConsumerWidget {
     final telaState = ref.watch(telaProvider);
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: telaState.isLoading
+        child: /* telaState.isLoading
             ? const FullScreenLoader()
-            : Screen1(
+            :  */Screen1(
                 widget: [_telaInformation(telaState.tela!, context, ref)],
                 title: telaState.tela!.id == 0 ? 'Crear Tela' : 'Editar Tela',
                 isGridview: false,
