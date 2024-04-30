@@ -11,19 +11,18 @@ final detalleVentaFormProvider =
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
+  final Future<bool> Function(
+          List<Map<String, dynamic>> detVentaLike, double descuento)?
       onSubmitCallback;
 
   DetalleVentaFormNotifier({this.onSubmitCallback})
       : super(DetalleVentaFormState());
 
   void addDetalleVenta() {
-    if (state.idtelas == 0) return;
-    //if (obtenerIndex(state.idtelas) != -1) return;
+    if (state.idtelas == 0) return;    
     if (double.tryParse(state.cantidad) == null) return;
     if (double.tryParse(state.precio) == null) return;
     if (double.parse(state.precio) <= 0) return;
-    //if (double.parse(state.precio) < state.precxcompra) return;
 
     final double ganancias = state.precxcompra == 0
         ? 0.0
@@ -68,10 +67,15 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   Future<bool> onFormSubmit() async {
     try {
       //state = state.copyWith(isLoading: true);
-      if (onSubmitCallback == null) return false;
-      if (state.detVentas.isEmpty) return false;
-      final bool result = await onSubmitCallback!(state.detVentas);
-      //state = state.copyWith(isLoading: false);
+      if (onSubmitCallback == null) return false;      
+      if (state.detVentas.isEmpty) return false; 
+      if (state.descuento == '') {
+        onDescuentoChanged('0');
+      }     
+      if (double.tryParse(state.descuento)== null) return false;
+
+      final bool result =
+          await onSubmitCallback!(state.detVentas, double.parse(state.descuento));
       return result;
     } catch (e) {
       return false;
@@ -107,6 +111,12 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
       precxcompra: value,
     );
   }
+
+  void onDescuentoChanged(String value) {
+    state = state.copyWith(
+      descuento: value,
+    );
+  }
 }
 
 class DetalleVentaFormState {
@@ -118,6 +128,7 @@ class DetalleVentaFormState {
   final double precxcompra;
   final double total;
   final List<Map<String, dynamic>> detVentas;
+  final String descuento;
 
   DetalleVentaFormState(
       {this.isLoading = false,
@@ -127,7 +138,8 @@ class DetalleVentaFormState {
       this.precio = '',
       this.nombre = '',
       this.detVentas = const [],
-      this.total = 0});
+      this.total = 0,
+      this.descuento = ''});
 
   DetalleVentaFormState copyWith({
     bool? isLoading,
@@ -138,6 +150,7 @@ class DetalleVentaFormState {
     double? total,
     List<Map<String, dynamic>>? detVentas,
     double? precxcompra,
+    String? descuento,
   }) =>
       DetalleVentaFormState(
         isLoading: isLoading ?? this.isLoading,
@@ -148,5 +161,6 @@ class DetalleVentaFormState {
         nombre: nombre ?? this.nombre,
         total: total ?? this.total,
         precxcompra: precxcompra ?? this.precxcompra,
+        descuento: descuento ?? this.descuento,
       );
 }

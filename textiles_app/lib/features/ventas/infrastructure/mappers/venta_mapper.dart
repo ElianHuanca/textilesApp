@@ -8,6 +8,7 @@ class VentaMapper {
     fecha: DateTime.parse( json['fecha']), 
     total: double.parse( json['total'].toString() ), 
     ganancias: double.parse( json['ganancias'].toString() ), 
-    idsucursales: json['idsucursales']
+    idsucursales: json['idsucursales'],
+    descuento: double.parse( json['descuento'].toString() )
   );
 }

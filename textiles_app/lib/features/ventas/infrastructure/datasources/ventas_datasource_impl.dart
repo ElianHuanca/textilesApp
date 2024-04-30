@@ -14,8 +14,7 @@ class VentasDatasourceImpl extends VentasDatasource {
   @override
   Future<List<Venta>> getVentas(int idsucursales) async {
     final response = await dio.get<List>('/ventas/$idsucursales');    
-    final List<Venta> ventas = [];
-    //if (response.data == null) return ventas;
+    final List<Venta> ventas = [];    
     for (final venta in response.data ?? []) {
       ventas.add(VentaMapper.jsonToEntity(venta));
     }

@@ -6,20 +6,16 @@ const Venta = require('../models/venta');
 const ObtenerDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
-
         const detallesVenta = await DetVenta.findAll({
             where: { idventas },
             include: {
                 model: Tela,
-                attributes: [], // Excluir todos los atributos de Tela
+                attributes: [],
             },
             attributes: ['id', 'cantidad', 'precio', 'total', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
             order: [['id', 'DESC']],
-            raw: true // Obtener resultados en formato plano (JSON)
+            raw: true 
         });
-
-
-
         res.json(detallesVenta);
     } catch (error) {
         console.error('Error al obtener detalle venta:', error);
@@ -30,24 +26,26 @@ const ObtenerDetVentas = async (req, res) => {
 
 const RegistrarDetVentas = async (req, res) => {
     try {
-        const { idventas } = req.params;
+        const { idventas, descuento } = req.params;
         const ventas = req.body;                
-        const detallesVentasCreados = [];
-        const venta2 = await Venta.findOne({ where: { id: idventas } });
+        const detallesVentasCreados = [];    
+        const vta = await Venta.findOne( { where: { id: idventas } } );    
         for (const venta of ventas) {
             const detVenta= await DetVenta.create({
                 idventas: idventas,
                 idtelas: venta.idtelas,
                 cantidad: venta.cantidad,
                 precio: venta.precio,
-                total: venta.total
+                total: venta.total,
+                ganancias: venta.ganancias
             });            
             detVenta.dataValues.nombre = venta.nombre;            
-            detallesVentasCreados.push(detVenta); 
-            venta2.total += venta.total;
-            venta2.ganancias += venta.ganancias;
-        }      
-        await venta2.save();
+            detallesVentasCreados.push(detVenta);             
+            vta.total += venta.total;
+            vta.ganancias += venta.ganancias;
+        }              
+        vta.descuento += descuento;
+        await vta.save();
         res.status(200).json(detallesVentasCreados);
     } catch (error) {
         console.error('Error al registrar detalle venta:', error);

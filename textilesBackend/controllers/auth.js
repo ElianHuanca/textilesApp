@@ -31,15 +31,13 @@ const checkStatus= async(req, res = response) => {
     const token = req.headers.authorization?.replace('Bearer ', '');
 
   try {
-    // Buscar al usuario en la base de datos por el token
+    
     const usuario = await Usuario.findOne({ token });
 
     if (!usuario) {
       return res.status(401).json({ error: 'Token incorrecto' });
     }
 
-    // Devolver el usuario sin la contraseña
-    //const { password, ...userData } = usuario.toObject();
     res.json(usuario);
   } catch (error) {
     console.error(error);

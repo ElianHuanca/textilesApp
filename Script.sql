@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS usuarios(
 	id SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
-	correo VARCHAR(100),
+	correo VARCHAR(100) unique,
 	password VARCHAR(255),
 	token text,
 	estado boolean default true
@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS sucursales(
 
 CREATE TABLE IF NOT EXISTS telas (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    precxmay DOUBLE PRECISION,
-    precxmen DOUBLE PRECISION,
-    precxrollo DOUBLE PRECISION,
-    precxcompra DOUBLE PRECISION,
+    nombre VARCHAR(100),	
+    precxmay  NUMERIC(5, 2) default 0,
+    precxmen  NUMERIC(5, 2) default 0,
+    precxrollo  NUMERIC(5, 2) default 0,
+    precxcompra  NUMERIC(5, 2) default 0,
 	idusuarios int,
 	estado boolean default true,
 	CONSTRAINT fk_usuarios FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -30,8 +30,9 @@ CREATE TABLE IF NOT EXISTS telas (
 CREATE TABLE IF NOT EXISTS ventas (
     id SERIAL PRIMARY KEY,
     fecha DATE default NOW(),
-    total DOUBLE precision default 0,
-    ganancias DOUBLE precision default 0,
+    total NUMERIC(9, 4) default 0,
+    ganancias NUMERIC(9, 4) default 0,
+    descuento  NUMERIC(4, 2) default 0,
     idsucursales INT,
 	estado boolean default true,
     CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -41,19 +42,16 @@ CREATE TABLE IF NOT EXISTS det_ventas (
     id SERIAL PRIMARY KEY,
     idventas INT,
     idtelas INT,
-    precio DOUBLE PRECISION,
-    cantidad DOUBLE PRECISION,
-    total DOUBLE precision default 0,
+    precio NUMERIC(5, 2),
+    cantidad NUMERIC(6, 2),
+    total NUMERIC(9, 4),
+	ganancias NUMERIC(9, 4) ,
 	estado boolean default true,
     CONSTRAINT fk_ventas FOREIGN KEY (idventas) REFERENCES ventas(id) ON DELETE CASCADE ON UPDATE RESTRICT,
     CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-ALTER TABLE usuarios ADD estado boolean DEFAULT true;
-ALTER TABLE sucursales ADD estado boolean DEFAULT true;
-ALTER TABLE telas ADD estado boolean DEFAULT true;
-ALTER TABLE ventas ADD estado boolean DEFAULT true;
-ALTER TABLE det_ventas ADD estado boolean DEFAULT true;
+
 
 INSERT INTO usuarios(nombre,correo,password) VALUES 
 ('Isela Huanca','isela@gmail.com','$2a$10$qAVkPAIHnamNzbDeMb94t.em.plQpqP8s/Bwy.LrZsCOqnWveg7He'),
@@ -113,7 +111,6 @@ RETURNS TRIGGER AS $$
 DECLARE
     precioxcompra numeric;
 BEGIN
-    SELECT telas.precxcompra INTO precioxcompra FROM telas WHERE id = NEW.idtelas;
     
     /*UPDATE ventas
     SET total = total + (NEW.cantidad * NEW.precio),
@@ -124,13 +121,10 @@ BEGIN
     set total = NEW.cantidad * NEW.precio
 	WHERE id = NEW.id;*/
 -- 	PRODUCCION
- 	 UPDATE ventas
+ 	UPDATE ventas
     SET total = total + NEW.total,
-        ganancias = ganancias + ((NEW.precio - precioxcompra) * NEW.cantidad)
-    WHERE id = NEW.idventas;
- 	  
- 	 
-		
+        ganancias = ganancias + NEW.ganancias
+    WHERE id = NEW.idventas;		
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -382,6 +376,12 @@ insert into det_ventas(idventas,idtelas,cantidad,precio) VALUES
 	(9,16,0.5, 60),
 	(9,10,0.5, 20);
 
+
+ALTER TABLE usuarios ADD estado boolean DEFAULT true;
+ALTER TABLE sucursales ADD estado boolean DEFAULT true;
+ALTER TABLE telas ADD estado boolean DEFAULT true;
+ALTER TABLE ventas ADD estado boolean DEFAULT true;
+ALTER TABLE det_ventas ADD estado boolean DEFAULT true;
 
 SELECT --telas.nombre,
        SUM(det_ventas.total) AS total,

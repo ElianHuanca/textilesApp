@@ -5,5 +5,5 @@ const UsuarioController = require("../controllers/usuarios");
 
 router.get('', UsuarioController.ObtenerUsuarios);
 router.post('', UsuarioController.registrarUsuario);
-router.put('/:id', UsuarioController.actualizarUsuario);
+router.put('', UsuarioController.actualizarUsuario);
 module.exports = router;

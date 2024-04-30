@@ -20,6 +20,10 @@ const Venta = sequelize.define('ventas', {
         type: DataTypes.DOUBLE,        
         defaultValue: 0
     },
+    descuento:{
+        type: DataTypes.DOUBLE,
+        defaultValue: 0
+    },
     estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,

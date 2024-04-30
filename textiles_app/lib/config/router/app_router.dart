@@ -14,13 +14,11 @@ final goRouterProvider = Provider((ref) {
     initialLocation: '/splash',
     refreshListenable: goRouterNotifier,
     routes: [
-      ///* Primera pantalla
       GoRoute(
         path: '/splash',
         builder: (context, state) => const CheckAuthStatusScreen(),
       ),
-
-      ///* Auth Routes
+      
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
@@ -85,7 +83,7 @@ final goRouterProvider = Provider((ref) {
 
       if (authStatus == AuthStatus.notAuthenticated) {
         if (isGoingTo == '/login' || isGoingTo == '/register') return null;
-
+      
         return '/login';
       }
 

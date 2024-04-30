@@ -8,12 +8,11 @@ class UsuarioScreen extends ConsumerWidget {
   const UsuarioScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final Usuario usuario = ref.read(authProvider).usuario!;
+  Widget build(BuildContext context, WidgetRef ref) {        
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Screen1(
-            widget: [_PerfilForm(usuario: usuario)],
+        child: const Screen1(
+          widget: [_PerfilForm()],
           title: 'Editar Perfil',
           isGridview: false,
         ));
@@ -21,13 +20,14 @@ class UsuarioScreen extends ConsumerWidget {
 }
 
 class _PerfilForm extends ConsumerWidget {
-  final Usuario usuario;
-  const _PerfilForm({ required this.usuario});
-
+  //final Usuario usuario;
+  const _PerfilForm(//required this.usuario
+  );
   @override
   Widget build(context, WidgetRef ref) {
-    final loginForm = ref.watch(loginFormProvider);
-
+    
+    print(ref.read(loginFormProvider).nombre);
+    final loginForm = ref.watch(loginFormProvider);    
     ref.listen(authProvider, (previous, next) {
       if (next.errorMessage.isEmpty) return;
       showSnackbar(context, next.errorMessage);
@@ -40,13 +40,13 @@ class _PerfilForm extends ConsumerWidget {
           const SizedBox(height: 30),
           CustomTextFormField(
             label: 'Nombre',
-            initialValue: usuario.nombre,
+            initialValue: loginForm.nombre,
             onChanged: ref.read(loginFormProvider.notifier).onNombreChange,
           ),
           const SizedBox(height: 30),
           CustomTextFormField(
             label: 'Correo',
-            initialValue: usuario.correo,
+            initialValue: loginForm.email.value,
             keyboardType: TextInputType.emailAddress,
             onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
             errorMessage:
@@ -58,7 +58,7 @@ class _PerfilForm extends ConsumerWidget {
             obscureText: true,
             onChanged: ref.read(loginFormProvider.notifier).onPasswordChanged,
             onFieldSubmitted: (_) =>
-                ref.read(loginFormProvider.notifier).onFormSubmit(),
+                ref.read(loginFormProvider.notifier).onFormUpdate(),
             errorMessage:
                 loginForm.isFormPosted ? loginForm.password.errorMessage : null,
           ),
@@ -71,7 +71,10 @@ class _PerfilForm extends ConsumerWidget {
                   buttonColor: Colors.black,
                   onPressed: loginForm.isPosting
                       ? null
-                      : ref.read(loginFormProvider.notifier).onFormSubmit)),
+                      : () {                          
+                          ref.read(loginFormProvider.notifier).onFormUpdate();
+                          showSnackbar(context, 'Usuario actualizado');
+                        })),
         ],
       ),
     );
