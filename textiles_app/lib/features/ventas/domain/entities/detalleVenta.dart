@@ -6,6 +6,7 @@ class DetalleVenta {
   double precio;
   double cantidad;
   double? total;
+  double? ganancias;
   int idtelas;
 
   DetalleVenta(
@@ -14,7 +15,8 @@ class DetalleVenta {
       required this.precio,
       required this.cantidad,
       this.total,
-      required this.idtelas});
+      required this.idtelas,
+      this.ganancias});
 
   toJson() {
     return {
@@ -23,7 +25,8 @@ class DetalleVenta {
       'precio': precio,
       'cantidad': cantidad,
       'total': total,
-      'idtelas': idtelas
+      'idtelas': idtelas,
+      'ganancias': ganancias
     };
   }
 }

@@ -1,20 +1,21 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/ventas/presentation/providers/forms/det_ventas_form_provider.dart';
+import 'package:textiles_app/features/ventas/presentation/providers/providers.dart';
+import 'dialogoDeAlerta.dart';
 
 class DataTableMap extends ConsumerWidget {
   final List<Map<String, dynamic>> list;
   final double total;
   final double? ganancias;
   final bool detventas;
-  const DataTableMap(
-      {super.key,
-      required this.list,
-      required this.total,
-      this.ganancias,
-      required this.detventas,      
-      });
+  const DataTableMap({
+    super.key,
+    required this.list,
+    required this.total,
+    this.ganancias,
+    required this.detventas,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,13 +65,17 @@ List<DataRow> _rows(List<Map<String, dynamic>> list, double total,
               _cell('${det['cantidad']}mts'),
               _cell('${det['total']}Bs'),
               _cellButton(() {
-                      detventas
-                          ? null
-                          : ref
-                              .read(detalleVentaFormProvider.notifier)
-                              .removeDetalleVenta(det['idtelas'],
-                                  det['cantidad'], det['precio']);
-                    })
+                detventas
+                    ? dialogoDeAlerta(context, () {
+                        ref
+                            .read(detalleVentasProvider.notifier)
+                            .deleteDetVenta(det['id']);
+                      })
+                    : ref
+                        .read(detalleVentaFormProvider.notifier)
+                        .removeDetalleVenta(
+                            det['idtelas'], det['cantidad'], det['precio']);
+              })
             ]);
           }).toList(),
           DataRow(cells: <DataCell>[

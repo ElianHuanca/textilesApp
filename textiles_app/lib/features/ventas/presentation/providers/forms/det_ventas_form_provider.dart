@@ -25,7 +25,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     if (double.parse(state.precio) <= 0) return;
 
     final double ganancias = state.precxcompra == 0
-        ? 0.0
+        ? 0
         : (double.parse(state.precio) - state.precxcompra) *
             double.parse(state.cantidad);
 
@@ -65,8 +65,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   }
 
   Future<bool> onFormSubmit() async {
-    try {
-      //state = state.copyWith(isLoading: true);
+    try {      
       if (onSubmitCallback == null) return false;      
       if (state.detVentas.isEmpty) return false; 
       if (state.descuento == '') {
@@ -120,7 +119,6 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
 }
 
 class DetalleVentaFormState {
-  final bool isLoading;
   final int idtelas;
   final String nombre;
   final String cantidad;
@@ -129,9 +127,10 @@ class DetalleVentaFormState {
   final double total;
   final List<Map<String, dynamic>> detVentas;
   final String descuento;
+  //final double ganancias;
 
   DetalleVentaFormState(
-      {this.isLoading = false,
+      {
       this.idtelas = 0,
       this.precxcompra = 0,
       this.cantidad = '',
@@ -139,10 +138,11 @@ class DetalleVentaFormState {
       this.nombre = '',
       this.detVentas = const [],
       this.total = 0,
-      this.descuento = ''});
+      this.descuento = '',
+      //this.ganancias = 0
+      });
 
-  DetalleVentaFormState copyWith({
-    bool? isLoading,
+  DetalleVentaFormState copyWith({    
     int? idtelas,
     String? cantidad,
     String? precio,
@@ -151,9 +151,9 @@ class DetalleVentaFormState {
     List<Map<String, dynamic>>? detVentas,
     double? precxcompra,
     String? descuento,
+    //double? ganancias,
   }) =>
-      DetalleVentaFormState(
-        isLoading: isLoading ?? this.isLoading,
+      DetalleVentaFormState(        
         idtelas: idtelas ?? this.idtelas,
         cantidad: cantidad ?? this.cantidad,
         precio: precio ?? this.precio,
@@ -162,5 +162,6 @@ class DetalleVentaFormState {
         total: total ?? this.total,
         precxcompra: precxcompra ?? this.precxcompra,
         descuento: descuento ?? this.descuento,
+        //ganancias: ganancias ?? this.ganancias,
       );
 }

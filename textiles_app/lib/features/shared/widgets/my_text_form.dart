@@ -20,8 +20,7 @@ class MiTextField extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    //controller?.text = initialValue ?? '';
+  Widget build(BuildContext context) {    
     return Expanded(
       flex: flex ?? 1,
       child: Container(
@@ -31,13 +30,9 @@ class MiTextField extends StatelessWidget {
             initialValue: initialValue,
             controller: controller,
             keyboardType: keyboardType ?? TextInputType.text,
-            onChanged: onChanged,
-            //onTap: () => controller?.clear(),
-            /* validator: (initialValue) =>
-                controller!.text.isEmpty ? 'Campo Requerido' : null, */
+            onChanged: onChanged,            
             decoration: InputDecoration(
-              label: Text(label),
-              //errorText: errorMessage,
+              label: Text(label),              
               suffixText: label == 'Cantidad'
                   ? ' mts'
                   : (label.contains('Precio') ? ' Bs' : ''),
@@ -50,5 +45,3 @@ class MiTextField extends StatelessWidget {
     );
   }
 }
-/* isela@gmail.com
-Huanca1962 */

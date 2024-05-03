@@ -57,7 +57,13 @@ const RegistrarDetVentas = async (req, res) => {
 const eliminarDetVenta = async (req, res) => {
     try {
         const { id } = req.params;
-        await DetVenta.destroy({ where: { id } });
+        const detVenta = await DetVenta.findByPk(id);
+        const venta = await Venta.findByPk(detVenta.idventas);
+        detVenta.estado = false;
+        venta.total -= detVenta.total;
+        venta.ganancias -= detVenta.ganancias;
+        await venta.save();
+        await detVenta.save();
         res.status(200).json({ message: 'Detalle de venta eliminado correctamente' });
     } catch (error) {
         console.error('Error al eliminar detalle de venta:', error);

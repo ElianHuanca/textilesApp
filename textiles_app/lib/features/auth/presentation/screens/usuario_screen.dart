@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/auth/domain/domain.dart';
+
 import 'package:textiles_app/features/shared/shared.dart';
 import '../providers/providers.dart';
 
@@ -19,14 +19,10 @@ class UsuarioScreen extends ConsumerWidget {
   }
 }
 
-class _PerfilForm extends ConsumerWidget {
-  //final Usuario usuario;
-  const _PerfilForm(//required this.usuario
-  );
+class _PerfilForm extends ConsumerWidget {  
+  const _PerfilForm();
   @override
-  Widget build(context, WidgetRef ref) {
-    
-    print(ref.read(loginFormProvider).nombre);
+  Widget build(context, WidgetRef ref) {    
     final loginForm = ref.watch(loginFormProvider);    
     ref.listen(authProvider, (previous, next) {
       if (next.errorMessage.isEmpty) return;

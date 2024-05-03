@@ -75,7 +75,7 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
       final Venta venta = getVenta!();
       final detalle = state.detalleVentas.firstWhere((detalle) => detalle.id == id);
       venta.total -= detalle.total!;
-      //venta.ganancias -= detalle.ganancias;     
+      venta.ganancias -= detalle.ganancias!;     
       state = state.copyWith(
           detalleVentas: state.detalleVentas
               .where((detalle) => detalle.id != id)

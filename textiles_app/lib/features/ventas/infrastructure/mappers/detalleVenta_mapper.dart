@@ -12,6 +12,7 @@ class DetalleVentaMapper {
     cantidad: double.parse(json['cantidad'].toString()),
     precio: double.parse( json['precio'].toString() ),
     total: double.parse( json['total'].toString() ), 
+    ganancias: double.parse( json['ganancias'].toString() ),
     idtelas: json['idtelas']
   );
 }

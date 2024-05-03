@@ -100,6 +100,24 @@ class DetVenta extends ConsumerWidget {
       DataTableMap(
           list: detalleVentaForm.detVentas, total: detalleVentaForm.total,detventas: false),
       Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: TextFormField(
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),        
+          onChanged: (String value) {
+            ref.read(detalleVentaFormProvider.notifier).onDescuentoChanged(value);
+          },
+          decoration: const InputDecoration(
+            labelText: 'Descuento',
+            suffixText: ' Bs',
+            suffixStyle: TextStyle(fontSize: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+        ),
+      ),
+      Container(
           padding: const EdgeInsets.all(12.0),
           child: MaterialButtonWidget(
               ontap: () => {

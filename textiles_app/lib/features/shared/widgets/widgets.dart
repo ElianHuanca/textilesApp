@@ -11,3 +11,4 @@ export 'showSnackbar.dart';
 export 'data_table_widget.dart';
 export 'data_table_map.dart';
 export 'my_text_form.dart';
+export 'dialogoDeAlerta.dart';
