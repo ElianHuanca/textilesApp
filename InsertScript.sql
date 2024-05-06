@@ -1,60 +1,5 @@
-CREATE TABLE IF NOT EXISTS usuarios(
-	id SERIAL PRIMARY KEY,
-	nombre VARCHAR(100),
-	correo VARCHAR(100) unique,
-	password VARCHAR(255),
-	token text,
-	estado boolean default true
-);
-
-CREATE TABLE IF NOT EXISTS sucursales(
-	id SERIAL PRIMARY KEY,
-	nombre VARCHAR(100),
-	idusuarios INT,
-	estado boolean default true,
-	CONSTRAINT fk_usuarios FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-CREATE TABLE IF NOT EXISTS telas (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),	
-    precxmay  NUMERIC(5, 2) default 0,
-    precxmen  NUMERIC(5, 2) default 0,
-    precxrollo  NUMERIC(5, 2) default 0,
-    precxcompra  NUMERIC(5, 2) default 0,
-	idusuarios int,
-	estado boolean default true,
-	CONSTRAINT fk_usuarios FOREIGN KEY (idusuarios) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-CREATE TABLE IF NOT EXISTS ventas (
-    id SERIAL PRIMARY KEY,
-    fecha DATE default NOW(),
-    total NUMERIC(9, 4) default 0,
-    ganancias NUMERIC(9, 4) default 0,
-    descuento  NUMERIC(4, 2) default 0,
-    idsucursales INT,
-	estado boolean default true,
-    CONSTRAINT fk_sucursales FOREIGN KEY (idsucursales) REFERENCES sucursales(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-CREATE TABLE IF NOT EXISTS det_ventas (
-    id SERIAL PRIMARY KEY,
-    idventas INT,
-    idtelas INT,
-    precio NUMERIC(5, 2),
-    cantidad NUMERIC(6, 2),
-    total NUMERIC(9, 4),
-	ganancias NUMERIC(9, 4) ,
-	estado boolean default true,
-    CONSTRAINT fk_ventas FOREIGN KEY (idventas) REFERENCES ventas(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-    CONSTRAINT fk_telas FOREIGN KEY (idtelas) REFERENCES telas(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-
-
 INSERT INTO usuarios(nombre,correo,password) VALUES 
-('Isela Huanca','isela@gmail.com','$2a$10$qAVkPAIHnamNzbDeMb94t.em.plQpqP8s/Bwy.LrZsCOqnWveg7He'),
+('Isela Huanca','ise@gmail.com','$2a$10$qAVkPAIHnamNzbDeMb94t.em.plQpqP8s/Bwy.LrZsCOqnWveg7He'),
 ('Mary Choque','mary@gmail.com','$2a$10$pyLUOKvtKEgB2PUyvCT.VO0Sm/2Lf3Y9zroRBg2ET8L6t5ja1n0rS');
 
 
@@ -90,9 +35,6 @@ INSERT INTO telas(nombre,precxmen, precxmay, precxrollo,precxcompra,idusuarios) 
 ('Lipiur Blonda',60,50,45,40,1),
 ('gasa',15,12,10,9,1),
 ('Tull Ramas Ramada', 65,55,50,40,1);
---(27, 'Blonda 30',30,25,20, 18),
---(28, 'Blonda 12',12,10,8, 6),
---(29,'Gasa Cuadros',20,15,14,12),
 
 insert into ventas(fecha,idsucursales) values
 ('14-06-2023',1),
@@ -106,20 +48,27 @@ insert into ventas(fecha,idsucursales) values
 ('12-07-2023',1);
 
 
-CREATE OR REPLACE FUNCTION actualizar_total_ingresos()
+
+
+
+--(27, 'Blonda 30',30,25,20, 18),
+--(28, 'Blonda 12',12,10,8, 6),
+--(29,'Gasa Cuadros',20,15,14,12),
+
+/*CREATE OR REPLACE FUNCTION actualizar_total_ingresos()
 RETURNS TRIGGER AS $$
 DECLARE
     precioxcompra numeric;
 BEGIN
     
-    /*UPDATE ventas
+    UPDATE ventas
     SET total = total + (NEW.cantidad * NEW.precio),
         ganancias = ganancias + ((NEW.precio - precioxcompra) * NEW.cantidad)
     WHERE id = NEW.idventas;
    
     update det_ventas
     set total = NEW.cantidad * NEW.precio
-	WHERE id = NEW.id;*/
+	WHERE id = NEW.id;
 -- 	PRODUCCION
  	UPDATE ventas
     SET total = total + NEW.total,
@@ -153,7 +102,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER det_venta_after_delete
 AFTER DELETE ON det_ventas
 FOR EACH ROW
-EXECUTE FUNCTION eliminar_total_ingresos();
+EXECUTE FUNCTION eliminar_total_ingresos();*/
 
 
 --14/06/23
@@ -390,4 +339,3 @@ FROM det_ventas
 INNER JOIN telas ON telas.id = det_ventas.idtelas AND telas.idusuarios = 1
 --GROUP BY telas.nombre
 --ORDER BY total DESC; 
-

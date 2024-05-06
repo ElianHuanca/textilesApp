@@ -12,7 +12,7 @@ const ObtenerDetVentas = async (req, res) => {
                 model: Tela,
                 attributes: [],
             },
-            attributes: ['id', 'cantidad', 'precio', 'total', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
+            attributes: ['id', 'cantidad', 'precio', 'total','ganancias', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
             order: [['id', 'DESC']],
             raw: true 
         });
@@ -26,11 +26,11 @@ const ObtenerDetVentas = async (req, res) => {
 
 const RegistrarDetVentas = async (req, res) => {
     try {
-        const { idventas, descuento } = req.params;
-        const ventas = req.body;                
+        const { idventas } = req.params;
+        const data = req.body;       
         const detallesVentasCreados = [];    
-        const vta = await Venta.findOne( { where: { id: idventas } } );    
-        for (const venta of ventas) {
+        const vta = await Venta.findOne( { where: { id: idventas } } );            
+        for (const venta of data.ventas) {
             const detVenta= await DetVenta.create({
                 idventas: idventas,
                 idtelas: venta.idtelas,
@@ -39,12 +39,12 @@ const RegistrarDetVentas = async (req, res) => {
                 total: venta.total,
                 ganancias: venta.ganancias
             });            
-            detVenta.dataValues.nombre = venta.nombre;            
-            detallesVentasCreados.push(detVenta);             
+            detVenta.dataValues.nombre = venta.nombre;      
             vta.total += venta.total;
-            vta.ganancias += venta.ganancias;
+            vta.ganancias +=  venta.ganancias;      
+            detallesVentasCreados.push(detVenta);                         
         }              
-        vta.descuento += descuento;
+        vta.descuento +=  data.descuento;
         await vta.save();
         res.status(200).json(detallesVentasCreados);
     } catch (error) {

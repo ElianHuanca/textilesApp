@@ -68,11 +68,10 @@ class DetVenta extends ConsumerWidget {
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         label: 'Precio',
-                        onChanged: (String p1) => {
+                        onChanged: 
                           ref
                               .read(detalleVentaFormProvider.notifier)
-                              .onPrecioChanged(p1),
-                        },
+                              .onPrecioChanged,
                         controller: precioController,
                       ),
                       MiTextField(
@@ -80,11 +79,10 @@ class DetVenta extends ConsumerWidget {
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         label: 'Cantidad',
-                        onChanged: (String p1) {
+                        onChanged: 
                           ref
                               .read(detalleVentaFormProvider.notifier)
-                              .onCantidadChanged(p1);
-                        },
+                              .onCantidadChanged,
                         controller: cantidadController,
                       ),
                     ],
@@ -104,12 +102,11 @@ class DetVenta extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: TextFormField(
           keyboardType: const TextInputType.numberWithOptions(decimal: true),        
-          onChanged: (String value) {
-            ref.read(detalleVentaFormProvider.notifier).onDescuentoChanged(value);
-          },
+          onChanged:
+            ref.read(detalleVentaFormProvider.notifier).onDescuentoChanged,
           decoration: const InputDecoration(
             labelText: 'Descuento',
-            suffixText: ' Bs',
+            suffixText: 'Bs',
             suffixStyle: TextStyle(fontSize: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
