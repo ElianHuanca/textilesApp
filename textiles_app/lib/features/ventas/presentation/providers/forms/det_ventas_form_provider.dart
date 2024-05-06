@@ -72,7 +72,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
         onDescuentoChanged('0');
       }     
       if (double.tryParse(state.descuento)== null) return false;
-
+      
       final bool result =
           await onSubmitCallback!(state.detVentas, double.parse(state.descuento));
       return result;

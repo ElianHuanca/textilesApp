@@ -12,7 +12,7 @@ const ObtenerDetVentas = async (req, res) => {
                 model: Tela,
                 attributes: [],
             },
-            attributes: ['id', 'cantidad', 'precio', 'total', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
+            attributes: ['id', 'cantidad', 'precio', 'total','ganancias', 'idtelas', 'idventas', [sequelize.col('tela.nombre'), 'nombre']], // Utilizar sequelize.col para referenciar el nombre de la tela
             order: [['id', 'DESC']],
             raw: true 
         });
@@ -26,8 +26,8 @@ const ObtenerDetVentas = async (req, res) => {
 
 const RegistrarDetVentas = async (req, res) => {
     try {
-        const { idventas, descuento } = req.params;
-        const ventas = req.body;                
+        const { idventas } = req.params;
+        const {ventas,descuento} = req.body;                
         const detallesVentasCreados = [];    
         const vta = await Venta.findOne( { where: { id: idventas } } );    
         for (const venta of ventas) {

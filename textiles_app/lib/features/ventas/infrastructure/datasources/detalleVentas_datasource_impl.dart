@@ -18,6 +18,7 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
     final response = await dio.get<List>('/det_ventas/$idventas');
     final List<DetalleVenta> detalleVentas = [];
     for (final detalle in response.data ?? []) {
+      print(detalle);
       detalleVentas.add(DetalleVentaMapper.jsonToEntity(detalle));
     }
     return detalleVentas;
@@ -25,21 +26,29 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
 
   @override
   Future<List<DetalleVenta>> createDetalleVenta(
-      List<Map<String, dynamic>> detalleVentasLike, int idventas,double descuento) async {
-    try {            
-      final response = await dio.post<List>('/det_ventas/$idventas/$descuento',data: detalleVentasLike);            
+      List<Map<String, dynamic>> detalleVentasLike,
+      int idventas,
+      double descuento) async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      final requestData = {
+        'ventas': detalleVentasLike,
+        'descuento': descuento,
+      };
+      final response = await dio.post<List>('/det_ventas/$idventas/$descuento',
+          data: requestData);
       final List<DetalleVenta> detalleVentas = [];
-      for (final detalle in response.data ?? []) {        
+      for (final detalle in response.data ?? []) {
         detalleVentas.add(DetalleVentaMapper.jsonToEntity(detalle));
       }
       return detalleVentas;
-    }catch (e) {
+    } catch (e) {
       throw Exception();
     }
   }
-  
+
   @override
-  Future<bool> deleteDetalleVenta(int id) async{
+  Future<bool> deleteDetalleVenta(int id) async {
     try {
       final response = await dio.delete('/det_ventas/$id');
       return response.statusCode == 200;

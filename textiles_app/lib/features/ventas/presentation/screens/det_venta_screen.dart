@@ -109,7 +109,7 @@ class DetVenta extends ConsumerWidget {
           },
           decoration: const InputDecoration(
             labelText: 'Descuento',
-            suffixText: ' Bs',
+            suffixText: 'Bs',
             suffixStyle: TextStyle(fontSize: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
