@@ -29,8 +29,7 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
       List<Map<String, dynamic>> detalleVentasLike,
       int idventas,
       double descuento) async {
-    try {
-      await Future.delayed(const Duration(milliseconds: 500));
+    try {      
       final requestData = {
         'ventas': detalleVentasLike,
         'descuento': descuento,

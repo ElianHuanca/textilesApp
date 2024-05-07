@@ -29,13 +29,14 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
         : (double.parse(state.precio) - state.precxcompra) *
             double.parse(state.cantidad);
 
+    
     final detVentaLike = {
       'idtelas': state.idtelas,
       'nombre': state.nombre,
       'cantidad': double.parse(state.cantidad),
       'precio': double.parse(state.precio),
-      'total': double.parse(state.cantidad) * double.parse(state.precio),
-      'ganancias': ganancias.toStringAsFixed(2)
+      'total': (double.parse(state.cantidad) * double.parse(state.precio)*100).round()/100.0,
+      'ganancias': (ganancias*100).round()/100.0,
     };
 
     state = state.copyWith(
@@ -68,11 +69,9 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     try {      
       if (onSubmitCallback == null) return false;      
       if (state.detVentas.isEmpty) return false; 
-      if (state.descuento == '') {
-        onDescuentoChanged('0');
-      }     
-      if (double.tryParse(state.descuento)== null) return false;
-            
+      //if (double.tryParse(state.descuento)== null) return false;
+      if (state.descuento == '') onDescuentoChanged('0');
+                             
       return await onSubmitCallback!(state.detVentas, double.parse(state.descuento));      
     } catch (e) {
       return false;

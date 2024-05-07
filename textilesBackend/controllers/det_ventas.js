@@ -7,7 +7,7 @@ const ObtenerDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
         const detallesVenta = await DetVenta.findAll({
-            where: { idventas },
+            where: { idventas,estado: true},
             include: {
                 model: Tela,
                 attributes: [],

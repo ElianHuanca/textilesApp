@@ -10,7 +10,7 @@ final detalleVentasProvider =
   final actualizaVenta = ref.watch(ventasProvider.notifier).actualizarVenta;
   return DetalleVentasNotifier(
       actualizarVenta: actualizaVenta,
-      detalleVentasRepository: detalleVentasRepository,      
+      detalleVentasRepository: detalleVentasRepository,
       setVenta: setVenta,
       getVenta: obtenerVenta);
 });
@@ -19,11 +19,10 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   final Function(Venta)? actualizarVenta;
   final Function(Venta)? setVenta;
   final Function? getVenta;
-  final DetalleVentasRepository detalleVentasRepository;  
+  final DetalleVentasRepository detalleVentasRepository;
 
   DetalleVentasNotifier(
-      {    
-      this.actualizarVenta,
+      {this.actualizarVenta,
       required this.detalleVentasRepository,
       this.getVenta,
       this.setVenta})
@@ -48,20 +47,23 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   }
 
   Future<bool> createDetVenta(
-      List<Map<String, dynamic>> detalleVentasLike,double descuento) async {
+      List<Map<String, dynamic>> detalleVentasLike, double descuento) async {
     try {
-      final Venta venta = getVenta!();      
+      final Venta venta = getVenta!();
       for (var detalle in detalleVentasLike) {
         venta.total += detalle['total'] ?? 0.0;
         venta.ganancias += detalle['ganancias'] ?? 0.0;
-      }      
+      }
       venta.descuento += descuento;
+      print(venta.total);
+      print(venta.ganancias);
+      print(venta.descuento);
       setVenta!(venta);
       actualizarVenta!(venta);
       final response = await detalleVentasRepository.createDetalleVenta(
-          detalleVentasLike, venta.id,descuento);
+          detalleVentasLike, venta.id, descuento);
       state =
-          state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);      
+          state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);
       return true;
     } catch (e) {
       return false;
@@ -69,26 +71,25 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   }
 
   Future<bool> deleteDetVenta(int id) async {
-  try {    
-    final response = await detalleVentasRepository.deleteDetalleVenta(id);
-    if (response) {
-      final Venta venta = getVenta!();
-      final detalle = state.detalleVentas.firstWhere((detalle) => detalle.id == id);
-      venta.total -= detalle.total!;
-      venta.ganancias -= detalle.ganancias!;     
-      state = state.copyWith(
-          detalleVentas: state.detalleVentas
-              .where((detalle) => detalle.id != id)
-              .toList());
+    try {
+      final response = await detalleVentasRepository.deleteDetalleVenta(id);
+      if (response) {
+        final Venta venta = getVenta!();
+        final detalle =
+            state.detalleVentas.firstWhere((detalle) => detalle.id == id);
+        venta.total -= detalle.total!;
+        venta.ganancias -= detalle.ganancias!;
+        state = state.copyWith(
+            detalleVentas: state.detalleVentas
+                .where((detalle) => detalle.id != id)
+                .toList());
+      }
+      return response;
+    } catch (e) {
+      return false;
     }
-    return response;
-  } catch (e) {
-    return false;
   }
 }
-}
-
-
 
 class DetalleVentasState {
   final bool isLoading;
