@@ -24,6 +24,7 @@ class DetVentas extends ConsumerWidget {
                 list: detalleVentas,
                 total: venta.total,
                 ganancias: venta.ganancias, 
+                descuento: venta.descuento,
                 detventas: true             
                 ))
       ],

@@ -7,7 +7,8 @@ import 'dialogoDeAlerta.dart';
 class DataTableMap extends ConsumerWidget {
   final List<Map<String, dynamic>> list;
   final double total;
-  final double? ganancias;
+  final double ?ganancias;
+  final double ?descuento;
   final bool detventas;
   const DataTableMap({
     super.key,
@@ -15,6 +16,7 @@ class DataTableMap extends ConsumerWidget {
     required this.total,
     this.ganancias,
     required this.detventas,
+    this.descuento
   });
 
   @override
@@ -22,7 +24,7 @@ class DataTableMap extends ConsumerWidget {
     return DataTable(
         columns: _columns(context),
         columnSpacing: 8,
-        rows: _rows(list, total, ganancias, ref, context, detventas));
+        rows: _rows(list, total, ref, context, detventas,ganancias,descuento));
   }
 }
 
@@ -45,7 +47,7 @@ DataColumn _column(BuildContext context, String texto) => DataColumn(
       ),
     );
 List<DataRow> _rows(List<Map<String, dynamic>> list, double total,
-    double? ganancias, WidgetRef ref, BuildContext context, bool detventas) {
+     WidgetRef ref, BuildContext context, bool detventas,double? ganancias,double? descuento) {
   return list.isEmpty
       ? [
           const DataRow(cells: <DataCell>[
@@ -91,6 +93,14 @@ List<DataRow> _rows(List<Map<String, dynamic>> list, double total,
               _cell(''),
               _cellTotal('Ganancias'),
               _cellTotal('$ganancias Bs'),
+              _cell(''),
+            ]),
+          if (descuento != null) // Agregar las ganancias solo si no son nulas
+            DataRow(cells: <DataCell>[
+              _cell(''),
+              _cell(''),
+              _cellTotal('Descuento'),
+              _cellTotal('$descuento Bs'),
               _cell(''),
             ]),
         ];

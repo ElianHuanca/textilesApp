@@ -66,9 +66,9 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
   
   @override
-  Future<Usuario> updateUsuario(String correo, String password, String nombre) async {
+  Future<Usuario> updateUsuario(int id,String correo, String password, String nombre) async {
     try {
-      final response = await dio.put('/usuarios', data: {
+      final response = await dio.put('/usuarios/$id', data: {        
         'nombre': nombre,
         'correo': correo,
         'password': password

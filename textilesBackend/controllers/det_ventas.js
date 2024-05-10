@@ -38,13 +38,16 @@ const RegistrarDetVentas = async (req, res) => {
                 precio: venta.precio,
                 total: venta.total,
                 ganancias: venta.ganancias
-            });            
+            });        
+               
             detVenta.dataValues.nombre = venta.nombre;      
             vta.total += venta.total;
             vta.ganancias +=  venta.ganancias;      
             detallesVentasCreados.push(detVenta);                         
-        }              
+        }   
+        console.log(vta.descuento);           
         vta.descuento +=  data.descuento;
+        console.log(vta.descuento);
         await vta.save();
         res.status(200).json(detallesVentasCreados);
     } catch (error) {

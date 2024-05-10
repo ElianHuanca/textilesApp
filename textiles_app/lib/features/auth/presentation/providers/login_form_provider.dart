@@ -9,23 +9,33 @@ final loginFormProvider =
   final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
   final updateUserCallback = ref.watch(authProvider.notifier).updateUser;
   return LoginFormNotifier(
+      usuario: ref.watch(authProvider).usuario!,
       loginUserCallback: loginUserCallback,
       updateUserCallback: updateUserCallback);
 });
 
 class LoginFormNotifier extends StateNotifier<LoginFormState> {
   final Function(String, String) loginUserCallback;
-  final Function(String, String, String) updateUserCallback;
-  LoginFormNotifier({
-    required this.loginUserCallback,
-    required this.updateUserCallback,
-  }) : super(LoginFormState());  
+  final Function(int,String, String, String) updateUserCallback;
+  LoginFormNotifier(
+      {required this.loginUserCallback,
+      required this.updateUserCallback,
+      required Usuario usuario})
+      : super(LoginFormState(
+          id: usuario.id,
+          email: usuario.correo == ''
+              ? const Email.pure()
+              : Email.dirty(usuario.correo),
+          password: const Password.pure(),
+          nombre: usuario.nombre,
+        ));
 
-  void cargarUsuario(Usuario usuario) {
+  Future<void> cargarUsuario(Usuario usuario) async {
+    await Future.delayed(Duration.zero);
     state = state.copyWith(
-        email: Email.dirty(usuario.correo),
-        nombre: usuario.nombre,        
-        );
+      email: Email.dirty(usuario.correo),
+      nombre: usuario.nombre,
+    );
   }
 
   onEmailChange(String value) {
@@ -56,13 +66,15 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     state = state.copyWith(isPosting: false);
   }
 
-  onFormUpdate() async {    
+  onFormUpdate() async {
     _touchEveryField();
     if (!state.isValid) return;
     if (state.nombre == '') return;
     state = state.copyWith(isPosting: true);
-    await updateUserCallback(
-        state.email.value, state.password.value, state.nombre!);    
+    print(
+        'email: ${state.email.value}, password: ${state.password.value}, nombre: ${state.nombre}');
+    await updateUserCallback(state.id!,
+        state.email.value, state.password.value, state.nombre!);
     state = state.copyWith(isPosting: false);
   }
 
@@ -82,7 +94,7 @@ class LoginFormState {
   final bool isPosting;
   final bool isFormPosted;
   final bool isValid;
-  //final int? id;
+  final int? id;
   final Email email;
   final Password password;
   final String? nombre;
@@ -91,7 +103,7 @@ class LoginFormState {
       {this.isPosting = false,
       this.isFormPosted = false,
       this.isValid = false,
-      //this.id,
+      this.id,
       this.email = const Email.pure(),
       this.password = const Password.pure(),
       this.nombre});
@@ -100,7 +112,7 @@ class LoginFormState {
     bool? isPosting,
     bool? isFormPosted,
     bool? isValid,
-    //int? id,
+    int? id,
     Email? email,
     Password? password,
     String? nombre,
@@ -109,7 +121,7 @@ class LoginFormState {
         isPosting: isPosting ?? this.isPosting,
         isFormPosted: isFormPosted ?? this.isFormPosted,
         isValid: isValid ?? this.isValid,
-        //id: id ?? this.id,
+        id: id ?? this.id,
         email: email ?? this.email,
         password: password ?? this.password,
         nombre: nombre ?? this.nombre,

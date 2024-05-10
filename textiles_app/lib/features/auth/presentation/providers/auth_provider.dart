@@ -21,18 +21,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required this.authRepository,
     required this.keyValueStorageService,
   }) : super(AuthState(
-    //usuario: Usuario(id: 0, nombre: '', correo: '', token: ''),
+    usuario: Usuario(id: 0, nombre: '', correo: '', token: ''),
   )) {
     checkAuthStatus();
-  }
-
-  Usuario newEmptyUsuario() {
-    return Usuario(
-      id: 0,
-      nombre: '',
-      correo: '',
-      token: '',      
-    );
   }
 
   Future<void> loginUser(String email, String password) async {
@@ -48,17 +39,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> updateUser(String email, String password, String nombre) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+  Future<void> updateUser(int id,String email, String password, String nombre) async {    
     try {
       final usuario =
-          await authRepository.updateUsuario(email, password, nombre);
+          await authRepository.updateUsuario(id,email, password, nombre);
       _setLoggedUser(usuario);
     } on CustomError catch (e) {
-      throw (e.message);
+      throw Exception(e.message);
     } catch (e) {
       //logout('Error no controlado');
-      throw ('Error no controlado');
+      throw Exception('Error no controlado');
     }
   }
 

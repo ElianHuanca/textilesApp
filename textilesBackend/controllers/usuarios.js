@@ -23,10 +23,12 @@ const registrarUsuario = async (req, res) => {
 
 const actualizarUsuario = async (req, res) => {
     try {        
+        console.log('realizo la peticion de actualizar usuario');
+        const { id } = req.params;
         const { nombre, correo, password } = req.body;
         const salt = bcryptjs.genSaltSync();
         const pass = bcryptjs.hashSync( password, salt );
-        const usuario = await Usuario.findOne( { where: { correo } } );
+        const usuario = await Usuario.findOne( { where: { id } } );
         usuario.nombre = nombre;
         usuario.correo = correo;
         usuario.password = pass;

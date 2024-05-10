@@ -5,10 +5,9 @@ import 'package:textiles_app/features/shared/shared.dart';
 import '../providers/providers.dart';
 
 class UsuarioScreen extends ConsumerWidget {
-  const UsuarioScreen({super.key});
-
+  const UsuarioScreen({super.key});  
   @override
-  Widget build(BuildContext context, WidgetRef ref) {        
+  Widget build(BuildContext context, WidgetRef ref) {            
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: const Screen1(
@@ -18,6 +17,26 @@ class UsuarioScreen extends ConsumerWidget {
         ));
   }
 }
+/* class UsuarioScreen extends ConsumerWidget {
+  const UsuarioScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authProvider);
+    Future.delayed(Duration.zero, () {
+      ref.read(loginFormProvider.notifier).cargarUsuario(auth.usuario!);
+    });
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: const Screen1(
+        widget: [_PerfilForm()],
+        title: 'Editar Perfil',
+        isGridview: false,
+      ),
+    );
+  }
+} */
 
 class _PerfilForm extends ConsumerWidget {  
   const _PerfilForm();
