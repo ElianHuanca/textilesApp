@@ -16,7 +16,7 @@ final loginFormProvider =
 
 class LoginFormNotifier extends StateNotifier<LoginFormState> {
   final Function(String, String) loginUserCallback;
-  final Function(int,String, String, String) updateUserCallback;
+  final Function(int, String, String, String) updateUserCallback;
   LoginFormNotifier(
       {required this.loginUserCallback,
       required this.updateUserCallback,
@@ -29,14 +29,6 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
           password: const Password.pure(),
           nombre: usuario.nombre,
         ));
-
-  Future<void> cargarUsuario(Usuario usuario) async {
-    await Future.delayed(Duration.zero);
-    state = state.copyWith(
-      email: Email.dirty(usuario.correo),
-      nombre: usuario.nombre,
-    );
-  }
 
   onEmailChange(String value) {
     final newEmail = Email.dirty(value);
@@ -71,22 +63,24 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     if (!state.isValid) return;
     if (state.nombre == '') return;
     state = state.copyWith(isPosting: true);
-    print(
-        'email: ${state.email.value}, password: ${state.password.value}, nombre: ${state.nombre}');
-    await updateUserCallback(state.id!,
-        state.email.value, state.password.value, state.nombre!);
+    await updateUserCallback(
+        state.id!, state.email.value, state.password.value, state.nombre!);
     state = state.copyWith(isPosting: false);
   }
 
   _touchEveryField() {
     final email = Email.dirty(state.email.value);
-    final password = Password.dirty(state.password.value);
-
-    state = state.copyWith(
-        isFormPosted: true,
-        email: email,
-        password: password,
-        isValid: Formz.validate([email, password]));
+    if (state.id != 0 && state.password.value.isEmpty) {
+      state = state.copyWith(
+          isFormPosted: true, email: email, isValid: Formz.validate([email]));
+    } else {
+      final password = Password.dirty(state.password.value);
+      state = state.copyWith(
+          isFormPosted: true,
+          email: email,
+          password: password,
+          isValid: Formz.validate([email, password]));
+    }
   }
 }
 

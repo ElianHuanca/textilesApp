@@ -26,12 +26,14 @@ const actualizarUsuario = async (req, res) => {
         console.log('realizo la peticion de actualizar usuario');
         const { id } = req.params;
         const { nombre, correo, password } = req.body;
-        const salt = bcryptjs.genSaltSync();
-        const pass = bcryptjs.hashSync( password, salt );
         const usuario = await Usuario.findOne( { where: { id } } );
+        if (!password.isEmpty){
+            const salt = bcryptjs.genSaltSync();
+            const pass = bcryptjs.hashSync( password, salt );
+            usuario.password = pass;
+        }        
         usuario.nombre = nombre;
-        usuario.correo = correo;
-        usuario.password = pass;
+        usuario.correo = correo;        
         await usuario.save();
         res.status(200).json(usuario);
     } catch (error) {    
