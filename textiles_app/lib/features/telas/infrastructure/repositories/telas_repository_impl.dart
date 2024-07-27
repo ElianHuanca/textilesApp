@@ -24,4 +24,9 @@ class TelasRepositoryImpl implements TelasRepository {
   Future<bool> deleteTela(int id) {   
     return datasource.deleteTela(id);
   }
+  
+  @override
+  Future<Tela> getTela(int id) {
+    return datasource.getTela(id);
+  }
 }

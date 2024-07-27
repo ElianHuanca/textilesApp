@@ -6,11 +6,12 @@ import '../../domain/domain.dart';
 import '../providers/providers.dart';
 
 class VentasScreen extends ConsumerWidget {
-  const VentasScreen({super.key});
+  final int idsucursal;
+  const VentasScreen({super.key,required this.idsucursal});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ventasState = ref.watch(ventasProvider);
+    final ventasState = ref.watch(ventasProvider(idsucursal));
     return Screen1(
       widget: _buildBody(ventasState.ventas, context, ref),
       title: 'Ventas',

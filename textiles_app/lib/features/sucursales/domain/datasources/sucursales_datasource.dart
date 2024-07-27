@@ -3,10 +3,9 @@
 import '../domain.dart';
 
 abstract class SucursalesDatasource {
-  Future<List<Sucursal>> getSucursales(int idusuarios);
-  Future<Sucursal> createSucursal(Map<String, dynamic> sucursalLike, int idusuarios);
-  /* Future<void> updateSucursal(Map<String, dynamic> sucursalLike,int id);
-  Future<void> deleteSucursal(int id); */
+  Future<List<Sucursal>> getSucursales();
+  Future<Sucursal> getSucursal(int id);
+  Future<Sucursal> createSucursal(Map<String, dynamic> sucursalLike);
   Future<bool> updateSucursal(Map<String, dynamic> sucursalLike,int id);
   Future<bool> deleteSucursal(int id);
 }

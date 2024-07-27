@@ -44,8 +44,10 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
-        path: '/sucursal',
-        builder: (context, state) =>  const SucursalScreen(),
+        path: '/sucursal/:idsucursal',
+        builder: (context, state) =>  SucursalScreen(
+          idsucursal: int.parse(state.pathParameters['idsucursal'].toString()),
+        ),
       ),
 
       GoRoute(
@@ -59,8 +61,10 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
-        path: '/ventas',
-        builder: (context, state) => const VentasScreen(),
+        path: '/ventas/:idsucursal',
+        builder: (context, state) => VentasScreen(
+          idsucursal: int.parse(state.pathParameters['idsucursal'].toString()),
+        ),
       ),
 
       GoRoute(

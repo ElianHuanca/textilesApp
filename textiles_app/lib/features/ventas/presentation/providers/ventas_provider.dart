@@ -1,14 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/sucursales/presentation/providers/providers.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
 final ventasProvider =
-    StateNotifierProvider<VentasNotifier, VentasState>((ref) {
+    StateNotifierProvider.autoDispose.family<VentasNotifier, VentasState,int>((ref,idsucursal) {
   final ventasRepository = ref.watch(ventasRepositoryProvider);
   return VentasNotifier(
       ventasRepository: ventasRepository,
-      idsucursales: ref.watch(sucursalProvider).sucursal!.id);
+      idsucursales: idsucursal);
 });
 
 class VentasNotifier extends StateNotifier<VentasState> {

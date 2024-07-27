@@ -52,4 +52,15 @@ class TelasDatasourceImpl implements TelasDatasource {
       throw Exception();
     }
   }
+  
+  @override
+  Future<Tela> getTela(int id) async{
+    try{
+      final response = await dio.get('/telas/$id');
+      final tela = TelaMapper.jsonToEntity(response.data);
+      return tela;
+    }catch(e){
+      throw Exception();
+    }
+  }
 }
