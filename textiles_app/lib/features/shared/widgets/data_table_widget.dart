@@ -3,20 +3,25 @@
 import 'package:flutter/material.dart';
 import 'package:textiles_app/features/ventas/domain/domain.dart';
 
-DataTable dataTableWidget(
-    BuildContext context, List<DetalleVenta> detalleVentas) {
+DataTable dataTableWidget(List<String> header, BuildContext context,
+    List<DetalleVenta> detalleVentas) {
   return DataTable(
-      columns: _columns(context), columnSpacing: 8, rows: _rows(detalleVentas));
+      columns: _columns(header), columnSpacing: 8, rows: _rows(detalleVentas));
 }
 
-List<DataColumn> _columns(BuildContext context) => <DataColumn>[
-      _column(context, 'Producto'),
-      _column(context, 'Cantidad'),
-      _column(context, 'Precio'),
-      _column(context, 'Total'),
-    ];
+/* List<DataColumn> _columns(List<String> header) => <DataColumn>[
+      header.map((element) => _column(element)).toList(),
+      _column('Producto'),
+      _column('Cantidad'),
+      _column('Precio'),
+      _column('Total'),
+    ]; */
+    
+List<DataColumn> _columns(List<String> header) {
+  return header.map((title) => _column(title)).toList();
+}
 
-DataColumn _column(BuildContext context, String texto) => DataColumn(
+DataColumn _column(String texto) => DataColumn(
       label: Text(
         texto,
         style: const TextStyle(
@@ -26,6 +31,7 @@ DataColumn _column(BuildContext context, String texto) => DataColumn(
         ),
       ),
     );
+
 List<DataRow> _rows(List<DetalleVenta> detalleVentas) {
   return detalleVentas.isEmpty
       ? [

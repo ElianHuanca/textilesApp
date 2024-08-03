@@ -3,9 +3,9 @@
 import '../domain.dart';
 
 abstract class TelasDatasource {
-  Future<List<Tela>> getTelas(int idusuarios);
+  Future<List<Tela>> getTelas();
   Future<Tela> getTela(int id);
-  Future<Tela> createTela(Map<String, dynamic> telaLike,int idusuarios);
-  Future<bool> updateTela(Map<String, dynamic> telaLike,int id);  
+  Future<Tela> createTela(Map<String, dynamic> telaLike);
+  Future<Tela> updateTela(Map<String, dynamic> telaLike,int id);  
   Future<bool> deleteTela(int id);  
 }

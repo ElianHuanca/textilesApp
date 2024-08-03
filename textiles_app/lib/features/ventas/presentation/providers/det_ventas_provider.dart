@@ -2,41 +2,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
-final detalleVentasProvider =
-    StateNotifierProvider<DetalleVentasNotifier, DetalleVentasState>((ref) {
+final detalleVentasProvider = StateNotifierProvider.autoDispose
+    .family<DetalleVentasNotifier, DetalleVentasState, int>((ref, idventa) {
   final detalleVentasRepository = ref.watch(detalleVentasRepositoryProvider);
-  final setVenta = ref.watch(ventaProvider.notifier).setVenta;
-  final obtenerVenta = ref.watch(ventaProvider.notifier).getVenta;
-  final actualizaVenta = ref.watch(ventasProvider.notifier).actualizarVenta;
   return DetalleVentasNotifier(
-      actualizarVenta: actualizaVenta,
-      detalleVentasRepository: detalleVentasRepository,
-      setVenta: setVenta,
-      getVenta: obtenerVenta);
+    detalleVentasRepository: detalleVentasRepository,
+    idventa:idventa
+  );
 });
 
 class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
-  final Function(Venta)? actualizarVenta;
-  final Function(Venta)? setVenta;
-  final Function? getVenta;
   final DetalleVentasRepository detalleVentasRepository;
 
-  DetalleVentasNotifier(
-      {this.actualizarVenta,
-      required this.detalleVentasRepository,
-      this.getVenta,
-      this.setVenta})
-      : super(DetalleVentasState()) {
-    getDetVenta(getVenta!().id);
+  DetalleVentasNotifier({
+    required this.detalleVentasRepository,
+    required int idventa
+  }) : super(DetalleVentasState(idventa:idventa)) {
+    getDetVenta(idventa);
   }
 
-  Future getDetVenta(int idVenta) async {
+  Future getDetVenta(int idventa) async {
     if (state.isLoading) return;
 
     state = state.copyWith(isLoading: true);
 
     final detalleVentas =
-        await detalleVentasRepository.getDetalleVenta(idVenta);
+        await detalleVentasRepository.getDetalleVenta(idventa);
 
     if (detalleVentas.isEmpty) {
       state = state.copyWith(isLoading: false);
@@ -49,17 +40,12 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   Future<bool> createDetVenta(
       List<Map<String, dynamic>> detalleVentasLike, double descuento) async {
     try {
-      final Venta venta = getVenta!();
+      double total = 0.0;
+      double ganancias = 0.0;
       for (var detalle in detalleVentasLike) {
-        venta.total += detalle['total'] ?? 0.0;
-        venta.ganancias += detalle['ganancias'] ?? 0.0;
-      }
-      venta.descuento += descuento;
-      print(venta.total);
-      print(venta.ganancias);
-      print(venta.descuento);
-      setVenta!(venta);
-      actualizarVenta!(venta);
+        total += detalle['total'];
+        ganancias += detalle['ganancias'];
+      }      
       final response = await detalleVentasRepository.createDetalleVenta(
           detalleVentasLike, venta.id, descuento);
       state =
@@ -92,16 +78,19 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
 }
 
 class DetalleVentasState {
+  final int idventa;
   final bool isLoading;
   final List<DetalleVenta> detalleVentas;
 
-  DetalleVentasState({this.isLoading = false, this.detalleVentas = const []});
+  DetalleVentasState({required this.idventa,this.isLoading = true, this.detalleVentas = const []});
 
   DetalleVentasState copyWith({
+    int? idventa,
     bool? isLoading,
     List<DetalleVenta>? detalleVentas,
   }) =>
       DetalleVentasState(
+        idventa: idventa ?? this.idventa,
         isLoading: isLoading ?? this.isLoading,
         detalleVentas: detalleVentas ?? this.detalleVentas,
       );

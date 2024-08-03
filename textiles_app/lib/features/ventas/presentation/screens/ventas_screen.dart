@@ -13,7 +13,7 @@ class VentasScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ventasState = ref.watch(ventasProvider(idsucursal));
     return Screen1(
-      widget: _buildBody(ventasState.ventas, context, ref),
+      widget: _buildBody(ventasState.ventas, context),
       title: 'Ventas',
       isGridview: true,
       backRoute: '/',
@@ -21,23 +21,23 @@ class VentasScreen extends ConsumerWidget {
   }
 
   List<Widget> _buildBody(
-      List<Venta> ventas, BuildContext context, WidgetRef ref) {
+      List<Venta> ventas, BuildContext context) {
     return ([
       ...ventas.map((venta) {
         final String fecha = changeFormatDate(venta.fecha);
         return ItemDashboard(
           title: fecha,
           iconData: Icons.calendar_month_rounded,
-          onTap: _onTap(context, ref, venta),
+          onTap: _onTap(context, venta.id),
         );
       }).toList()
     ]);
   }
 
-  Function _onTap(BuildContext context, WidgetRef ref, Venta venta) {
+  Function _onTap(BuildContext context, int idventa) {
     return () {
-      ref.read(ventaProvider.notifier).setVenta(venta);
-      context.go('/det_ventas');
+      //ref.read(ventaProvider.notifier).setVenta(venta);
+      context.go('/det_ventas/$idventa');
     };
   }
 }

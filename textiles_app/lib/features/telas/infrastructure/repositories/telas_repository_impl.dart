@@ -6,17 +6,17 @@ class TelasRepositoryImpl implements TelasRepository {
   TelasRepositoryImpl(this.datasource);
 
   @override
-  Future<List<Tela>> getTelas(int idusuarios) {
-    return datasource.getTelas(idusuarios);
+  Future<List<Tela>> getTelas() {
+    return datasource.getTelas();
   }
   
   @override
-  Future<Tela> createTela(Map<String, dynamic> telaLike,int idusuarios) {
-    return datasource.createTela(telaLike, idusuarios);
+  Future<Tela> createTela(Map<String, dynamic> telaLike) {
+    return datasource.createTela(telaLike);
   }
   
   @override
-  Future<bool> updateTela(Map<String, dynamic> telaLike,int id) {   
+  Future<Tela> updateTela(Map<String, dynamic> telaLike,int id) {   
     return datasource.updateTela(telaLike,id);
   }
 

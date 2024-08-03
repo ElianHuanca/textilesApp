@@ -11,11 +11,14 @@ class SucursalesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sucursalesState = ref.watch(sucursalesProvider);
-    return Screen1(
-      widget: _buildBody(sucursalesState.sucursales, context, ref, gSucursales),
-      title: 'Sucursales',
-      isGridview: true,
-    );
+    return sucursalesState.isLoading
+        ? const FullScreenLoader()
+        : Screen1(
+            widget: _buildBody(
+                sucursalesState.sucursales, context, ref, gSucursales),
+            title: 'Sucursales',
+            isGridview: true,
+          );
   }
 
   List<Widget> _buildBody(List<Sucursal> sucursales, BuildContext context,

@@ -46,7 +46,7 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
         path: '/sucursal/:idsucursal',
         builder: (context, state) =>  SucursalScreen(
-          idsucursal: int.parse(state.pathParameters['idsucursal'].toString()),
+          id: int.parse(state.pathParameters['idsucursal'].toString()),
         ),
       ),
 
@@ -56,8 +56,10 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
-        path: '/tela',
-        builder: (context, state) => const TelaScreen(),
+        path: '/tela/:idtela',
+        builder: (context, state) => TelaScreen(
+          id: int.parse(state.pathParameters['idtela'].toString()),
+        ),
       ),
 
       GoRoute(
@@ -68,8 +70,10 @@ final goRouterProvider = Provider((ref) {
       ),
 
       GoRoute(
-        path: '/det_ventas',
-        builder: (context, state) => const DetVentas(),
+        path: '/det_ventas/:idventa',
+        builder: (context, state) => DetVentas(
+          idventa: int.parse(state.pathParameters['idventa'].toString()),
+        ),
       ),
 
       GoRoute(

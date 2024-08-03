@@ -30,8 +30,7 @@ class SucursalNotifier extends StateNotifier<SucursalState> {
       final sucursal = await sucursalesRepository.getSucursal(state.id);
 
       state = state.copyWith(isLoading: false, sucursal: sucursal);
-    }catch(e){
-      //404 product not found
+    }catch(e){      
       print(e);
     }
   }
@@ -51,13 +50,11 @@ class SucursalState {
   final int id;
   final Sucursal? sucursal;
   final bool isLoading;
-  final bool isSaving;
 
   SucursalState({
     required this.id,
     this.sucursal,
-    this.isLoading = true,
-    this.isSaving = false,
+    this.isLoading = true,    
   });
 
   SucursalState copyWith({
@@ -69,7 +66,6 @@ class SucursalState {
       SucursalState(
         id: id ?? this.id,
         sucursal: sucursal ?? this.sucursal,
-        isLoading: isLoading ?? this.isLoading,
-        isSaving: isSaving ?? this.isSaving,
+        isLoading: isLoading ?? this.isLoading,        
       );
 }

@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:textiles_app/features/sucursales/infrastructure/infrastructure.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
@@ -49,10 +47,8 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
 
   Future<bool> updateSucursal(Map<String, dynamic> sucursalLike) async {
     try {
-      final response = await sucursalesRepository.updateSucursal(
-          sucursalLike, sucursalLike['id']);
-      if (!response) return false;
-      final Sucursal sucursal = SucursalMapper.jsonToEntity(sucursalLike);
+      final sucursal = await sucursalesRepository.updateSucursal(
+          sucursalLike, sucursalLike['id']);            
       state = state.copyWith(
           sucursales: state.sucursales
               .map(
@@ -83,7 +79,7 @@ class SucursalesState {
   final bool isLoading;
   final List<Sucursal> sucursales;
 
-  SucursalesState({this.isLoading = false, this.sucursales = const []});
+  SucursalesState({this.isLoading = true, this.sucursales = const []});
 
   SucursalesState copyWith({bool? isLoading, List<Sucursal>? sucursales}) {
     return SucursalesState(

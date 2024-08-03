@@ -5,34 +5,36 @@ import 'package:textiles_app/features/shared/shared.dart';
 import '../providers/providers.dart';
 
 class DetVentas extends ConsumerWidget {
-  const DetVentas({super.key});
+  final int idventa;
+  const DetVentas({super.key, required this.idventa});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final detalleVentasState = ref.watch(detalleVentasProvider);
-    final venta = ref.watch(ventaProvider).venta;
-    final List<Map<String, dynamic>> detalleVentas = detalleVentasState
+    final detalleVentasState = ref.watch(detalleVentasProvider(idventa));
+    final ventaState = ref.watch(ventaProvider(idventa));
+    /* final List<Map<String, dynamic>> detalleVentas = detalleVentasState
         .detalleVentas
         .map((detalleVenta) => detalleVenta.toJson() as Map<String, dynamic>)
-        .toList();
-    String fecha = changeFormatDate(venta!.fecha);
-    return Screen1(
-      widget: [
-        container(
-            context,
-            DataTableMap(
-                list: detalleVentas,
-                total: venta.total,
-                ganancias: venta.ganancias, 
-                descuento: venta.descuento,
-                detventas: true             
-                ))
-      ],
-      title: fecha,
-      isGridview: false,
-      backRoute: '/ventas',
-      onTap: () => {context.go('/det_venta')},
-    );
+        .toList(); */
+    //String fecha = changeFormatDate(venta!.fecha);
+    return detalleVentasState.isLoading || ventaState.isLoading
+        ? const FullScreenLoader()
+        : Screen1(
+            widget: [
+              container(
+                  context,
+                  DataTableMap(
+                      list: detalleVentasState.detalleVentas,
+                      total: ventaState.venta!.total,
+                      ganancias: ventaState.venta!.ganancias,
+                      descuento: ventaState.venta!.descuento,
+                      detventas: true))
+            ],
+            title: changeFormatDate(ventaState.venta!.fecha),
+            isGridview: false,
+            backRoute: '/ventas',
+            onTap: () => {context.go('/det_venta')},
+          );
   }
 
   Container container(BuildContext context, Widget widget) {

@@ -6,12 +6,12 @@ import '../../domain/domain.dart';
 import '../providers/providers.dart';
 
 class SucursalScreen extends ConsumerWidget {
-  final int idsucursal;
-  const SucursalScreen({super.key, required this.idsucursal});
+  final int id;
+  const SucursalScreen({super.key, required this.id});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sucursalState = ref.watch(sucursalProvider(idsucursal));
+    final sucursalState = ref.watch(sucursalProvider(id));
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: sucursalState.isLoading

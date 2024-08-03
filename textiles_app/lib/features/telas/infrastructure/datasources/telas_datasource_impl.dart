@@ -5,15 +5,15 @@ import '../infrastructure.dart';
 
 class TelasDatasourceImpl implements TelasDatasource {
   late final Dio dio;
-
-  TelasDatasourceImpl()
+  final int idusuario;
+  TelasDatasourceImpl({required this.idusuario})
       : dio = Dio(BaseOptions(
           baseUrl: Environment.apiUrl,
         ));
 
   @override
-  Future<List<Tela>> getTelas(int idusuarios) async {
-    final response = await dio.get<List>('/telas/$idusuarios');
+  Future<List<Tela>> getTelas() async {
+    final response = await dio.get<List>('/telas/$idusuario');
     final List<Tela> telas = [];
     for (final tela in response.data ?? []) {
       telas.add(TelaMapper.jsonToEntity(tela));
@@ -22,10 +22,10 @@ class TelasDatasourceImpl implements TelasDatasource {
   }
 
   @override
-  Future<Tela> createTela(Map<String, dynamic> telaLike, int idusuarios) async {
+  Future<Tela> createTela(Map<String, dynamic> telaLike) async {
     try {
       telaLike.remove('id');
-      final response = await dio.post('/telas/$idusuarios', data: telaLike);
+      final response = await dio.post('/telas/$idusuario', data: telaLike);
       final tela = TelaMapper.jsonToEntity(response.data);
       return tela;
     } catch (e) {
@@ -34,10 +34,11 @@ class TelasDatasourceImpl implements TelasDatasource {
   }
 
   @override
-  Future<bool> updateTela(Map<String, dynamic> telaLike, int id) async {
+  Future<Tela> updateTela(Map<String, dynamic> telaLike, int id) async {
     try {
       final response = await dio.put('/telas/$id', data: telaLike);
-      return response.statusCode == 200;
+      final tela = TelaMapper.jsonToEntity(response.data);
+      return tela;
     } catch (e) {
       throw Exception();
     }

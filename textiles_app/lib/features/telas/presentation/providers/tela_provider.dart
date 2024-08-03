@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
-final telaProvider = StateNotifierProvider<TelaNotifier, TelaState>((ref) {
+final telaProvider = StateNotifierProvider.autoDispose.family<TelaNotifier, TelaState,int>((ref,id) {
   final telasRepository = ref.watch(telasRepositoryProvider);
 
-  return TelaNotifier(telasRepository: telasRepository);
+  return TelaNotifier(telasRepository: telasRepository,id:id);
 });
 
 class TelaNotifier extends StateNotifier<TelaState> {
@@ -13,7 +13,8 @@ class TelaNotifier extends StateNotifier<TelaState> {
 
   TelaNotifier({
     required this.telasRepository,
-  }) : super(TelaState());
+    required int id,
+  }) : super(TelaState(id:id));
 
   Tela newEmptyTela() {
     return Tela(
@@ -25,29 +26,41 @@ class TelaNotifier extends StateNotifier<TelaState> {
       precxcompra: 0,
     );
   }
+  
+  Future<void> loadTela() async {
+    try {
+      if (state.id == 0) {
+        state = state.copyWith(isLoading: false, tela: newEmptyTela());
+        return;
+      }
+      final tela = await telasRepository.getTela(state.id);
 
-  void nuevaTela()  {
-    state = state.copyWith(      
-      tela: newEmptyTela(),
-    );
-  }
-
-  void setTela(Tela tela) {
-    state = state.copyWith( tela: tela);
+      state = state.copyWith(isLoading: false, tela: tela);
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
 class TelaState {
+  final int id;  
   final Tela? tela;  
+  final bool isLoading;
 
   TelaState({
+    required this.id,
     this.tela,    
+    this.isLoading = true,
   });
 
   TelaState copyWith({
     Tela? tela,    
+    int? id,
+    bool? isLoading,
   }) =>
       TelaState(
         tela: tela ?? this.tela,
+        id: id ?? this.id,
+        isLoading: isLoading ?? this.isLoading,
       );
 }
