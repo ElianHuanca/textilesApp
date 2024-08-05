@@ -16,6 +16,11 @@ class VentasRepositoryImpl extends VentasRepository {
   @override
   Future<Venta> createVentaAhora(int idsucursales) {
     return datasource.createVentaAhora(idsucursales);
+  }
+  
+  @override
+  Future<Venta> getVenta(int id) {
+    return datasource.getVenta(id);
   }  
   
 }

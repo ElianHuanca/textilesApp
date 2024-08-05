@@ -141,7 +141,6 @@ class TelaFormState {
   });
 
   TelaFormState copyWith({
-    bool? isFormValid,
     int? id,
     String? nombre,
     String? precxmen,

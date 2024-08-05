@@ -6,17 +6,17 @@ class SucursalesRepositoryImpl implements SucursalesRepository {
   SucursalesRepositoryImpl(this.datasource);
 
   @override
-  Future<List<Sucursal>> getSucursales(int idusuarios) {
-    return datasource.getSucursales(idusuarios);
+  Future<List<Sucursal>> getSucursales() {
+    return datasource.getSucursales();
   }
   
   @override
-  Future<Sucursal> createSucursal(Map<String, dynamic> sucursalLike,int idusuarios) {
-    return datasource.createSucursal(sucursalLike, idusuarios);
+  Future<Sucursal> createSucursal(Map<String, dynamic> sucursalLike) {
+    return datasource.createSucursal(sucursalLike);
   }
 
   @override
-  Future<bool> updateSucursal(Map<String, dynamic> sucursalLike, int id) {
+  Future<Sucursal> updateSucursal(Map<String, dynamic> sucursalLike, int id) {
     return datasource.updateSucursal(sucursalLike, id);
   }
   
@@ -25,5 +25,8 @@ class SucursalesRepositoryImpl implements SucursalesRepository {
     return datasource.deleteSucursal(id);
   }
   
-  
+  @override
+  Future<Sucursal> getSucursal(int id) {
+    return datasource.getSucursal(id);
+  }
 }

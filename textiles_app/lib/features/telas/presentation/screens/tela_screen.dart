@@ -6,14 +6,17 @@ import '../providers/providers.dart';
 import 'package:go_router/go_router.dart';
 
 class TelaScreen extends ConsumerWidget {
-  const TelaScreen({super.key});
+  final int id;
+  const TelaScreen({super.key, required this.id});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final telaState = ref.watch(telaProvider);
+    final telaState = ref.watch(telaProvider(id));
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Screen1(
+        child: telaState.isLoading
+            ? const FullScreenLoader()
+            : Screen1(
                 widget: [_telaInformation(telaState.tela!, context, ref)],
                 title: telaState.tela!.id == 0 ? 'Crear Tela' : 'Editar Tela',
                 isGridview: false,
@@ -48,18 +51,18 @@ class TelaScreen extends ConsumerWidget {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   initialValue: telaForm.precxmen,
-                  onChanged: (value) => ref
+                  onChanged: ref
                       .read(telaFormProvider(tela).notifier)
-                      .onPrecxmenChanged(value),
+                      .onPrecxmenChanged,
                 ),
                 MiTextField(
                   label: 'Precio X Mayor',
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   initialValue: telaForm.precxmay,
-                  onChanged: (value) => ref
+                  onChanged: ref
                       .read(telaFormProvider(tela).notifier)
-                      .onPrecxmayChanged(value),
+                      .onPrecxmayChanged,
                 ),
               ],
             ),
@@ -71,18 +74,18 @@ class TelaScreen extends ConsumerWidget {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   initialValue: telaForm.precxrollo,
-                  onChanged: (value) => ref
+                  onChanged: ref
                       .read(telaFormProvider(tela).notifier)
-                      .onPrecxrolloChanged(value),
+                      .onPrecxrolloChanged,
                 ),
                 MiTextField(
                   label: 'Precio Compra',
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   initialValue: telaForm.precxcompra,
-                  onChanged: (value) => ref
+                  onChanged: ref
                       .read(telaFormProvider(tela).notifier)
-                      .onPrecxcompraChanged(value),
+                      .onPrecxcompraChanged,
                 ),
               ],
             ),
@@ -104,16 +107,22 @@ class TelaScreen extends ConsumerWidget {
     return () {
       tela.id == 0
           ? {
-              ref.read(telaFormProvider(tela).notifier).onCreateSubmit().then(
-                  (value) => value
-                      ? showSnackbar(context, 'Creado Correctamente')
-                      : showSnackbar(context, 'Hubo Un Error'))
+              ref
+                  .read(telaFormProvider(tela).notifier)
+                  .onCreateSubmit()
+                  .then((value) {
+                showSnackbar(
+                    context, value ? 'Creado Correctamente' : 'Hubo Un Error');
+              })
             }
           : {
-              ref.read(telaFormProvider(tela).notifier).onUpdateSubmit().then(
-                  (value) => value
-                      ? showSnackbar(context, 'Modificado Correctamente')
-                      : showSnackbar(context, 'Hubo Un Error'))
+              ref
+                  .read(telaFormProvider(tela).notifier)
+                  .onUpdateSubmit()
+                  .then((value) {
+                showSnackbar(context,
+                    value ? 'Modificado Correctamente' : 'Hubo Un Error');
+              })
             };
       context.go('/telas');
     };
@@ -121,10 +130,10 @@ class TelaScreen extends ConsumerWidget {
 
   Function _onDelete(BuildContext context, WidgetRef ref, Tela tela) {
     return () {
-      ref.read(telaFormProvider(tela).notifier).onDeleteSubmit().then((value) =>
-          value
-              ? showSnackbar(context, 'Eliminado Correctamente')
-              : showSnackbar(context, 'Hubo Un Error'));
+      ref.read(telaFormProvider(tela).notifier).onDeleteSubmit().then((value) {
+        showSnackbar(
+            context, value ? 'Eliminado Correctamente' : 'Hubo Un Error');
+      });
       context.go('/telas');
     };
   }

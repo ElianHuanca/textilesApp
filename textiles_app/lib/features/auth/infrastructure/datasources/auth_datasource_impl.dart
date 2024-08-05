@@ -37,11 +37,11 @@ class AuthDataSourceImpl extends AuthDataSource {
   @override
   Future<Usuario> login(String correo, String password) async {
     
-    try {
+    try {      
       final response = await dio.post('/auth', data: {
         'correo': correo,
         'password': password
-      });      
+      });            
       final user = UsuarioMapper.userJsonToEntity(response.data);
       return user;
       

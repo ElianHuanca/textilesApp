@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:textiles_app/features/auth/presentation/providers/auth_provider.dart';
-import 'package:textiles_app/features/sucursales/infrastructure/infrastructure.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
@@ -8,26 +6,25 @@ final sucursalesProvider =
     StateNotifierProvider<SucursalesNotifier, SucursalesState>((ref) {
   final sucursalesRepository = ref.watch(sucursalesRepositoryProvider);
   return SucursalesNotifier(
-    idusuarios: ref.watch(authProvider).usuario!.id,
     sucursalesRepository: sucursalesRepository,
   );
 });
 
 class SucursalesNotifier extends StateNotifier<SucursalesState> {
   final SucursalesRepository sucursalesRepository;
-  final int idusuarios;
+  
   SucursalesNotifier(
-      {required this.idusuarios, required this.sucursalesRepository})
+      {required this.sucursalesRepository})
       : super(SucursalesState()) {
-    getSucursales(idusuarios);
+    getSucursales();
   }
 
-  Future getSucursales(int idusuarios) async {
+  Future getSucursales() async {
     if (state.isLoading) return;
 
     state = state.copyWith(isLoading: true);
 
-    final sucursales = await sucursalesRepository.getSucursales(idusuarios);
+    final sucursales = await sucursalesRepository.getSucursales();
 
     if (sucursales.isEmpty) {
       state = state.copyWith(isLoading: false);
@@ -40,8 +37,7 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
   Future<bool> createSucursal(Map<String, dynamic> sucursalLike) async {
     try {
       final sucursal =
-          await sucursalesRepository.createSucursal(sucursalLike, idusuarios);
-
+          await sucursalesRepository.createSucursal(sucursalLike);
       state = state.copyWith(sucursales: [...state.sucursales, sucursal]);
       return true;
     } catch (e) {
@@ -51,10 +47,8 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
 
   Future<bool> updateSucursal(Map<String, dynamic> sucursalLike) async {
     try {
-      final response = await sucursalesRepository.updateSucursal(
-          sucursalLike, sucursalLike['id']);
-      if (!response) return false;
-      final Sucursal sucursal = SucursalMapper.jsonToEntity(sucursalLike);
+      final sucursal = await sucursalesRepository.updateSucursal(
+          sucursalLike, sucursalLike['id']);            
       state = state.copyWith(
           sucursales: state.sucursales
               .map(
@@ -85,7 +79,7 @@ class SucursalesState {
   final bool isLoading;
   final List<Sucursal> sucursales;
 
-  SucursalesState({this.isLoading = false, this.sucursales = const []});
+  SucursalesState({this.isLoading = true, this.sucursales = const []});
 
   SucursalesState copyWith({bool? isLoading, List<Sucursal>? sucursales}) {
     return SucursalesState(

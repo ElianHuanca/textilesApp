@@ -11,11 +11,14 @@ class SucursalesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sucursalesState = ref.watch(sucursalesProvider);
-    return Screen1(
-      widget: _buildBody(sucursalesState.sucursales, context, ref, gSucursales),
-      title: 'Sucursales',
-      isGridview: true,      
-    );
+    return sucursalesState.isLoading
+        ? const FullScreenLoader()
+        : Screen1(
+            widget: _buildBody(
+                sucursalesState.sucursales, context, ref, gSucursales),
+            title: 'Sucursales',
+            isGridview: true,
+          );
   }
 
   List<Widget> _buildBody(List<Sucursal> sucursales, BuildContext context,
@@ -25,31 +28,32 @@ class SucursalesScreen extends ConsumerWidget {
         return ItemDashboard(
             title: sucursal.nombre,
             iconData: Icons.store,
-            onTap: _onTap(context, ref, sucursal, gSucursales));
+            onTap: _onTap(context, sucursal.id, gSucursales));
       }).toList(),
       gSucursales
           ? ItemDashboard(
               title: 'Agregar Sucusal',
               iconData: Icons.add_business_rounded,
-              onTap: _onTap2(context, ref))
+              onTap: _onTap2(context))
           : const SizedBox(),
     ]);
   }
 
   //ACTUALIZAR|ELIMINAR SUCURSAL O VER VENTAS
-  Function _onTap(BuildContext context, WidgetRef ref, Sucursal sucursal,
-      bool gSucursales) {
+  Function _onTap(BuildContext context, int idsucursal, bool gSucursales) {
     return () {
-      ref.read(sucursalProvider.notifier).setSucursal(sucursal);
-      gSucursales ? context.go('/sucursal') : context.go('/ventas');
+      //ref.read(sucursalProvider.notifier).setSucursal(sucursal);
+      gSucursales
+          ? context.go('/sucursal/$idsucursal')
+          : context.go('/ventas/$idsucursal');
     };
   }
 
   //CREAR SUCURSAL
-  Function _onTap2(BuildContext context, WidgetRef ref) {
+  Function _onTap2(BuildContext context) {
     return () {
-      ref.read(sucursalProvider.notifier).nuevaSucursal();
-      context.go('/sucursal');
+      //ref.read(sucursalProvider.notifier).nuevaSucursal();
+      context.go('/sucursal/0');
     };
   }
 }

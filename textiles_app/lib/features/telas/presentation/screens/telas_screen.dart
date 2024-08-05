@@ -10,22 +10,23 @@ class TelasScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final telasState = ref.watch(telasProvider);
-    return Screen1(
-      widget: _buildBody(telasState.telas, context, ref),
-      title: 'Telas',
-      isGridview: false,
-      onTap: _onTap(context, ref),      
-    );
+    return telasState.isLoading
+        ? const FullScreenLoader()
+        : Screen1(
+            widget: _buildBody(telasState.telas, context),
+            title: 'Telas',
+            isGridview: false,
+            onTap: _onTap(context),
+          );
   }
 
-  List<Widget> _buildBody(
-      List<Tela> telas, BuildContext context, WidgetRef ref) {
+  List<Widget> _buildBody(List<Tela> telas, BuildContext context) {
     return telas.map((tela) {
-      return _telaCard(tela, context, ref);
+      return _telaCard(tela, context);
     }).toList();
   }
 
-  Container _telaCard(Tela tela, BuildContext context, WidgetRef ref) {
+  Container _telaCard(Tela tela, BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -52,17 +53,15 @@ class TelasScreen extends ConsumerWidget {
           ],
         ),
         onTap: () {
-          ref.read(telaProvider.notifier).setTela(tela);
-          context.go('/tela');
+          context.go('/tela/${tela.id}');
         },
       ),
     );
   }
 
-  Function _onTap(BuildContext context, WidgetRef ref) {
+  Function _onTap(BuildContext context) {
     return () {
-      ref.read(telaProvider.notifier).nuevaTela();
-        context.go('/tela');
+      context.go('/tela/0');
     };
   }
 }

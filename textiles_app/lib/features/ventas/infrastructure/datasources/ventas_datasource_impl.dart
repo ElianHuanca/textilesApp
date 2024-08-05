@@ -30,4 +30,14 @@ class VentasDatasourceImpl extends VentasDatasource {
       throw Exception('Error al crear venta: $e');
     }
   }
+  
+  @override
+  Future<Venta> getVenta(int id) async{
+    try{
+      final response = await dio.get('/ventas/$id');
+      return VentaMapper.jsonToEntity(response.data);
+    }catch(e){
+      throw Exception('Error al obtener venta: $e');
+    }
+  }
 }
