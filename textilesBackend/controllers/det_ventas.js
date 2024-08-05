@@ -44,10 +44,8 @@ const RegistrarDetVentas = async (req, res) => {
             vta.total += venta.total;
             vta.ganancias +=  venta.ganancias;      
             detallesVentasCreados.push(detVenta);                         
-        }   
-        console.log(vta.descuento);           
-        vta.descuento +=  data.descuento;
-        console.log(vta.descuento);
+        }           
+        vta.descuento +=  data.descuento;        
         await vta.save();
         res.status(200).json(detallesVentasCreados);
     } catch (error) {

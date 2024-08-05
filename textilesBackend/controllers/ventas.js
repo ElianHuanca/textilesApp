@@ -1,5 +1,7 @@
-const Venta = require('../models/venta');
-
+//const Venta = require('../models/venta');
+//const Sucursal = require('../models/sucursal');
+const { Venta, Sucursal } = require('../models');
+const { Sequelize , Op } = require('sequelize');
 const ObtenerVentas = async (req, res) => {
     try {
         const { idsucursales } = req.params;
@@ -57,8 +59,38 @@ const RegistrarVentaAhora = async (req, res) => {
     }
 };
 
+const ventasTotalesPorSucursal = async (req, res) => {
+    try {
+        const {idusuarios} = req.params;
+        const {fechaini,fechafin} = req.body;
+        const ventas = await Sucursal.findAll({
+            attributes: ['nombre', [Sequelize.fn('sum', Sequelize.col('Ventas.total')), 'totalVentas']],
+            include: [{
+                model: Venta,
+                as: 'Ventas',
+                attributes: [],
+                where: {
+                    fecha: {
+                        [Op.between]: [fechaini, fechafin],
+                    },
+                },
+            }],
+            where: {
+                idusuarios: idusuarios,
+            },
+            group: ['sucursal.id'],
+        });
+
+        res.json(ventas);
+    } catch (error) {
+        console.error('Error al obtener ventas totales por sucursal:', error);
+        res.status(500).json({ error: 'Error al obtener ventas totales por sucursal', message: error.message });
+    }
+}
+
 module.exports = {
     ObtenerVentas,
     RegistrarVenta,
-    RegistrarVentaAhora    
+    RegistrarVentaAhora,
+    ventasTotalesPorSucursal
 }

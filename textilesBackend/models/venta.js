@@ -39,7 +39,10 @@ const Venta = sequelize.define('ventas', {
     timestamps: false, 
 });
 
-Venta.belongsTo(Sucursal, { foreignKey: 'idsucursales' }); 
+//Venta.belongsTo(Sucursal, { foreignKey: 'idsucursales' }); 
 
+/* Venta.associate = (models) => {
+    Venta.belongsTo(models.Sucursal, { foreignKey: 'idsucursales' });
+}; */
 module.exports = Venta;
 

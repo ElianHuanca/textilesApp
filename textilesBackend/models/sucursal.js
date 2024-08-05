@@ -1,6 +1,7 @@
 const sequelize = require("../database/database");
 const { DataTypes } = require('sequelize');
 const Usuario = require('./usuario');
+
 const Sucursal = sequelize.define('sucursales', {
     id: {
         type: DataTypes.INTEGER,
@@ -17,15 +18,14 @@ const Sucursal = sequelize.define('sucursales', {
     idusuarios: {
         type: DataTypes.INTEGER,
         references: {
-            model: Usuario, // Nombre del modelo al que se hace referencia
-            key: 'id' // Clave primaria del modelo al que se hace referencia
+            model: Usuario,
+            key: 'id'
         }
     }
 }, {
     timestamps: false, 
 });
 
-Sucursal.belongsTo(Usuario, { foreignKey: 'idusuarios' }); // Establece la relación de clave foránea
 
 module.exports = Sucursal;
 

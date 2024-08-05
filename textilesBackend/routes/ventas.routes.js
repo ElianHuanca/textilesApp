@@ -8,4 +8,6 @@ router.get('/:idsucursales', VentaController.ObtenerVentas);
 router.post('', VentaController.RegistrarVenta);
 
 router.post('/:idsucursales', VentaController.RegistrarVentaAhora);
+
+router.get('/grafica1/:idusuarios', VentaController.ventasTotalesPorSucursal);
 module.exports = router;
