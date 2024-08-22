@@ -5,15 +5,15 @@ import 'package:textiles_app/features/ventas/infrastructure/infrastructure.dart'
 
 class VentasDatasourceImpl extends VentasDatasource {
   late final Dio dio;
-
-  VentasDatasourceImpl()
+  final int idsucursal;
+  VentasDatasourceImpl({required this.idsucursal})
       : dio = Dio(BaseOptions(
           baseUrl: Environment.apiUrl,
         ));
 
   @override
-  Future<List<Venta>> getVentas(int idsucursales) async {
-    final response = await dio.get<List>('/ventas/$idsucursales');    
+  Future<List<Venta>> getVentas() async {
+    final response = await dio.get<List>('/ventas/$idsucursal');    
     final List<Venta> ventas = [];    
     for (final venta in response.data ?? []) {
       ventas.add(VentaMapper.jsonToEntity(venta));
@@ -34,10 +34,20 @@ class VentasDatasourceImpl extends VentasDatasource {
   @override
   Future<Venta> getVenta(int id) async{
     try{
-      final response = await dio.get('/ventas/$id');
+      final response = await dio.get('/ventas/venta/$id');
       return VentaMapper.jsonToEntity(response.data);
     }catch(e){
       throw Exception('Error al obtener venta: $e');
+    }
+  }
+  
+  @override
+  Future<Venta> actualizarVenta(Map<String, dynamic> ventaLike, int id) async{
+    try{
+      final response = await dio.put('/ventas/$id', data: ventaLike);
+      return VentaMapper.jsonToEntity(response.data);
+    }catch(e){
+      throw Exception('Error al actualizar venta: $e');
     }
   }
 }

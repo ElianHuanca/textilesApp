@@ -3,7 +3,9 @@ const router = Router();
 
 const Telas = require("../controllers/telas");
 
-router.get('/:idusuarios', Telas.ObtenerTelasXUsu);//http:localhost:8080/api/telas/1
+router.get('/:idusuarios', Telas.ObtenerTelasXUsu);
+
+router.get('/tela/:id', Telas.ObtenerTela);
 
 router.post('/:idusuarios', Telas.RegistrarTela);
 

@@ -12,7 +12,7 @@ final sucursalProvider = StateNotifierProvider.autoDispose
 class SucursalNotifier extends StateNotifier<SucursalState> {
   final SucursalesRepository sucursalesRepository;  
   SucursalNotifier({required this.sucursalesRepository, required int id})
-      : super(SucursalState(id:id));
+      : super(SucursalState(id:id)){loadSucursal();}
 
   Sucursal newEmptySucursal() {
     return Sucursal(

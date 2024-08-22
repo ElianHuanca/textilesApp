@@ -22,9 +22,6 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   }
 
   Future getDetVenta(int idventa) async {
-    if (state.isLoading) return;
-
-    state = state.copyWith(isLoading: true);
 
     final detalleVentas =
         await detalleVentasRepository.getDetalleVenta(idventa);
@@ -38,16 +35,10 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   }
 
   Future<bool> createDetVenta(
-      List<Map<String, dynamic>> detalleVentasLike, double descuento) async {
-    try {
-      double total = 0.0;
-      double ganancias = 0.0;
-      for (var detalle in detalleVentasLike) {
-        total += detalle['total'];
-        ganancias += detalle['ganancias'];
-      }      
+      List<Map<String, dynamic>> detalleVentasLike) async {
+    try {         
       final response = await detalleVentasRepository.createDetalleVenta(
-          detalleVentasLike, venta.id, descuento);
+          detalleVentasLike, state.idventa);
       state =
           state.copyWith(detalleVentas: [...response, ...state.detalleVentas]);
       return true;
@@ -59,12 +50,7 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   Future<bool> deleteDetVenta(int id) async {
     try {
       final response = await detalleVentasRepository.deleteDetalleVenta(id);
-      if (response) {
-        final Venta venta = getVenta!();
-        final detalle =
-            state.detalleVentas.firstWhere((detalle) => detalle.id == id);
-        venta.total -= detalle.total!;
-        venta.ganancias -= detalle.ganancias!;
+      if (response) {                
         state = state.copyWith(
             detalleVentas: state.detalleVentas
                 .where((detalle) => detalle.id != id)

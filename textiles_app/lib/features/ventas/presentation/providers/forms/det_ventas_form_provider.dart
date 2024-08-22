@@ -1,48 +1,50 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/providers.dart';
 
-final detalleVentaFormProvider =
-    StateNotifierProvider<DetalleVentaFormNotifier, DetalleVentaFormState>(
-        (ref) {
+final detalleVentaFormProvider = StateNotifierProvider.autoDispose
+    .family<DetalleVentaFormNotifier, DetalleVentaFormState, int>(
+        (ref, idventa) {
   final createCallback =
-      ref.watch(detalleVentasProvider.notifier).createDetVenta;
-
+      ref.watch(detalleVentasProvider(idventa).notifier).createDetVenta;    
   return DetalleVentaFormNotifier(onSubmitCallback: createCallback);
 });
 
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(
-          List<Map<String, dynamic>> detVentaLike, double descuento)?
+  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
       onSubmitCallback;
-
+  /* final Future<bool> Function(Map<String, dynamic> ventaLike, int id)?
+      onUpdateCallback; */
   DetalleVentaFormNotifier({this.onSubmitCallback})
       : super(DetalleVentaFormState());
 
   void addDetalleVenta() {
-    if (state.idtelas == 0) return;    
+    if (state.idtelas == 0) return;
     if (double.tryParse(state.cantidad) == null) return;
+    final double cantidad = double.parse(state.cantidad);
+    if (cantidad <= 0) return;
     if (double.tryParse(state.precio) == null) return;
-    if (double.parse(state.precio) <= 0) return;
+    final double precio = double.parse(state.precio);
+    if (precio <= 0) return;
 
     final double ganancias = state.precxcompra == 0
         ? 0
-        : (double.parse(state.precio) - state.precxcompra) *
-            double.parse(state.cantidad);
+        : (((precio - state.precxcompra) * cantidad) * 100).round() / 100.0;
 
-    
+    final double total = (cantidad * precio * 100).round() / 100.0;
+
     final detVentaLike = {
       'idtelas': state.idtelas,
       'nombre': state.nombre,
-      'cantidad': double.parse(state.cantidad),
-      'precio': double.parse(state.precio),
-      'total': (double.parse(state.cantidad) * double.parse(state.precio)*100).round()/100.0,
-      'ganancias': (ganancias*100).round()/100.0,
+      'cantidad': cantidad,
+      'precio': state.precio,
+      'total': total,
+      'ganancias': ganancias,
     };
 
     state = state.copyWith(
       detVentas: [detVentaLike, ...state.detVentas],
-      total: state.total +
-          double.parse(state.cantidad) * double.parse(state.precio),
+      total: state.total + total,
+      ganancias: state.ganancias + ganancias,
       precio: '',
       cantidad: '',
     );
@@ -60,24 +62,31 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     if (index == -1) return;
     final detVentaToRemove = state.detVentas[index];
     state = state.copyWith(
-        total: state.total -
-            detVentaToRemove['cantidad'] * detVentaToRemove['precio']);
+        total: state.total - detVentaToRemove['total'],
+        ganancias: state.ganancias - detVentaToRemove['ganancias']);
     state.detVentas.removeAt(index);
   }
 
   Future<bool> onFormSubmit() async {
-    try {      
-      if (onSubmitCallback == null) return false;      
-      if (state.detVentas.isEmpty) return false; 
-      //if (double.tryParse(state.descuento)== null) return false;
+    try {
+      if (onSubmitCallback == null) return false;
+      if (state.detVentas.isEmpty) return false;
       if (state.descuento == '') onDescuentoChanged('0');
-                             
-      return await onSubmitCallback!(state.detVentas, double.parse(state.descuento));      
+
+      return await onSubmitCallback!(state.detVentas);
+
     } catch (e) {
       return false;
     }
   }
 
+  Map<String, dynamic> toJson() {
+    return {      
+      'total': state.total,
+      'descuento': state.descuento,
+      'ganancias': state.ganancias,
+    };
+  }
   void onIdTelasChanged(int value) {
     state = state.copyWith(
       idtelas: value,
@@ -124,11 +133,10 @@ class DetalleVentaFormState {
   final double total;
   final List<Map<String, dynamic>> detVentas;
   final String descuento;
-  //final double ganancias;
+  final double ganancias;
 
   DetalleVentaFormState(
-      {
-      this.idtelas = 0,
+      {this.idtelas = 0,
       this.precxcompra = 0,
       this.cantidad = '',
       this.precio = '',
@@ -136,10 +144,9 @@ class DetalleVentaFormState {
       this.detVentas = const [],
       this.total = 0,
       this.descuento = '',
-      //this.ganancias = 0
-      });
+      this.ganancias = 0});
 
-  DetalleVentaFormState copyWith({    
+  DetalleVentaFormState copyWith({
     int? idtelas,
     String? cantidad,
     String? precio,
@@ -148,9 +155,9 @@ class DetalleVentaFormState {
     List<Map<String, dynamic>>? detVentas,
     double? precxcompra,
     String? descuento,
-    //double? ganancias,
+    double? ganancias,
   }) =>
-      DetalleVentaFormState(        
+      DetalleVentaFormState(
         idtelas: idtelas ?? this.idtelas,
         cantidad: cantidad ?? this.cantidad,
         precio: precio ?? this.precio,
@@ -159,6 +166,6 @@ class DetalleVentaFormState {
         total: total ?? this.total,
         precxcompra: precxcompra ?? this.precxcompra,
         descuento: descuento ?? this.descuento,
-        //ganancias: ganancias ?? this.ganancias,
+        ganancias: ganancias ?? this.ganancias,
       );
 }

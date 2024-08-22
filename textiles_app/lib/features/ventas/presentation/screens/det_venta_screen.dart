@@ -41,7 +41,8 @@ class DetVenta extends ConsumerWidget {
                           onSelected: (value) {
                             ref
                                 .read(detalleVentaFormProvider.notifier)
-                                .onPrecxCompraChanged(value?.precxcompra ?? 0.0);
+                                .onPrecxCompraChanged(
+                                    value?.precxcompra ?? 0.0);
                             ref
                                 .read(detalleVentaFormProvider.notifier)
                                 .onNombreChanged(value!.nombre);
@@ -61,17 +62,16 @@ class DetVenta extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  Row(                    
+                  Row(
                     children: [
                       MiTextField(
                         flex: 3,
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         label: 'Precio',
-                        onChanged: 
-                          ref
-                              .read(detalleVentaFormProvider.notifier)
-                              .onPrecioChanged,
+                        onChanged: ref
+                            .read(detalleVentaFormProvider.notifier)
+                            .onPrecioChanged,
                         controller: precioController,
                       ),
                       MiTextField(
@@ -79,10 +79,9 @@ class DetVenta extends ConsumerWidget {
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         label: 'Cantidad',
-                        onChanged: 
-                          ref
-                              .read(detalleVentaFormProvider.notifier)
-                              .onCantidadChanged,
+                        onChanged: ref
+                            .read(detalleVentaFormProvider.notifier)
+                            .onCantidadChanged,
                         controller: cantidadController,
                       ),
                     ],
@@ -96,14 +95,16 @@ class DetVenta extends ConsumerWidget {
         thickness: 1,
       ),
       DataTableMap(
-          list: detalleVentaForm.detVentas, total: detalleVentaForm.total,detventas: false),
+          list: detalleVentaForm.detVentas,
+          total: detalleVentaForm.total,
+          detventas: false),
       Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: TextFormField(
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),        
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onChanged:
-            ref.read(detalleVentaFormProvider.notifier).onDescuentoChanged,
+              ref.read(detalleVentaFormProvider.notifier).onDescuentoChanged,
           decoration: const InputDecoration(
             labelText: 'Descuento',
             suffixText: 'Bs',
@@ -117,17 +118,16 @@ class DetVenta extends ConsumerWidget {
       Container(
           padding: const EdgeInsets.all(12.0),
           child: MaterialButtonWidget(
-              ontap: () => {
-                    //detalleVentaForm.isLoading ? null :
-                    ref
-                        .read(detalleVentaFormProvider.notifier)
-                        .onFormSubmit()
-                        .then((value) => value
-                            ? showSnackbar(context, 'Venta Registrado Correctamente')
-                            : showSnackbar(context, 'Hubo Un Error')),
-                    context.go('/det_ventas')
-                  },
-              texto: 'Guardar',//detalleVentaForm.isLoading ? 'Guardando...' : 'Guardar'
+            ontap: () => {
+              //detalleVentaForm.isLoading ? null :
+              ref.read(detalleVentaFormProvider.notifier).onFormSubmit().then(
+                  (value) => value
+                      ? showSnackbar(context, 'Venta Registrado Correctamente')
+                      : showSnackbar(context, 'Hubo Un Error')),
+              context.go('/det_ventas')
+            },
+            texto:
+                'Guardar', //detalleVentaForm.isLoading ? 'Guardando...' : 'Guardar'
           ))
     ];
   }

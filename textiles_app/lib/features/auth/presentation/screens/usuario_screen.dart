@@ -11,6 +11,7 @@ class UsuarioScreen extends StatelessWidget {
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: const Screen1(
+          backRoute: false,
           widget: [_PerfilForm()],
           title: 'Editar Perfil',
           isGridview: false,

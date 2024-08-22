@@ -20,7 +20,7 @@ class TelaScreen extends ConsumerWidget {
                 widget: [_telaInformation(telaState.tela!, context, ref)],
                 title: telaState.tela!.id == 0 ? 'Crear Tela' : 'Editar Tela',
                 isGridview: false,
-                backRoute: '/telas',
+                backRoute: true,
               ));
   }
 
@@ -124,7 +124,7 @@ class TelaScreen extends ConsumerWidget {
                     value ? 'Modificado Correctamente' : 'Hubo Un Error');
               })
             };
-      context.go('/telas');
+      context.pop;
     };
   }
 
@@ -134,7 +134,7 @@ class TelaScreen extends ConsumerWidget {
         showSnackbar(
             context, value ? 'Eliminado Correctamente' : 'Hubo Un Error');
       });
-      context.go('/telas');
+      context.pop();
     };
   }
 }

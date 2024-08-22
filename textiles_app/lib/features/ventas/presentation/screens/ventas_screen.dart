@@ -16,7 +16,7 @@ class VentasScreen extends ConsumerWidget {
       widget: _buildBody(ventasState.ventas, context),
       title: 'Ventas',
       isGridview: true,
-      backRoute: '/',
+      backRoute: true,
     );
   }
 
@@ -37,7 +37,7 @@ class VentasScreen extends ConsumerWidget {
   Function _onTap(BuildContext context, int idventa) {
     return () {
       //ref.read(ventaProvider.notifier).setVenta(venta);
-      context.go('/det_ventas/$idventa');
+      context.push('/det_ventas/$idventa');
     };
   }
 }

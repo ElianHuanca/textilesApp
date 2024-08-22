@@ -7,7 +7,7 @@ class Screen1 extends StatelessWidget {
   final String title;
   final bool isGridview;
   final FloatingActionButton? floatingActionButton;
-  final String? backRoute;
+  final bool backRoute;
   final Function? onTap;
   const Screen1(
       {required this.widget,
@@ -15,21 +15,20 @@ class Screen1 extends StatelessWidget {
       required this.title,
       required this.isGridview,
       this.floatingActionButton,
-      this.backRoute,
-      this.onTap
-      });
+      required this.backRoute,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-          drawer: backRoute == null ? SideMenu() : null,
+          drawer: backRoute ? null : SideMenu() ,
           appBar: AppBar(
-            leading: backRoute != null
+            leading: backRoute
                 ? BackButton(
-                    onPressed: () {
-                      GoRouter.of(context).go(backRoute!);
+                    onPressed: () {                                         
+                      context.pop();
                     },
                   )
                 : null,
@@ -42,10 +41,8 @@ class Screen1 extends StatelessWidget {
             ),
             actions: [
               onTap != null
-                  ?
-              IconButton(
-                  onPressed: () => onTap!(),
-                  icon: const Icon(Icons.add))
+                  ? IconButton(
+                      onPressed: () => onTap!(), icon: const Icon(Icons.add))
                   : const SizedBox(),
             ],
           ),

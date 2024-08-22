@@ -16,8 +16,8 @@ class DetalleVentasRepositoryImpl extends DetalleVentasRepository {
   }
   
   @override
-  Future<List<DetalleVenta>> createDetalleVenta(List<Map<String, dynamic>> detalleVentasLike,int idventas,double descuento) {
-    return datasource.createDetalleVenta(detalleVentasLike, idventas,descuento);
+  Future<List<DetalleVenta>> createDetalleVenta(List<Map<String, dynamic>> detalleVentasLike,int idventas) {
+    return datasource.createDetalleVenta(detalleVentasLike, idventas);
   }
   
   @override

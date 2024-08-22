@@ -1,5 +1,3 @@
-//const Venta = require('../models/venta');
-//const Sucursal = require('../models/sucursal');
 const { Venta, Sucursal } = require('../models');
 const { Sequelize , Op } = require('sequelize');
 const ObtenerVentas = async (req, res) => {
@@ -13,6 +11,21 @@ const ObtenerVentas = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener ventas:', error);
         res.status(500).json({ error: 'Error al obtener ventas', message: error.message });
+    }
+};
+
+const ObtenerVenta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const venta = await Venta.findOne({ where: { id } });
+        if (venta) {
+            res.json(venta);
+        } else {
+            res.status(404).json({ error: 'No se encontró la venta' });
+        }
+    } catch (error) {
+        console.error('Error al obtener venta:', error);
+        res.status(500).json({ error: 'Error al obtener venta', message: error.message });
     }
 };
 
@@ -59,6 +72,30 @@ const RegistrarVentaAhora = async (req, res) => {
     }
 };
 
+const ActualizarVenta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { total, ganancias, descuento } = req.body;
+
+        const venta = await Venta.findOne({ where: { id } });        
+
+        const nuevoTotal = venta.total + total;
+        const nuevasGanancias = venta.ganancias + ganancias;
+        const nuevoDescuento = venta.descuento + descuento;
+        
+        await Venta.update(
+            { total: nuevoTotal, ganancias: nuevasGanancias, descuento: nuevoDescuento },
+            { where: { id } }
+        );
+
+        res.json({ message: 'Venta actualizada correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar venta:', error);
+        res.status(500).json({ error: 'Error al actualizar venta', message: error.message });
+    }
+};
+
+
 const ventasTotalesPorSucursal = async (req, res) => {
     try {
         const {idusuarios} = req.params;
@@ -90,7 +127,9 @@ const ventasTotalesPorSucursal = async (req, res) => {
 
 module.exports = {
     ObtenerVentas,
+    ObtenerVenta,
     RegistrarVenta,
     RegistrarVentaAhora,
+    ActualizarVenta,
     ventasTotalesPorSucursal
 }

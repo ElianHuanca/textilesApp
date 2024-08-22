@@ -17,7 +17,7 @@ class SucursalScreen extends ConsumerWidget {
         child: sucursalState.isLoading
             ? const FullScreenLoader()
             : Screen1(
-                backRoute: '/sucursales',
+                backRoute: true,
                 widget: [
                   const SizedBox(
                     height: 10,
@@ -94,7 +94,7 @@ class SucursalScreen extends ConsumerWidget {
           (value) => value
               ? showSnackbar(context, 'Eliminado Correctamente')
               : showSnackbar(context, 'Hubo Un Error'));
-      context.go('/sucursales');
+      context.push('/sucursales');
     };
   }
 }

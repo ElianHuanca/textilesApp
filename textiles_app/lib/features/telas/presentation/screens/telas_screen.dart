@@ -13,6 +13,7 @@ class TelasScreen extends ConsumerWidget {
     return telasState.isLoading
         ? const FullScreenLoader()
         : Screen1(
+            backRoute: false,
             widget: _buildBody(telasState.telas, context),
             title: 'Telas',
             isGridview: false,
@@ -53,7 +54,7 @@ class TelasScreen extends ConsumerWidget {
           ],
         ),
         onTap: () {
-          context.go('/tela/${tela.id}');
+          context.push('/tela/${tela.id}');
         },
       ),
     );
@@ -61,7 +62,7 @@ class TelasScreen extends ConsumerWidget {
 
   Function _onTap(BuildContext context) {
     return () {
-      context.go('/tela/0');
+      context.push('/tela/0');
     };
   }
 }

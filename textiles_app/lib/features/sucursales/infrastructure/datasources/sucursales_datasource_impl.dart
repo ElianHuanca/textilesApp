@@ -58,7 +58,7 @@ class SucursalesDatasourceImpl implements SucursalesDatasource {
   @override
   Future<Sucursal> getSucursal(int id) async{
     try{
-      final response = await dio.get('/sucursales/$id');
+      final response = await dio.get('/sucursales/sucursal/$id');
       final sucursal = SucursalMapper.jsonToEntity(response.data);
       return sucursal;
     }catch(e){

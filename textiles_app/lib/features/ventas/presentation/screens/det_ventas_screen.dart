@@ -10,30 +10,32 @@ class DetVentas extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final detalleVentasState = ref.watch(detalleVentasProvider(idventa));
     final ventaState = ref.watch(ventaProvider(idventa));
-    /* final List<Map<String, dynamic>> detalleVentas = detalleVentasState
-        .detalleVentas
-        .map((detalleVenta) => detalleVenta.toJson() as Map<String, dynamic>)
-        .toList(); */
-    //String fecha = changeFormatDate(venta!.fecha);
-    return detalleVentasState.isLoading || ventaState.isLoading
+    final detalleVentasState = ref.watch(detalleVentasProvider(idventa));    
+    return detalleVentasState.isLoading && ventaState.isLoading
         ? const FullScreenLoader()
         : Screen1(
             widget: [
               container(
                   context,
-                  DataTableMap(
-                      list: detalleVentasState.detalleVentas,
-                      total: ventaState.venta!.total,
-                      ganancias: ventaState.venta!.ganancias,
-                      descuento: ventaState.venta!.descuento,
-                      detventas: true))
+                  detalleVentasState.detalleVentas.isEmpty
+                      ? const Center(
+                          child: Text('Lista Vacia',
+                              style: TextStyle(fontStyle: FontStyle.italic)),
+                        )
+                      : dataTableWidget(
+                          ['Producto', 'Cantidad', 'Precio', 'Total'],
+                          context,
+                          detalleVentasState.detalleVentas,
+                          ventaState.venta!.total,
+                          ventaState.venta!.ganancias,
+                          ventaState.venta!.descuento,
+                        ))
             ],
             title: changeFormatDate(ventaState.venta!.fecha),
             isGridview: false,
-            backRoute: '/ventas',
-            onTap: () => {context.go('/det_venta')},
+            backRoute: true,
+            onTap: () => {context.push('/det_venta')},
           );
   }
 

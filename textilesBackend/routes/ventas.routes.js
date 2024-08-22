@@ -5,9 +5,13 @@ const VentaController = require("../controllers/ventas");
 
 router.get('/:idsucursales', VentaController.ObtenerVentas);
 
+router.get('/venta/:id', VentaController.ObtenerVenta);
+
 router.post('', VentaController.RegistrarVenta);
 
 router.post('/:idsucursales', VentaController.RegistrarVentaAhora);
+
+router.put('/:id', VentaController.ActualizarVenta);
 
 router.get('/grafica1/:idusuarios', VentaController.ventasTotalesPorSucursal);
 module.exports = router;

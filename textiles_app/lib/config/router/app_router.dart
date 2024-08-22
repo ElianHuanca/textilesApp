@@ -76,10 +76,10 @@ final goRouterProvider = Provider((ref) {
         ),
       ),
 
-      GoRoute(
+      /* GoRoute(
         path: '/det_venta',
         builder: (context, state) => DetVenta(),
-      ),
+      ), */
     ],
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;

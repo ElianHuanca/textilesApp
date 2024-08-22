@@ -79,7 +79,7 @@ class SucursalesState {
   final bool isLoading;
   final List<Sucursal> sucursales;
 
-  SucursalesState({this.isLoading = true, this.sucursales = const []});
+  SucursalesState({this.isLoading = false, this.sucursales = const []});
 
   SucursalesState copyWith({bool? isLoading, List<Sucursal>? sucursales}) {
     return SucursalesState(

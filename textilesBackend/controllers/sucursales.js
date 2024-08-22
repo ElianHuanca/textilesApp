@@ -12,6 +12,21 @@ const ObtenerSucursales = async (req, res) => {
     }    
 };
 
+const ObtenerSucursal = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const sucursal = await Sucursal.findOne({ where: { id } });
+        if (sucursal) {
+            res.json(sucursal);
+        } else {
+            res.status(404).json({ error: 'No se encontró la sucursal' });
+        }
+    } catch (error) {
+        console.error('Error al obtener sucursal:', error);
+        res.status(500).json({ error: 'Error al obtener sucursal', message: error.message });
+    }
+};
+
 const RegistrarSucursal = async (req, res) => {
     try {
         const { idusuarios } = req.params;
@@ -59,6 +74,7 @@ const EliminarSucursal = async (req, res) => {
 }
 module.exports = {
     ObtenerSucursales,
+    ObtenerSucursal,
     RegistrarSucursal,
     ActualizarSucursal,
     EliminarSucursal

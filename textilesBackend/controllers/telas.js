@@ -14,6 +14,21 @@ const ObtenerTelasXUsu = async (req, res) => {
     }
 };
 
+const ObtenerTela = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const tela = await Tela.findOne({ where: { id } });
+        if (tela) {
+            res.json(tela);
+        } else {
+            res.status(404).json({ error: 'No se encontró la tela' });
+        }
+    } catch (error) {
+        console.error('Error al obtener tela:', error);
+        res.status(500).json({ error: 'Error al obtener tela', message: error.message });
+    }
+};
+
 const RegistrarTela = async (req, res) => {
     try {
         const { idusuarios } = req.params;
@@ -59,6 +74,7 @@ const EliminarTela = async (req, res) => {
 
 module.exports = {
     ObtenerTelasXUsu,
+    ObtenerTela,
     RegistrarTela,
     ActualizarTela,
     EliminarTela

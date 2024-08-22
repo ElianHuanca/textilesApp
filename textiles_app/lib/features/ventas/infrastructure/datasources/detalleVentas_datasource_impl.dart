@@ -27,12 +27,10 @@ class DetalleVentasDatasourceImpl extends DetalleVentasDatasource {
   @override
   Future<List<DetalleVenta>> createDetalleVenta(
       List<Map<String, dynamic>> detalleVentasLike,
-      int idventas,
-      double descuento) async {
+      int idventas) async {
     try {      
       final requestData = {
-        'ventas': detalleVentasLike,
-        'descuento': descuento,
+        'ventas': detalleVentasLike,        
       };
       final response = await dio.post<List>('/det_ventas/$idventas',
           data: requestData);

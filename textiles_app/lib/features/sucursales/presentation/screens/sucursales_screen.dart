@@ -14,6 +14,7 @@ class SucursalesScreen extends ConsumerWidget {
     return sucursalesState.isLoading
         ? const FullScreenLoader()
         : Screen1(
+            backRoute: false,
             widget: _buildBody(
                 sucursalesState.sucursales, context, ref, gSucursales),
             title: 'Sucursales',
@@ -44,8 +45,8 @@ class SucursalesScreen extends ConsumerWidget {
     return () {
       //ref.read(sucursalProvider.notifier).setSucursal(sucursal);
       gSucursales
-          ? context.go('/sucursal/$idsucursal')
-          : context.go('/ventas/$idsucursal');
+          ? context.push('/sucursal/$idsucursal')
+          : context.push('/ventas/$idsucursal');
     };
   }
 
@@ -53,7 +54,7 @@ class SucursalesScreen extends ConsumerWidget {
   Function _onTap2(BuildContext context) {
     return () {
       //ref.read(sucursalProvider.notifier).nuevaSucursal();
-      context.go('/sucursal/0');
+      context.push('/sucursal/0');
     };
   }
 }

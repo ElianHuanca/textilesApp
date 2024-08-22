@@ -10,9 +10,9 @@ final ventaProvider = StateNotifierProvider.autoDispose.family<VentaNotifier,Ven
 class VentaNotifier extends StateNotifier<VentaState> {
   final VentasRepository ventasRepository;  
   VentaNotifier({required this.ventasRepository, required int id})
-      : super(VentaState(id:id));
+      : super(VentaState(id:id)){loadVenta();}
 
-  Future<void> loadTela() async {
+  Future<void> loadVenta() async {
     try {      
       final venta = await ventasRepository.getVenta(state.id);
 

@@ -14,7 +14,9 @@ class TelaNotifier extends StateNotifier<TelaState> {
   TelaNotifier({
     required this.telasRepository,
     required int id,
-  }) : super(TelaState(id:id));
+  }) : super(TelaState(id:id)){
+    loadTela();
+  }
 
   Tela newEmptyTela() {
     return Tela(

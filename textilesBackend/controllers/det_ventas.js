@@ -27,27 +27,18 @@ const ObtenerDetVentas = async (req, res) => {
 const RegistrarDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
-        const data = req.body;       
-        const detallesVentasCreados = [];    
-        const vta = await Venta.findOne( { where: { id: idventas } } );            
+        const data = req.body;               
         for (const venta of data.ventas) {
-            const detVenta= await DetVenta.create({
+            await DetVenta.create({
                 idventas: idventas,
                 idtelas: venta.idtelas,
                 cantidad: venta.cantidad,
                 precio: venta.precio,
                 total: venta.total,
                 ganancias: venta.ganancias
-            });        
-               
-            detVenta.dataValues.nombre = venta.nombre;      
-            vta.total += venta.total;
-            vta.ganancias +=  venta.ganancias;      
-            detallesVentasCreados.push(detVenta);                         
-        }           
-        vta.descuento +=  data.descuento;        
-        await vta.save();
-        res.status(200).json(detallesVentasCreados);
+            });                                                 
+        }                   
+        res.status(200).json({ message: 'Detalle de venta registrado correctamente' });
     } catch (error) {
         console.error('Error al registrar detalle venta:', error);
         res.status(500).json({ error: 'Error al registrar detalle venta', message: error.message });

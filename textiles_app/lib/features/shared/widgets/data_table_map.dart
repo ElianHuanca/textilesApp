@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+/* // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/ventas/presentation/providers/providers.dart';
@@ -121,3 +121,4 @@ DataCell _cellButton(Function() onTap) => DataCell(
         icon: const Icon(Icons.delete_forever_rounded),
       ),
     );
+ */
