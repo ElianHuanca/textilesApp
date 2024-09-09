@@ -9,8 +9,8 @@ class VentasRepositoryImpl extends VentasRepository {
   VentasRepositoryImpl(this.datasource);
 
   @override
-  Future<List<Venta>> getVentas() {
-    return datasource.getVentas();
+  Future<List<Venta>> getVentas(int idsucursal) {
+    return datasource.getVentas(idsucursal);
   }
 
   @override

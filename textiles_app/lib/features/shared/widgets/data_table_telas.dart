@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class DataTableMapTelas extends ConsumerWidget {
   final List<Map<String, dynamic>> listbody;
   final List<String> listheader;
-  final List<double> listfooter;
+  final double total;
+  final Function() onTap;
   const DataTableMapTelas({
     super.key,
     required this.listbody,
     required this.listheader,
-    required this.listfooter,
+    required this.total,
+    required this.onTap,
   });
 
   @override
@@ -18,14 +20,13 @@ class DataTableMapTelas extends ConsumerWidget {
     return DataTable(
         columns: _columns(context, listheader),
         columnSpacing: 8,
-        rows: _rows(listbody, listfooter));
+        rows: _rows(listbody, total, onTap));
   }
 }
 
 List<DataColumn> _columns(BuildContext context, List<String> listheader) =>
     <DataColumn>[
       ...listheader.map((header) => _column(context, header)),
-
     ];
 
 DataColumn _column(BuildContext context, String texto) => DataColumn(
@@ -38,19 +39,22 @@ DataColumn _column(BuildContext context, String texto) => DataColumn(
         ),
       ),
     );
-List<DataRow> _rows(List<Map<String, dynamic>> listbody, List<double> listfooter) {
+List<DataRow> _rows(
+    List<Map<String, dynamic>> listbody,double total, Function() onTap) {
   return [
     ...listbody.map((data) {
       return DataRow(cells: <DataCell>[
         _cell('${data['nombre']}'),
         _cell('${data['cantidad']}Bs'),
         _cell('${data['total']}Bs'),
-        _cell('${data['ganancias']}'),
+        _cellButton(() => onTap)
+        //_cell('${data['ganancias']}'),
       ]);
     }).toList(),
     DataRow(cells: <DataCell>[
       _cell(''),
-      ...listfooter.map((footer) => _cell(footer.toString())).toList(),
+      _cell('Total'),
+      _cell('$total Bs'),
     ])
   ];
 }
@@ -58,7 +62,11 @@ List<DataRow> _rows(List<Map<String, dynamic>> listbody, List<double> listfooter
 DataCell _cell(String texto) => DataCell(
     Text(texto, style: const TextStyle(fontSize: 12, color: Colors.black)));
 
-/* DataCell _cellTotal(String texto) => DataCell(Text(texto,
-    style: const TextStyle(
-        fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold))); */
-
+DataCell _cellButton(Function() onTap) => DataCell(
+      IconButton(
+        padding: EdgeInsets.zero, // Elimina el relleno alrededor del icono
+        onPressed: onTap,
+        iconSize: 20, // Tamaño más pequeño del icono
+        icon: const Icon(Icons.delete_forever_rounded),
+      ),
+    );

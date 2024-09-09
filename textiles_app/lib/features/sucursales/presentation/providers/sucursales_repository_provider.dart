@@ -6,7 +6,7 @@ import 'package:textiles_app/features/sucursales/infrastructure/infrastructure.d
 
 final sucursalesRepositoryProvider = Provider<SucursalesRepository>((ref) {  
 
-  final idusuario = ref.watch(authProvider).usuario?.id ?? 0;
+  final idusuario = ref.watch(authProvider).usuario!.id;
 
   final sucursalesRepository = SucursalesRepositoryImpl(
     SucursalesDatasourceImpl( idusuario:idusuario),

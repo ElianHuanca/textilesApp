@@ -35,8 +35,7 @@ class VentasScreen extends ConsumerWidget {
   }
 
   Function _onTap(BuildContext context, int idventa) {
-    return () {
-      //ref.read(ventaProvider.notifier).setVenta(venta);
+    return () {      
       context.push('/det_ventas/$idventa');
     };
   }

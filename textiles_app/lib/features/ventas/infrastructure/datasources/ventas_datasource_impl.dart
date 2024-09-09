@@ -5,14 +5,13 @@ import 'package:textiles_app/features/ventas/infrastructure/infrastructure.dart'
 
 class VentasDatasourceImpl extends VentasDatasource {
   late final Dio dio;
-  final int idsucursal;
-  VentasDatasourceImpl({required this.idsucursal})
+  VentasDatasourceImpl()
       : dio = Dio(BaseOptions(
           baseUrl: Environment.apiUrl,
         ));
 
   @override
-  Future<List<Venta>> getVentas() async {
+  Future<List<Venta>> getVentas(int idsucursal) async {
     final response = await dio.get<List>('/ventas/$idsucursal');    
     final List<Venta> ventas = [];    
     for (final venta in response.data ?? []) {

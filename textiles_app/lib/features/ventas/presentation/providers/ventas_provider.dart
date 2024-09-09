@@ -6,25 +6,25 @@ final ventasProvider = StateNotifierProvider.autoDispose
     .family<VentasNotifier, VentasState, int>((ref, idsucursal) {
   final ventasRepository = ref.watch(ventasRepositoryProvider);
   return VentasNotifier(
-      ventasRepository: ventasRepository, idsucursales: idsucursal);
+      ventasRepository: ventasRepository, idsucursal: idsucursal);
 });
 
 class VentasNotifier extends StateNotifier<VentasState> {
   final VentasRepository ventasRepository;
 
-  VentasNotifier({required this.ventasRepository, required int idsucursales})
+  VentasNotifier({required this.ventasRepository, required int idsucursal})
       : super(VentasState()) {
-    getVentas(idsucursales);
+    getVentas(idsucursal);
   }
 
-  Future getVentas(int idsucursales) async {
+  Future getVentas(int idsucursal) async {
     if (state.isLoading) return;
 
     state = state.copyWith(isLoading: true);
 
-    final ventas = await ventasRepository.getVentas();
+    final ventas = await ventasRepository.getVentas(idsucursal);
     if (ventas.isEmpty) {
-      final venta = await ventasRepository.createVentaAhora(idsucursales);
+      final venta = await ventasRepository.createVentaAhora(idsucursal);
       state = state.copyWith(isLoading: false, ventas: [venta]);
       return;
     }
@@ -32,7 +32,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     if (today.isAfter(ventas[0].fecha)) {
-      final venta = await ventasRepository.createVentaAhora(idsucursales);
+      final venta = await ventasRepository.createVentaAhora(idsucursal);
       ventas.insert(0, venta);
     }
 
@@ -53,15 +53,6 @@ class VentasNotifier extends StateNotifier<VentasState> {
       return false;
     }
   }
-  /* void actualizarVenta(Venta ventaActualizada) {
-    int indice =
-        state.ventas.indexWhere((venta) => venta.id == ventaActualizada.id);
-    if (indice != -1) {
-      List<Venta> nuevasVentas = List.from(state.ventas);
-      nuevasVentas[indice] = ventaActualizada;
-      state = state.copyWith(ventas: nuevasVentas);
-    }
-  } */
 }
 
 class VentasState {

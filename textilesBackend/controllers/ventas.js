@@ -88,7 +88,8 @@ const ActualizarVenta = async (req, res) => {
             { where: { id } }
         );
 
-        res.json({ message: 'Venta actualizada correctamente' });
+        const ventaActualizada = await Venta.findOne({ where: { id } });
+        res.json(ventaActualizada);
     } catch (error) {
         console.error('Error al actualizar venta:', error);
         res.status(500).json({ error: 'Error al actualizar venta', message: error.message });

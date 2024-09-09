@@ -27,7 +27,7 @@ const ObtenerDetVentas = async (req, res) => {
 const RegistrarDetVentas = async (req, res) => {
     try {
         const { idventas } = req.params;
-        const data = req.body;               
+        const data = req.body;         
         for (const venta of data.ventas) {
             await DetVenta.create({
                 idventas: idventas,
@@ -36,9 +36,9 @@ const RegistrarDetVentas = async (req, res) => {
                 precio: venta.precio,
                 total: venta.total,
                 ganancias: venta.ganancias
-            });                                                 
+            });                                                             
         }                   
-        res.status(200).json({ message: 'Detalle de venta registrado correctamente' });
+        res.status(200).json(data);
     } catch (error) {
         console.error('Error al registrar detalle venta:', error);
         res.status(500).json({ error: 'Error al registrar detalle venta', message: error.message });

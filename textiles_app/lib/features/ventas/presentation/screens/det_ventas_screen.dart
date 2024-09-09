@@ -35,7 +35,7 @@ class DetVentas extends ConsumerWidget {
             title: changeFormatDate(ventaState.venta!.fecha),
             isGridview: false,
             backRoute: true,
-            onTap: () => {context.push('/det_venta')},
+            onTap: () => {context.push('/det_venta/$idventa')},
           );
   }
 

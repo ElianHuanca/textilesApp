@@ -1,26 +1,28 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+/* import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/ventas/domain/domain.dart';
 import '../../providers/providers.dart';
 
-final detalleVentaFormProvider = StateNotifierProvider.autoDispose
-    .family<DetalleVentaFormNotifier, DetalleVentaFormState, Venta>(
-        (ref, venta) {
+final ventaFormProvider = StateNotifierProvider.autoDispose
+    .family<VentaFormNotifier, VentaFormState, Venta>((ref, venta) {
   final createCallback =
-      ref.watch(detalleVentasProvider(venta.id).notifier).createDetVenta;      
-  final updateCallback =
       ref.watch(ventasProvider(venta.idsucursales).notifier).actualizarVenta;
-  return DetalleVentaFormNotifier(onSubmitCallback: createCallback,onUpdateCallback: updateCallback, idventa: venta.id);
+  return VentaFormNotifier(onSubmitCallback: createCallback,id:venta.id);
 });
 
-class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
-  final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)?
-      onSubmitCallback;  
+class VentaFormNotifier extends StateNotifier<VentaFormState> {
   final Future<bool> Function(Map<String, dynamic> ventaLike, int id)?
-      onUpdateCallback;
-  DetalleVentaFormNotifier({this.onSubmitCallback,this.onUpdateCallback,required int idventa})
-      : super(DetalleVentaFormState(
-          idventa: idventa,
-      ));
+      onSubmitCallback;
+  VentaFormNotifier({this.onSubmitCallback,required int id}) : super(VentaFormState(
+      id: id,
+      idtelas: 0,
+      precxcompra: 0,
+      cantidad: '',
+      precio: '',
+      nombre: '',
+      total: 0,
+      descuento: '',
+      ganancias: 0
+  ));
 
   void addDetalleVenta() {
     if (state.idtelas == 0) return;
@@ -37,17 +39,7 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
 
     final double total = (cantidad * precio * 100).round() / 100.0;
 
-    final detVentaLike = {
-      'idtelas': state.idtelas,
-      'nombre': state.nombre,
-      'cantidad': cantidad,
-      'precio': state.precio,
-      'total': total,
-      'ganancias': ganancias,
-    };
-
     state = state.copyWith(
-      detVentas: [detVentaLike, ...state.detVentas],
       total: state.total + total,
       ganancias: state.ganancias + ganancias,
       precio: '',
@@ -55,43 +47,26 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     );
   }
 
-  int obtenerIndex(int idtelas, double cantidad, double precio) {
-    return state.detVentas.indexWhere((element) =>
-        element['idtelas'] == idtelas &&
-        element['cantidad'] == cantidad &&
-        element['precio'] == precio);
-  }
-
-  void removeDetalleVenta(int idtelas, double cantidad, double precio) {
-    final index = obtenerIndex(idtelas, cantidad, precio);
-    if (index == -1) return;
-    final detVentaToRemove = state.detVentas[index];
-    state = state.copyWith(
-        total: state.total - detVentaToRemove['total'],
-        ganancias: state.ganancias - detVentaToRemove['ganancias']);
-    state.detVentas.removeAt(index);
-  }
-
   Future<bool> onFormSubmit() async {
     try {
       if (onSubmitCallback == null) return false;
-      if (state.detVentas.isEmpty) return false;
       if (state.descuento == '') onDescuentoChanged('0');
 
-      return await onSubmitCallback!(state.detVentas) && await onUpdateCallback!(toMap(), state.idventa);
-
+      final venta = ventaToMap();
+      return await onSubmitCallback!(venta, state.id);
     } catch (e) {
       return false;
     }
   }
 
-  Map<String, dynamic> toMap() {
-    return {      
+  Map<String, dynamic> ventaToMap() {
+    return {
       'total': state.total,
       'descuento': state.descuento,
       'ganancias': state.ganancias,
     };
   }
+
   void onIdTelasChanged(int value) {
     state = state.copyWith(
       idtelas: value,
@@ -129,49 +104,45 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   }
 }
 
-class DetalleVentaFormState {
-  final int idventa;
+class VentaFormState {
+  final int id;
   final int idtelas;
   final String nombre;
   final String cantidad;
   final String precio;
   final double precxcompra;
   final double total;
-  final List<Map<String, dynamic>> detVentas;
   final String descuento;
   final double ganancias;
 
-  DetalleVentaFormState(
+  VentaFormState(
       {
-      this.idventa = 0,
+      this.id = 0,
       this.idtelas = 0,
       this.precxcompra = 0,
       this.cantidad = '',
       this.precio = '',
       this.nombre = '',
-      this.detVentas = const [],
       this.total = 0,
       this.descuento = '',
       this.ganancias = 0});
 
-  DetalleVentaFormState copyWith({
-    int? idventa,
+  VentaFormState copyWith({
+    int? id,
     int? idtelas,
     String? cantidad,
     String? precio,
     String? nombre,
     double? total,
-    List<Map<String, dynamic>>? detVentas,
     double? precxcompra,
     String? descuento,
     double? ganancias,
   }) =>
-      DetalleVentaFormState(
-        idventa: idventa ?? this.idventa,
+      VentaFormState(
+        id: id ?? this.id,
         idtelas: idtelas ?? this.idtelas,
         cantidad: cantidad ?? this.cantidad,
         precio: precio ?? this.precio,
-        detVentas: detVentas ?? this.detVentas,
         nombre: nombre ?? this.nombre,
         total: total ?? this.total,
         precxcompra: precxcompra ?? this.precxcompra,
@@ -179,3 +150,4 @@ class DetalleVentaFormState {
         ganancias: ganancias ?? this.ganancias,
       );
 }
+ */

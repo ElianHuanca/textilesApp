@@ -21,16 +21,6 @@ class VentaNotifier extends StateNotifier<VentaState> {
       print(e);
     }
   }
-  
-  /* Venta getVenta() {
-    return state.venta!;
-  }
-
-  void setVenta( Venta venta ) {
-    state = state.copyWith(
-      venta: venta
-    );
-  } */
 
 }
 
