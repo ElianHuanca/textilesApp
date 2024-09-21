@@ -103,12 +103,11 @@ class DetVenta extends ConsumerWidget {
           listheader: const ['Nombre', 'Cantidad', 'Total'],
           listbody: detalleVentaForm.detVentas,
           total: detalleVentaForm.total,
-          onTap: {
+          onTap: (int idtelas, double cantidad, double precio) {
             ref
                 .read(detalleVentaFormProvider(venta).notifier)
-                .removeDetalleVenta(
-                    det['idtelas'], det['cantidad'], det['precio'])
-          ),
+                .removeDetalleVenta(idtelas, cantidad, precio);
+          }),
       Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -135,9 +134,7 @@ class DetVenta extends ConsumerWidget {
               ref
                   .read(detalleVentaFormProvider(venta).notifier)
                   .onFormSubmit()
-                  .then((value) => value
-                      ? showSnackbar(context, 'Venta Registrado Correctamente')
-                      : showSnackbar(context, 'Hubo Un Error')),
+                  .then((value) => showSnackbarBool(context, value)),
               context.go('/det_ventas')
             },
             texto:

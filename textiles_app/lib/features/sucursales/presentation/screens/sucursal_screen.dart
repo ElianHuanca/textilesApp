@@ -67,34 +67,44 @@ class SucursalScreen extends ConsumerWidget {
 
   Function _onSubmit(BuildContext context, WidgetRef ref, Sucursal sucursal) {
     return () {
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
       sucursal.id == 0
           ? {
               ref
                   .read(sucursalFormProvider(sucursal).notifier)
                   .onFormCreate()
-                  .then((value) => value
-                      ? showSnackbar(context, 'Guardado Correctamente')
-                      : showSnackbar(context, 'Hubo Un Error')),
+                  .then((value) {
+                scaffoldMessenger.showSnackBar(SnackBar(
+                    content: Text(
+                        value ? 'Creado Correctamente' : 'Hubo Un Error')));
+              })
             }
           : {
               ref
                   .read(sucursalFormProvider(sucursal).notifier)
                   .onFormUpdate()
-                  .then((value) => value
-                      ? showSnackbar(context, 'Modificado Correctamente')
-                      : showSnackbar(context, 'Hubo Un Error')),
+                  .then((value) {
+                scaffoldMessenger.showSnackBar(SnackBar(
+                    content: Text(
+                        value ? 'Modificado Correctamente' : 'Hubo Un Error')));
+              })
             };
-      context.go('/sucursales');
+      context.pop;
     };
   }
 
   Function _onDelete(BuildContext context, WidgetRef ref, Sucursal sucursal) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return () {
-      ref.read(sucursalFormProvider(sucursal).notifier).onFormDelete().then(
-          (value) => value
-              ? showSnackbar(context, 'Eliminado Correctamente')
-              : showSnackbar(context, 'Hubo Un Error'));
-      context.push('/sucursales');
+      ref
+          .read(sucursalFormProvider(sucursal).notifier)
+          .onFormDelete()
+          .then((value) {
+        scaffoldMessenger.showSnackBar(SnackBar(
+            content:
+                Text(value ? 'Eliminado Correctamente' : 'Hubo Un Error')));
+      });
+      context.pop();
     };
   }
 }

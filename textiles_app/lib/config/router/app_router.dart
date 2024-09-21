@@ -18,68 +18,60 @@ final goRouterProvider = Provider((ref) {
         path: '/splash',
         builder: (context, state) => const CheckAuthStatusScreen(),
       ),
-      
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
-
       GoRoute(
         path: '/usuario',
         builder: (context, state) => const UsuarioScreen(),
       ),
-
       GoRoute(
         path: '/',
         builder: (context, state) => const SucursalesScreen(
           false,
         ),
       ),
-
       GoRoute(
         path: '/sucursales',
         builder: (context, state) => const SucursalesScreen(
           true,
         ),
       ),
-
       GoRoute(
         path: '/sucursal/:idsucursal',
-        builder: (context, state) =>  SucursalScreen(
+        builder: (context, state) => SucursalScreen(
           id: int.parse(state.pathParameters['idsucursal'].toString()),
         ),
       ),
-
       GoRoute(
         path: '/telas',
         builder: (context, state) => const TelasScreen(),
       ),
-
       GoRoute(
         path: '/tela/:idtela',
         builder: (context, state) => TelaScreen(
           id: int.parse(state.pathParameters['idtela'].toString()),
         ),
       ),
-
       GoRoute(
         path: '/ventas/:idsucursal',
         builder: (context, state) => VentasScreen(
           idsucursal: int.parse(state.pathParameters['idsucursal'].toString()),
         ),
       ),
-
       GoRoute(
         path: '/det_ventas/:idventa',
         builder: (context, state) => DetVentas(
           idventa: int.parse(state.pathParameters['idventa'].toString()),
         ),
       ),
-
-      /* GoRoute(
-        path: '/det_venta',
-        builder: (context, state) => DetVenta(),
-      ), */
+      GoRoute(
+        path: '/det_venta/:idventa',
+        builder: (context, state) => DetVenta(
+          idventa: int.parse(state.pathParameters['idventa'].toString()),
+        ),
+      ),
     ],
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
@@ -91,7 +83,7 @@ final goRouterProvider = Provider((ref) {
 
       if (authStatus == AuthStatus.notAuthenticated) {
         if (isGoingTo == '/login' || isGoingTo == '/register') return null;
-      
+
         return '/login';
       }
 

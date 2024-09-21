@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/shared/shared.dart';
@@ -104,35 +106,34 @@ class TelaScreen extends ConsumerWidget {
   }
 
   Function _onSubmit(BuildContext context, WidgetRef ref, Tela tela) {
-    return () {
-      tela.id == 0
-          ? {
-              ref
-                  .read(telaFormProvider(tela).notifier)
-                  .onCreateSubmit()
-                  .then((value) {
-                showSnackbar(
-                    context, value ? 'Creado Correctamente' : 'Hubo Un Error');
-              })
-            }
-          : {
-              ref
-                  .read(telaFormProvider(tela).notifier)
-                  .onUpdateSubmit()
-                  .then((value) {
-                showSnackbar(context,
-                    value ? 'Modificado Correctamente' : 'Hubo Un Error');
-              })
-            };
-      context.pop;
+    return () async {
+      bool value;
+      if (tela.id == 0) {
+        value =
+            await ref.read(telaFormProvider(tela).notifier).onCreateSubmit();
+      } else {  
+        value =
+            await ref.read(telaFormProvider(tela).notifier).onUpdateSubmit();
+      }
+
+      showSnackbarBool(context, value);
+      /* if (context.mounted) {
+        scaffoldMessenger.showSnackBar(SnackBar(
+            content:
+                Text(value ? 'Realizado Correctamente' : 'Hubo Un Error')));
+        context.pop();
+      } */
+      context.pop();
     };
   }
 
   Function _onDelete(BuildContext context, WidgetRef ref, Tela tela) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return () {
       ref.read(telaFormProvider(tela).notifier).onDeleteSubmit().then((value) {
-        showSnackbar(
-            context, value ? 'Eliminado Correctamente' : 'Hubo Un Error');
+        scaffoldMessenger.showSnackBar(SnackBar(
+            content:
+                Text(value ? 'Eliminado Correctamente' : 'Hubo Un Error')));
       });
       context.pop();
     };

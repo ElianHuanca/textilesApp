@@ -15,7 +15,7 @@ class VentaNotifier extends StateNotifier<VentaState> {
   Future<void> loadVenta() async {
     try {      
       final venta = await ventasRepository.getVenta(state.id);
-
+      print(venta);
       state = state.copyWith(isLoading: false, venta: venta);
     } catch (e) {
       print(e);

@@ -6,7 +6,7 @@ class DataTableMapTelas extends ConsumerWidget {
   final List<Map<String, dynamic>> listbody;
   final List<String> listheader;
   final double total;
-  final Function() onTap;
+  final Function(int,double,double) onTap;
   const DataTableMapTelas({
     super.key,
     required this.listbody,
@@ -40,7 +40,7 @@ DataColumn _column(BuildContext context, String texto) => DataColumn(
       ),
     );
 List<DataRow> _rows(
-    List<Map<String, dynamic>> listbody,double total, Function() onTap) {
+    List<Map<String, dynamic>> listbody,double total, Function(int,double,double) onTap) {
   return [
     ...listbody.map((data) {
       return DataRow(cells: <DataCell>[

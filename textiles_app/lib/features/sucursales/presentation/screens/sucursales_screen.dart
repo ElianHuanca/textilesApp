@@ -38,12 +38,9 @@ class SucursalesScreen extends ConsumerWidget {
               onTap: _onTap2(context))
           : const SizedBox(),
     ]);
-  }
-
-  //ACTUALIZAR|ELIMINAR SUCURSAL O VER VENTAS
+  }  
   Function _onTap(BuildContext context, int idsucursal, bool gSucursales) {
-    return () {
-      //ref.read(sucursalProvider.notifier).setSucursal(sucursal);
+    return () {      
       gSucursales
           ? context.push('/sucursal/$idsucursal')
           : context.push('/ventas/$idsucursal');
@@ -52,8 +49,7 @@ class SucursalesScreen extends ConsumerWidget {
 
   //CREAR SUCURSAL
   Function _onTap2(BuildContext context) {
-    return () {
-      //ref.read(sucursalProvider.notifier).nuevaSucursal();
+    return () {      
       context.push('/sucursal/0');
     };
   }

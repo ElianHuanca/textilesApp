@@ -44,14 +44,13 @@ class TelasNotifier extends StateNotifier<TelasState> {
   Future<bool> updateTela(Map<String, dynamic> telaLike) async {
     try {
       final tela =
-          await telasRepository.updateTela(telaLike, telaLike['id']);      
+          await telasRepository.updateTela(telaLike, telaLike['id']);            
       state = state.copyWith(
           telas: state.telas
               .map(
                 (element) => (element.id == tela.id) ? tela : element,
               )
               .toList());
-
       return true;
     } catch (e) {
       return false;
@@ -76,7 +75,7 @@ class TelasState {
   final List<Tela> telas;
 
   TelasState(
-      {this.isLoading = true,
+      {this.isLoading = false,
       this.telas = const [] 
       }); 
 
