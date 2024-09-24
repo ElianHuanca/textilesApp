@@ -25,32 +25,20 @@ class SucursalesScreen extends ConsumerWidget {
   List<Widget> _buildBody(List<Sucursal> sucursales, BuildContext context,
       WidgetRef ref, bool gSucursales) {
     return ([
-      ...sucursales.map((sucursal) {
-        return ItemDashboard(
-            title: sucursal.nombre,
-            iconData: Icons.store,
-            onTap: _onTap(context, sucursal.id, gSucursales));
-      }).toList(),
+      ...sucursales
+          .map((sucursal) => ItemDashboard(
+              title: sucursal.nombre,
+              iconData: Icons.store,
+              onTap: () => gSucursales
+                  ? context.push('/sucursal/${sucursal.id}')
+                  : context.push('/ventas/${sucursal.id}')))
+          .toList(),
       gSucursales
           ? ItemDashboard(
               title: 'Agregar Sucusal',
               iconData: Icons.add_business_rounded,
-              onTap: _onTap2(context))
+              onTap: () => context.push('/sucursal/0'))
           : const SizedBox(),
     ]);
-  }  
-  Function _onTap(BuildContext context, int idsucursal, bool gSucursales) {
-    return () {      
-      gSucursales
-          ? context.push('/sucursal/$idsucursal')
-          : context.push('/ventas/$idsucursal');
-    };
-  }
-
-  //CREAR SUCURSAL
-  Function _onTap2(BuildContext context) {
-    return () {      
-      context.push('/sucursal/0');
-    };
   }
 }

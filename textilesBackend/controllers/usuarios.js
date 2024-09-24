@@ -6,6 +6,17 @@ const ObtenerUsuarios = async (req, res) => {
     res.json(usuarios);
 };
 
+const ObtenerUsuario = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const usuario = await Usuario.findOne({ where: { id } });
+        res.json(usuario);
+    }catch(error){
+        console.error('Error al obtener usuario:', error);
+        res.status(500).json({ error: 'Error al obtener usuario', message: error.message });
+    }
+};
+
 const registrarUsuario = async (req, res) => {
     try {
         //res.json(req.body);
@@ -43,6 +54,7 @@ const actualizarUsuario = async (req, res) => {
     
 module.exports = {
     ObtenerUsuarios,
+    ObtenerUsuario,
     registrarUsuario,
     actualizarUsuario
 }

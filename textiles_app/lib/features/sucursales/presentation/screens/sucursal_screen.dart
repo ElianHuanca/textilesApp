@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 import '../../domain/domain.dart';
 import '../providers/providers.dart';
@@ -33,78 +32,40 @@ class SucursalScreen extends ConsumerWidget {
   Widget _sucursalInformation(
       Sucursal sucursal, BuildContext context, WidgetRef ref) {
     final sucursalForm = ref.watch(sucursalFormProvider(sucursal));
-
+    final sucursalFormNotifier =
+        ref.read(sucursalFormProvider(sucursal).notifier);
     return Container(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 MiTextField(
                   label: 'Nombre',
                   initialValue: sucursalForm.nombre,
-                  onChanged: (value) => ref
-                      .read(sucursalFormProvider(sucursal).notifier)
-                      .onNombreChanged(value),
+                  onChanged: sucursalFormNotifier.onNombreChanged,
                 ),
               ],
             ),
             const SizedBox(height: 20),
             MaterialButtonWidget(
-              ontap: _onSubmit(context, ref, sucursal),
+              ontap: () async {
+                final bool value = await sucursalFormNotifier.onSubmit(
+                    isUpdate: sucursal.id != 0);
+                if (context.mounted) showSnackbarBool(context, value);
+              },
               texto: sucursal.id == 0 ? 'Guardar' : 'Modificar',
             ),
             const SizedBox(height: 15),
-            sucursal.id != 0
-                ? MaterialButtonWidget(
-                    ontap: _onDelete(context, ref, sucursal), texto: 'Eliminar')
-                : const SizedBox(),
+            if (sucursal.id != 0)
+              MaterialButtonWidget(
+                ontap: () async {
+                  final bool value = await sucursalFormNotifier.onDelete();
+                  if (context.mounted) showSnackbarBool(context, value);
+                },
+                texto: 'Eliminar',
+              )
           ],
         ));
-  }
-
-  Function _onSubmit(BuildContext context, WidgetRef ref, Sucursal sucursal) {
-    return () {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
-      sucursal.id == 0
-          ? {
-              ref
-                  .read(sucursalFormProvider(sucursal).notifier)
-                  .onFormCreate()
-                  .then((value) {
-                scaffoldMessenger.showSnackBar(SnackBar(
-                    content: Text(
-                        value ? 'Creado Correctamente' : 'Hubo Un Error')));
-              })
-            }
-          : {
-              ref
-                  .read(sucursalFormProvider(sucursal).notifier)
-                  .onFormUpdate()
-                  .then((value) {
-                scaffoldMessenger.showSnackBar(SnackBar(
-                    content: Text(
-                        value ? 'Modificado Correctamente' : 'Hubo Un Error')));
-              })
-            };
-      context.pop;
-    };
-  }
-
-  Function _onDelete(BuildContext context, WidgetRef ref, Sucursal sucursal) {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    return () {
-      ref
-          .read(sucursalFormProvider(sucursal).notifier)
-          .onFormDelete()
-          .then((value) {
-        scaffoldMessenger.showSnackBar(SnackBar(
-            content:
-                Text(value ? 'Eliminado Correctamente' : 'Hubo Un Error')));
-      });
-      context.pop();
-    };
   }
 }

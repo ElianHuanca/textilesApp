@@ -12,7 +12,9 @@ class VentasScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ventasState = ref.watch(ventasProvider(idsucursal));
-    return Screen1(
+    return ventasState.isLoading 
+    ? const FullScreenLoader()
+    : Screen1(
       widget: _buildBody(ventasState.ventas, context),
       title: 'Ventas',
       isGridview: true,
@@ -28,15 +30,9 @@ class VentasScreen extends ConsumerWidget {
         return ItemDashboard(
           title: fecha,
           iconData: Icons.calendar_month_rounded,
-          onTap: _onTap(context, venta.id),
+          onTap: () => context.push('/det_ventas/${venta.id}')
         );
       }).toList()
     ]);
-  }
-
-  Function _onTap(BuildContext context, int idventa) {
-    return () {      
-      context.push('/det_ventas/$idventa');
-    };
   }
 }

@@ -22,26 +22,31 @@ class VentasNotifier extends StateNotifier<VentasState> {
 
     state = state.copyWith(isLoading: true);
 
-    final ventas = await ventasRepository.getVentas(idsucursal);
-    if (ventas.isEmpty) {
-      final venta = await ventasRepository.createVentaAhora(idsucursal);
-      state = state.copyWith(isLoading: false, ventas: [venta]);
-      return;
-    }
+    try {
+      final ventas = await ventasRepository.getVentas(idsucursal);
 
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    if (today.isAfter(ventas[0].fecha)) {
-      final venta = await ventasRepository.createVentaAhora(idsucursal);
-      ventas.insert(0, venta);
-    }
+      if (ventas.isEmpty) {
+        final venta = await ventasRepository.createVentaAhora(idsucursal);
+        state = state.copyWith(ventas: [venta]);
+        return;
+      }
 
-    state = state.copyWith(isLoading: false, ventas: ventas);
+      DateTime now = DateTime.now();
+      //DateTime today = DateTime(now.year, now.month, now.day);
+      if (ventas[0].fecha.isBefore(DateTime(now.year, now.month, now.day))) {
+        final venta = await ventasRepository.createVentaAhora(idsucursal);
+        ventas.insert(0, venta);
+      }
+    } catch (e) {
+      print("Error al obtener ventas: $e");
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   Future<bool> actualizarVenta(Map<String, dynamic> ventaLike, int id) async {
     try {
-      final venta = await ventasRepository.actualizarVenta(ventaLike, id);      
+      final venta = await ventasRepository.actualizarVenta(ventaLike, id);
       state = state.copyWith(
           ventas: state.ventas
               .map(

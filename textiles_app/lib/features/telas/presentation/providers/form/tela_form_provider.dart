@@ -44,9 +44,9 @@ class TelaFormNotifier extends StateNotifier<TelaFormState> {
     }
   }
 
-  Future<bool> onDeleteSubmit() async {    
+  Future<bool> onDeleteSubmit() async {
     try {
-      return await onDeleteCallback(state.id!);
+      return await onDeleteCallback(state.id);
     } catch (e) {
       return false;
     }
@@ -110,7 +110,7 @@ class TelaFormNotifier extends StateNotifier<TelaFormState> {
 }
 
 class TelaFormState {
-  final int? id;
+  final int id;
   final String nombre;
   final String precxmen;
   final String precxmay;
@@ -118,7 +118,7 @@ class TelaFormState {
   final String precxcompra;
 
   TelaFormState({
-    this.id,
+    this.id = 0,
     this.nombre = '',
     this.precxmen = '',
     this.precxmay = '',

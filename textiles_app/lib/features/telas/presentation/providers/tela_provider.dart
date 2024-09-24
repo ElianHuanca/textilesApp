@@ -20,17 +20,17 @@ class TelaNotifier extends StateNotifier<TelaState> {
     loadTela();
   }
 
-  Future<void> loadTela() async {    
-    if (state.id == 0) {
-      state = state.copyWith(isLoading: false, tela: Tela.empty());
-      return;
-    }
-
+  Future<void> loadTela() async {
     try {
+      if (state.id == 0) {
+        state = state.copyWith(tela: Tela.empty());
+        return;
+      }
       final tela = await telasRepository.getTela(state.id);
-      state = state.copyWith(isLoading: false, tela: tela);
+      state = state.copyWith(tela: tela);
     } catch (e) {
-      print("Error cargando tela: $e");
+      print("Error cargando tela: $e");      
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }

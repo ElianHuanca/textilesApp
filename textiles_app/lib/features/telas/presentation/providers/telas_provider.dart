@@ -11,19 +11,20 @@ final telasProvider = StateNotifierProvider<TelasNotifier, TelasState>((ref) {
 
 class TelasNotifier extends StateNotifier<TelasState> {
   final TelasRepository telasRepository;
+
   TelasNotifier({required this.telasRepository}) : super(TelasState()) {
     getTelas();
   }
 
   Future getTelas() async {
     if (state.isLoading) return;
-
     state = state.copyWith(isLoading: true);
-
     try {
       final telas = await telasRepository.getTelas();
-      state = state.copyWith(isLoading: false, telas: telas);
-    } catch (_) {
+      state = state.copyWith(telas: telas);
+    } catch (e) {
+      print("Error al obtener telas: $e");
+    }finally {
       state = state.copyWith(isLoading: false);
     }
   }

@@ -4,94 +4,79 @@ import '../providers.dart';
 
 final sucursalFormProvider = StateNotifierProvider.autoDispose
     .family<SucursalFormNotifier, SucursalFormState, Sucursal>((ref, sucursal) {
-  final createCallback =ref.watch(sucursalesProvider.notifier).createSucursal;
-  final updateCallback = ref.watch(sucursalesProvider.notifier).updateSucursal;
-  final deleteCallback = ref.watch(sucursalesProvider.notifier).deleteSucursal;  
+  final sucursalesNotifier = ref.watch(sucursalesProvider.notifier);
   return SucursalFormNotifier(
     sucursal: sucursal,
-    onCreateCallback: createCallback,
-    onUpdateCallback: updateCallback,
-    onDeleteCallback: deleteCallback,    
+    onCreateCallback: sucursalesNotifier.createSucursal,
+    onUpdateCallback: sucursalesNotifier.updateSucursal,
+    onDeleteCallback: sucursalesNotifier.deleteSucursal,
   );
 });
+
 class SucursalFormNotifier extends StateNotifier<SucursalFormState> {
-  final Future<bool> Function(Map<String, dynamic>)?onCreateCallback;
-  final Future<bool> Function(Map<String, dynamic>)? onUpdateCallback;
-  final Future<bool> Function(int id)? onDeleteCallback;  
+  final Future<bool> Function(Map<String, dynamic>) onCreateCallback;
+  final Future<bool> Function(Map<String, dynamic>) onUpdateCallback;
+  final Future<bool> Function(int id) onDeleteCallback;
   SucursalFormNotifier({
-    this.onCreateCallback,
-    this.onUpdateCallback,
-    this.onDeleteCallback,
+    required this.onCreateCallback,
+    required this.onUpdateCallback,
+    required this.onDeleteCallback,
     required Sucursal sucursal,
-    
   }) : super(SucursalFormState(
           id: sucursal.id,
           nombre: sucursal.nombre,
         ));
 
-  Future<bool> onFormCreate() async {
-    if (onCreateCallback == null) return false;    
-    if(validador()) return false;
-    final sucursalLike = stateToMap();
+  Future<bool> onSubmit({required bool isUpdate}) async {
+    if (isFormInvalid()) return false;
+    final sucursalLike = toMap();
     try {
-      return await onCreateCallback!(sucursalLike);
+      return isUpdate
+          ? await onUpdateCallback(sucursalLike)
+          : await onCreateCallback(sucursalLike);
     } catch (e) {
       return false;
     }
   }
 
-  bool validador() {
-    return state.nombre.isEmpty;      
+  bool isFormInvalid() {
+    return state.nombre.isEmpty;
   }
 
-  Map<String, dynamic> stateToMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': state.id,
       'nombre': state.nombre,
     };
   }
-  Future<bool> onFormUpdate() async{
-    if (onUpdateCallback == null) return false;
-    if(validador()) return false;
-    final sucursalLike = stateToMap();
+
+  Future<bool> onDelete() async {
     try {
-      return await onUpdateCallback!(sucursalLike);
+      return await onDeleteCallback(state.id);
     } catch (e) {
       return false;
     }
   }
 
-  Future<bool> onFormDelete() async {
-    if (onDeleteCallback == null) return false;
-
-    try {
-      return await onDeleteCallback!(state.id);
-    } catch (e) {
-      return false;
-    }
-  }
   onNombreChanged(String value) {
     state = state.copyWith(
-        nombre: value,
-        );
+      nombre: value,
+    );
   }
 }
 
-class SucursalFormState {  
+class SucursalFormState {
   final int id;
   final String nombre;
 
-  SucursalFormState({    
-    this.id = 0,
-    this.nombre =''
-  });
+  SucursalFormState({this.id = 0, this.nombre = ''});
 
   SucursalFormState copyWith({
     bool? isFormValid,
     int? id,
     String? nombre,
   }) =>
-      SucursalFormState(        
+      SucursalFormState(
         id: id ?? this.id,
         nombre: nombre ?? this.nombre,
       );

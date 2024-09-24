@@ -12,35 +12,32 @@ final sucursalesProvider =
 
 class SucursalesNotifier extends StateNotifier<SucursalesState> {
   final SucursalesRepository sucursalesRepository;
-  
-  SucursalesNotifier(
-      {required this.sucursalesRepository})
+
+  SucursalesNotifier({required this.sucursalesRepository})
       : super(SucursalesState()) {
     getSucursales();
   }
 
   Future getSucursales() async {
     if (state.isLoading) return;
-
-    state = state.copyWith(isLoading: true);
-
-    final sucursales = await sucursalesRepository.getSucursales();
-
-    if (sucursales.isEmpty) {
+    try {      
+      state = state.copyWith(isLoading: true);
+      final sucursales = await sucursalesRepository.getSucursales();
+      state = state.copyWith(sucursales: sucursales);
+    } catch (e) {
+      print("Error al obtener sucursales: $e");
+    } finally {
       state = state.copyWith(isLoading: false);
-      return;
     }
-
-    state = state.copyWith(isLoading: false, sucursales: sucursales);
   }
 
   Future<bool> createSucursal(Map<String, dynamic> sucursalLike) async {
     try {
-      final sucursal =
-          await sucursalesRepository.createSucursal(sucursalLike);
+      final sucursal = await sucursalesRepository.createSucursal(sucursalLike);
       state = state.copyWith(sucursales: [...state.sucursales, sucursal]);
       return true;
     } catch (e) {
+      print("Error creando sucursal: $e");
       return false;
     }
   }
@@ -48,7 +45,7 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
   Future<bool> updateSucursal(Map<String, dynamic> sucursalLike) async {
     try {
       final sucursal = await sucursalesRepository.updateSucursal(
-          sucursalLike, sucursalLike['id']);            
+          sucursalLike, sucursalLike['id']);
       state = state.copyWith(
           sucursales: state.sucursales
               .map(
@@ -57,6 +54,7 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
               .toList());
       return true;
     } catch (e) {
+      print("Error actualizando sucursal: $e");
       return false;
     }
   }
@@ -70,6 +68,7 @@ class SucursalesNotifier extends StateNotifier<SucursalesState> {
               state.sucursales.where((element) => element.id != id).toList());
       return true;
     } catch (e) {
+      print("Error eliminando sucursal: $e");
       return false;
     }
   }

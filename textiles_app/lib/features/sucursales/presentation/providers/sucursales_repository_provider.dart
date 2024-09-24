@@ -6,10 +6,10 @@ import 'package:textiles_app/features/sucursales/infrastructure/infrastructure.d
 
 final sucursalesRepositoryProvider = Provider<SucursalesRepository>((ref) {  
 
-  final idusuario = ref.watch(authProvider).usuario!.id;
+  final int idusuario = ref.read(authProvider).usuario!.id;//ref.watch(authProvider).usuario!.id;
 
-  final sucursalesRepository = SucursalesRepositoryImpl(
+  return SucursalesRepositoryImpl(
     SucursalesDatasourceImpl( idusuario:idusuario),
   );
-  return sucursalesRepository;
+  
 });

@@ -4,46 +4,34 @@ import 'providers.dart';
 
 final sucursalProvider = StateNotifierProvider.autoDispose
     .family<SucursalNotifier, SucursalState, int>((ref, id) {
-  final sucursalesRepository = ref.watch(sucursalesRepositoryProvider);
+  final sucursalesRepository = ref.read(
+      sucursalesRepositoryProvider); //ref.watch(sucursalesRepositoryProvider);
 
   return SucursalNotifier(sucursalesRepository: sucursalesRepository, id: id);
 });
 
 class SucursalNotifier extends StateNotifier<SucursalState> {
-  final SucursalesRepository sucursalesRepository;  
-  SucursalNotifier({required this.sucursalesRepository, required int id})
-      : super(SucursalState(id:id)){loadSucursal();}
+  final SucursalesRepository sucursalesRepository;
 
-  Sucursal newEmptySucursal() {
-    return Sucursal(
-      id: 0,
-      nombre: '',
-    );
+  SucursalNotifier({required this.sucursalesRepository, required int id})
+      : super(SucursalState(id: id)) {
+    loadSucursal();
   }
 
   Future<void> loadSucursal() async {
-    try{
-      if( state.id == 0){
-        state = state.copyWith(isLoading: false, sucursal: newEmptySucursal());
+    try {
+      if (state.id == 0) {
+        state = state.copyWith(sucursal: Sucursal.empty());
         return;
       }
       final sucursal = await sucursalesRepository.getSucursal(state.id);
-
-      state = state.copyWith(isLoading: false, sucursal: sucursal);
-    }catch(e){      
-      print(e);
+      state = state.copyWith(sucursal: sucursal);
+    } catch (e) {
+      print(e);      
+    }finally{
+      state = state.copyWith(isLoading: false);
     }
   }
-  /* Future<void> nuevaSucursal() async {
-    state = state.copyWith(
-      isLoading: false,
-      sucursal: newEmptySucursal(),
-    );
-  } */
-
-  /* Future<void> setSucursal(Sucursal sucursal) async {
-    state = state.copyWith(isLoading: false, sucursal: sucursal);
-  } */
 }
 
 class SucursalState {
@@ -54,18 +42,17 @@ class SucursalState {
   SucursalState({
     required this.id,
     this.sucursal,
-    this.isLoading = true,    
+    this.isLoading = true,
   });
 
   SucursalState copyWith({
     int? id,
     Sucursal? sucursal,
     bool? isLoading,
-    bool? isSaving,
   }) =>
       SucursalState(
         id: id ?? this.id,
         sucursal: sucursal ?? this.sucursal,
-        isLoading: isLoading ?? this.isLoading,        
+        isLoading: isLoading ?? this.isLoading,
       );
 }

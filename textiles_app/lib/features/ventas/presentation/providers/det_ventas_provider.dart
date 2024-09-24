@@ -6,37 +6,34 @@ final detalleVentasProvider = StateNotifierProvider.autoDispose
     .family<DetalleVentasNotifier, DetalleVentasState, int>((ref, idventa) {
   final detalleVentasRepository = ref.watch(detalleVentasRepositoryProvider);
   return DetalleVentasNotifier(
-    detalleVentasRepository: detalleVentasRepository,
-    idventa:idventa
-  );
+      detalleVentasRepository: detalleVentasRepository, idventa: idventa);
 });
 
 class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   final DetalleVentasRepository detalleVentasRepository;
 
-  DetalleVentasNotifier({
-    required this.detalleVentasRepository,
-    required int idventa
-  }) : super(DetalleVentasState(idventa:idventa)) {
+  DetalleVentasNotifier(
+      {required this.detalleVentasRepository, required int idventa})
+      : super(DetalleVentasState(idventa: idventa)) {
     getDetVenta(idventa);
   }
 
   Future getDetVenta(int idventa) async {
-
-    final detalleVentas =
-        await detalleVentasRepository.getDetalleVenta(idventa);
-
-    if (detalleVentas.isEmpty) {
+    try {
+      final detalleVentas =
+          await detalleVentasRepository.getDetalleVenta(idventa);
+      if (detalleVentas.isEmpty) return;
+      state = state.copyWith(detalleVentas: detalleVentas);
+    } catch (e) {
+      print("Error al obtener detalle ventas: $e");      
+    }finally {
       state = state.copyWith(isLoading: false);
-      return;
     }
-
-    state = state.copyWith(isLoading: false, detalleVentas: detalleVentas);
   }
 
   Future<bool> createDetVenta(
       List<Map<String, dynamic>> detalleVentasLike) async {
-    try {         
+    try {
       final response = await detalleVentasRepository.createDetalleVenta(
           detalleVentasLike, state.idventa);
       state =
@@ -50,12 +47,12 @@ class DetalleVentasNotifier extends StateNotifier<DetalleVentasState> {
   Future<bool> deleteDetVenta(int id) async {
     try {
       final response = await detalleVentasRepository.deleteDetalleVenta(id);
-      if (response) {                
+      if (response) {
         state = state.copyWith(
             detalleVentas: state.detalleVentas
                 .where((detalle) => detalle.id != id)
                 .toList());
-      }
+      }      
       return response;
     } catch (e) {
       return false;
@@ -68,7 +65,10 @@ class DetalleVentasState {
   final bool isLoading;
   final List<DetalleVenta> detalleVentas;
 
-  DetalleVentasState({required this.idventa,this.isLoading = true, this.detalleVentas = const []});
+  DetalleVentasState(
+      {required this.idventa,
+      this.isLoading = true,
+      this.detalleVentas = const []});
 
   DetalleVentasState copyWith({
     int? idventa,
