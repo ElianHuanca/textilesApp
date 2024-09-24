@@ -2,10 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/domain.dart';
 import 'providers.dart';
 
-final telaProvider = StateNotifierProvider.autoDispose.family<TelaNotifier, TelaState,int>((ref,id) {
-  final telasRepository = ref.watch(telasRepositoryProvider);
+final telaProvider = StateNotifierProvider.autoDispose
+    .family<TelaNotifier, TelaState, int>((ref, id) {
+  final telasRepository =
+      ref.read(telasRepositoryProvider); //ref.watch(telasRepositoryProvider);
 
-  return TelaNotifier(telasRepository: telasRepository,id:id);
+  return TelaNotifier(telasRepository: telasRepository, id: id);
 });
 
 class TelaNotifier extends StateNotifier<TelaState> {
@@ -14,49 +16,39 @@ class TelaNotifier extends StateNotifier<TelaState> {
   TelaNotifier({
     required this.telasRepository,
     required int id,
-  }) : super(TelaState(id:id)){
+  }) : super(TelaState(id: id)) {
     loadTela();
   }
 
-  Tela newEmptyTela() {
-    return Tela(
-      id: 0,
-      nombre: '',
-      precxmen: 0,
-      precxmay: 0,
-      precxrollo: 0,
-      precxcompra: 0,
-    );
-  }
-  
-  Future<void> loadTela() async {
-    try {
-      if (state.id == 0) {
-        state = state.copyWith(isLoading: false, tela: newEmptyTela());
-        return;
-      }
-      final tela = await telasRepository.getTela(state.id);
+  Future<void> loadTela() async {    
+    if (state.id == 0) {
+      state = state.copyWith(isLoading: false, tela: Tela.empty());
+      return;
+    }
 
+    try {
+      final tela = await telasRepository.getTela(state.id);
       state = state.copyWith(isLoading: false, tela: tela);
     } catch (e) {
-      print(e);
+      print("Error cargando tela: $e");
+      state = state.copyWith(isLoading: false);
     }
   }
 }
 
 class TelaState {
-  final int id;  
-  final Tela? tela;  
+  final int id;
+  final Tela? tela;
   final bool isLoading;
 
   TelaState({
     required this.id,
-    this.tela,    
+    this.tela,
     this.isLoading = true,
   });
 
   TelaState copyWith({
-    Tela? tela,    
+    Tela? tela,
     int? id,
     bool? isLoading,
   }) =>

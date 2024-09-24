@@ -6,10 +6,10 @@ import '../../infrastructure/infrastructure.dart';
 
 final telasRepositoryProvider = Provider<TelasRepository>((ref) {
 
-  final int idusuario = ref.watch(authProvider).usuario!.id ;
+  final int idusuario = ref.read(authProvider).usuario!.id;//ref.watch(authProvider).usuario!.id ;
 
-  final telasRepository = TelasRepositoryImpl(
+  return TelasRepositoryImpl(
     TelasDatasourceImpl(idusuario:idusuario)
   );
-  return telasRepository;
+  
 });

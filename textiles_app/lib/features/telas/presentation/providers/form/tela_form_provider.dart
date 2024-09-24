@@ -4,25 +4,24 @@ import '../providers.dart';
 
 final telaFormProvider = StateNotifierProvider.autoDispose
     .family<TelaFormNotifier, TelaFormState, Tela>((ref, tela) {
-  final createUpdateCallback = ref.watch(telasProvider.notifier).createTela;
-  final updateCallback = ref.watch(telasProvider.notifier).updateTela;
-  final deleteCallback = ref.watch(telasProvider.notifier).deleteTela;
+  final telasNotifier = ref.watch(telasProvider.notifier);
   return TelaFormNotifier(
     tela: tela,
-    onCreateCallback: createUpdateCallback,
-    onUpdateCallback: updateCallback,
-    onDeleteCallback: deleteCallback,
+    onCreateCallback: telasNotifier.createTela,
+    onUpdateCallback: telasNotifier.updateTela,
+    onDeleteCallback: telasNotifier.deleteTela,
   );
 });
 
 class TelaFormNotifier extends StateNotifier<TelaFormState> {
-  final Future<bool> Function(Map<String, dynamic> telaLike)? onCreateCallback;
-  final Future<bool> Function(Map<String, dynamic> telaLike)? onUpdateCallback;
-  final Future<bool> Function(int id)? onDeleteCallback;
+  final Future<bool> Function(Map<String, dynamic> telaLike) onCreateCallback;
+  final Future<bool> Function(Map<String, dynamic> telaLike) onUpdateCallback;
+  final Future<bool> Function(int id) onDeleteCallback;
+
   TelaFormNotifier({
-    this.onCreateCallback,
-    this.onUpdateCallback,
-    this.onDeleteCallback,
+    required this.onCreateCallback,
+    required this.onUpdateCallback,
+    required this.onDeleteCallback,
     required Tela tela,
   }) : super(TelaFormState(
           id: tela.id,
@@ -33,34 +32,21 @@ class TelaFormNotifier extends StateNotifier<TelaFormState> {
           precxcompra: tela.precxcompra != 0 ? tela.precxcompra.toString() : '',
         ));
 
-  Future<bool> onCreateSubmit() async {    
-    if (onCreateCallback == null) return false;
-    if (validadorVacio()) return false;
-    if (validadorDecimal()) return false;
+  Future<bool> onSubmit({required bool isUpdate}) async {
+    if (isFormInvalid()) return false;
     final telaLike = telaToMap();
     try {
-      return await onCreateCallback!(telaLike);
+      return isUpdate
+          ? await onUpdateCallback(telaLike)
+          : await onCreateCallback(telaLike);
     } catch (e) {
       return false;
     }
   }
 
-  Future<bool> onUpdateSubmit() async {
-    if (onUpdateCallback == null) return false;
-    if (validadorVacio()) return false;
-    if (validadorDecimal()) return false;
-    final telaLike = telaToMap();
+  Future<bool> onDeleteSubmit() async {    
     try {
-      return await onUpdateCallback!(telaLike);
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> onDeleteSubmit() async {
-    if (onDeleteCallback == null) return false;
-    try {
-      return await onDeleteCallback!(state.id!);
+      return await onDeleteCallback(state.id!);
     } catch (e) {
       return false;
     }
@@ -70,11 +56,15 @@ class TelaFormNotifier extends StateNotifier<TelaFormState> {
     return {
       'id': state.id,
       'nombre': state.nombre,
-      'precxmen': double.parse(state.precxmen),
-      'precxmay': double.parse(state.precxmay),
-      'precxrollo': double.parse(state.precxrollo),
-      'precxcompra': double.parse(state.precxcompra),
+      'precxmen': _tryParse(state.precxmen) ?? 0,
+      'precxmay': _tryParse(state.precxmay) ?? 0,
+      'precxrollo': _tryParse(state.precxrollo) ?? 0,
+      'precxcompra': _tryParse(state.precxcompra) ?? 0,
     };
+  }
+
+  bool isFormInvalid() {
+    return validadorVacio() || !validadorDecimal();
   }
 
   bool validadorVacio() {
@@ -86,44 +76,40 @@ class TelaFormNotifier extends StateNotifier<TelaFormState> {
   }
 
   bool validadorDecimal() {
-    return double.tryParse(state.precxmen) == null ||
-        double.tryParse(state.precxmay) == null ||
-        double.tryParse(state.precxrollo) == null ||
-        double.tryParse(state.precxcompra) == null;
+    return _tryParse(state.precxmen) != null &&
+        _tryParse(state.precxmay) != null &&
+        _tryParse(state.precxrollo) != null &&
+        _tryParse(state.precxcompra) != null;
   }
 
-  void onNombreChanged(String value) {
-    state = state.copyWith(
-      nombre: value,
-    );
+  double? _tryParse(String value) {
+    return double.tryParse(value);
   }
 
-  void onPrecxmenChanged(String value) {
-    state = state.copyWith(
-      precxmen: value,
-    );
-  }
+  void onNombreChanged(String value) => _updateState(nombre: value);
+  void onPrecxmenChanged(String value) => _updateState(precxmen: value);
+  void onPrecxmayChanged(String value) => _updateState(precxmay: value);
+  void onPrecxrolloChanged(String value) => _updateState(precxrollo: value);
+  void onPrecxcompraChanged(String value) => _updateState(precxcompra: value);
 
-  void onPrecxmayChanged(String value) {
+  void _updateState({
+    String? nombre,
+    String? precxmen,
+    String? precxmay,
+    String? precxrollo,
+    String? precxcompra,
+  }) {
     state = state.copyWith(
-      precxmay: value,
-    );
-  }
-
-  void onPrecxrolloChanged(String value) {
-    state = state.copyWith(
-      precxrollo: value,
-    );
-  }
-
-  void onPrecxcompraChanged(String value) {
-    state = state.copyWith(
-      precxcompra: value,
+      nombre: nombre ?? state.nombre,
+      precxmen: precxmen ?? state.precxmen,
+      precxmay: precxmay ?? state.precxmay,
+      precxrollo: precxrollo ?? state.precxrollo,
+      precxcompra: precxcompra ?? state.precxcompra,
     );
   }
 }
 
-class TelaFormState {  
+class TelaFormState {
   final int? id;
   final String nombre;
   final String precxmen;
@@ -131,7 +117,7 @@ class TelaFormState {
   final String precxrollo;
   final String precxcompra;
 
-  TelaFormState({    
+  TelaFormState({
     this.id,
     this.nombre = '',
     this.precxmen = '',
@@ -148,7 +134,7 @@ class TelaFormState {
     String? precxrollo,
     String? precxcompra,
   }) =>
-      TelaFormState(        
+      TelaFormState(
         id: id ?? this.id,
         nombre: nombre ?? this.nombre,
         precxmen: precxmen ?? this.precxmen,

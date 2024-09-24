@@ -14,20 +14,18 @@ class TelasScreen extends ConsumerWidget {
         ? const FullScreenLoader()
         : Screen1(
             backRoute: false,
-            widget: _buildBody(telasState.telas, context),
+            widget: _buildBody(telasState.telas,context),
             title: 'Telas',
             isGridview: false,
-            onTap: _onTap(context),
+            onTap: () => context.push('/tela/0')
           );
   }
 
   List<Widget> _buildBody(List<Tela> telas, BuildContext context) {
-    return telas.map((tela) {
-      return _telaCard(tela, context);
-    }).toList();
+    return telas.map((tela) => _telaCard(tela, context)).toList();
   }
 
-  Container _telaCard(Tela tela, BuildContext context) {
+  Container _telaCard(Tela tela,BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -53,16 +51,9 @@ class TelasScreen extends ConsumerWidget {
             Text('Precio de compra: ${tela.precxcompra}Bs'),
           ],
         ),
-        onTap: () {
-          context.push('/tela/${tela.id}');
-        },
+        onTap: () => context.push('/tela/${tela.id}')
+        
       ),
     );
-  }
-
-  Function _onTap(BuildContext context) {
-    return () {
-      context.push('/tela/0');
-    };
   }
 }

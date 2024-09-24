@@ -4,15 +4,14 @@ import 'providers.dart';
 
 final telasProvider = StateNotifierProvider<TelasNotifier, TelasState>((ref) {
   final telasRepository = ref.watch(telasRepositoryProvider);
-  return TelasNotifier(    
+  return TelasNotifier(
     telasRepository: telasRepository,
   );
 });
 
 class TelasNotifier extends StateNotifier<TelasState> {
-  final TelasRepository telasRepository;  
-  TelasNotifier({required this.telasRepository})
-      : super(TelasState()) {
+  final TelasRepository telasRepository;
+  TelasNotifier({required this.telasRepository}) : super(TelasState()) {
     getTelas();
   }
 
@@ -21,14 +20,12 @@ class TelasNotifier extends StateNotifier<TelasState> {
 
     state = state.copyWith(isLoading: true);
 
-    final telas = await telasRepository.getTelas();
-
-    if (telas.isEmpty) {
+    try {
+      final telas = await telasRepository.getTelas();
+      state = state.copyWith(isLoading: false, telas: telas);
+    } catch (_) {
       state = state.copyWith(isLoading: false);
-      return;
     }
-
-    state = state.copyWith(isLoading: false, telas: telas);
   }
 
   Future<bool> createTela(Map<String, dynamic> telaLike) async {
@@ -37,14 +34,14 @@ class TelasNotifier extends StateNotifier<TelasState> {
       state = state.copyWith(telas: [tela, ...state.telas]);
       return true;
     } catch (e) {
+      print("Error creando tela: $e");
       return false;
     }
   }
 
   Future<bool> updateTela(Map<String, dynamic> telaLike) async {
     try {
-      final tela =
-          await telasRepository.updateTela(telaLike, telaLike['id']);            
+      final tela = await telasRepository.updateTela(telaLike, telaLike['id']);
       state = state.copyWith(
           telas: state.telas
               .map(
@@ -53,6 +50,7 @@ class TelasNotifier extends StateNotifier<TelasState> {
               .toList());
       return true;
     } catch (e) {
+      print("Error actualizando tela: $e");
       return false;
     }
   }
@@ -65,6 +63,7 @@ class TelasNotifier extends StateNotifier<TelasState> {
           telas: state.telas.where((element) => element.id != id).toList());
       return true;
     } catch (e) {
+      print("Error eliminando tela: $e");
       return false;
     }
   }
@@ -74,10 +73,7 @@ class TelasState {
   final bool isLoading;
   final List<Tela> telas;
 
-  TelasState(
-      {this.isLoading = false,
-      this.telas = const [] 
-      }); 
+  TelasState({this.isLoading = false, this.telas = const []});
 
   TelasState copyWith({bool? isLoading, List<Tela>? telas}) {
     return TelasState(

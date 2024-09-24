@@ -15,4 +15,17 @@ class Tela {
       this.idusuarios,
       required this.id,
       required this.nombre});
+
+  // Constructor para crear una tela vacía
+  factory Tela.empty() {
+    return Tela(
+      id: 0,
+      nombre: '',
+      precxmen: 0,
+      precxmay: 0,
+      precxrollo: 0,
+      precxcompra: 0,
+      idusuarios: 0,
+    );
+  }
 }

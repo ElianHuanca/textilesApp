@@ -1,6 +1,5 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 void showSnackbar(BuildContext context, String text) {
   final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -8,10 +7,6 @@ void showSnackbar(BuildContext context, String text) {
   scaffoldMessenger.showSnackBar(
     SnackBar(content: Text(text)),
   );
-  /* ScaffoldMessenger.of(context).clearSnackBars();
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(message)),
-  ); */
 }
 
 void showSnackbarBool(BuildContext context, bool value) {
@@ -21,4 +16,7 @@ void showSnackbarBool(BuildContext context, bool value) {
     SnackBar(
         content: Text(value ? 'Realizado Correctamente' : 'Hubo Un Error')),
   );
+  if (Navigator.canPop(context)) {
+    context.pop();
+  }
 }

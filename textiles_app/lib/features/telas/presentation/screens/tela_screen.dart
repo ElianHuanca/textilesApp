@@ -1,11 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 import '../../domain/domain.dart';
 import '../providers/providers.dart';
-import 'package:go_router/go_router.dart';
 
 class TelaScreen extends ConsumerWidget {
   final int id;
@@ -107,35 +104,22 @@ class TelaScreen extends ConsumerWidget {
 
   Function _onSubmit(BuildContext context, WidgetRef ref, Tela tela) {
     return () async {
-      bool value;
-      if (tela.id == 0) {
-        value =
-            await ref.read(telaFormProvider(tela).notifier).onCreateSubmit();
-      } else {  
-        value =
-            await ref.read(telaFormProvider(tela).notifier).onUpdateSubmit();
+      final bool value = await ref
+          .read(telaFormProvider(tela).notifier)
+          .onSubmit(isUpdate: tela.id != 0);
+      if (context.mounted) {
+        showSnackbarBool(context, value);
       }
-
-      showSnackbarBool(context, value);
-      /* if (context.mounted) {
-        scaffoldMessenger.showSnackBar(SnackBar(
-            content:
-                Text(value ? 'Realizado Correctamente' : 'Hubo Un Error')));
-        context.pop();
-      } */
-      context.pop();
     };
   }
 
   Function _onDelete(BuildContext context, WidgetRef ref, Tela tela) {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    return () {
-      ref.read(telaFormProvider(tela).notifier).onDeleteSubmit().then((value) {
-        scaffoldMessenger.showSnackBar(SnackBar(
-            content:
-                Text(value ? 'Eliminado Correctamente' : 'Hubo Un Error')));
-      });
-      context.pop();
+    return () async {
+      final bool value =
+          await ref.read(telaFormProvider(tela).notifier).onDeleteSubmit();
+      if (context.mounted) {
+        showSnackbarBool(context, value);
+      }
     };
   }
 }
