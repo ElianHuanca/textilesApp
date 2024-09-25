@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:textiles_app/features/shared/shared.dart';
 import 'package:textiles_app/features/shared/widgets/data_table_telas.dart';
 import 'package:textiles_app/features/telas/domain/domain.dart';
@@ -27,6 +26,8 @@ class DetVenta extends ConsumerWidget {
   List<Widget> _widget(BuildContext context, WidgetRef ref, Venta venta) {
     final telasState = ref.watch(telasProvider);
     final detalleVentaForm = ref.watch(detalleVentaFormProvider(venta));
+    final detVentaFormNotifier =
+        ref.read(detalleVentaFormProvider(venta).notifier);
     return [
       telasState.isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -43,16 +44,10 @@ class DetVenta extends ConsumerWidget {
                           width: MediaQuery.of(context).size.width * 0.93,
                           hintText: 'Seleccione una Tela',
                           onSelected: (value) {
-                            ref
-                                .read(detalleVentaFormProvider(venta).notifier)
-                                .onPrecxCompraChanged(
-                                    value?.precxcompra ?? 0.0);
-                            ref
-                                .read(detalleVentaFormProvider(venta).notifier)
-                                .onNombreChanged(value!.nombre);
-                            ref
-                                .read(detalleVentaFormProvider(venta).notifier)
-                                .onIdTelasChanged(value.id);
+                            detVentaFormNotifier
+                                .onPrecxCompraChanged(value?.precxcompra ?? 0);
+                            detVentaFormNotifier.onNombreChanged(value!.nombre);
+                            detVentaFormNotifier.onIdTelasChanged(value.id);
                           },
                           dropdownMenuEntries: telasState.telas
                               .map<DropdownMenuEntry<Tela>>((e) {
@@ -73,9 +68,7 @@ class DetVenta extends ConsumerWidget {
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         label: 'Precio',
-                        onChanged: ref
-                            .read(detalleVentaFormProvider(venta).notifier)
-                            .onPrecioChanged,
+                        onChanged: detVentaFormNotifier.onPrecioChanged,
                         controller: precioController,
                       ),
                       MiTextField(
@@ -83,16 +76,19 @@ class DetVenta extends ConsumerWidget {
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         label: 'Cantidad',
-                        onChanged: ref
-                            .read(detalleVentaFormProvider(venta).notifier)
-                            .onCantidadChanged,
+                        onChanged: detVentaFormNotifier.onCantidadChanged,
                         controller: cantidadController,
                       ),
                     ],
                   ),
                   const SizedBox(height: 15),
                   MaterialButtonWidget(
-                      ontap: _onAdd(ref, venta), texto: 'Añadir'),
+                      ontap: () {
+                        detVentaFormNotifier.addDetalleVenta();
+                        cantidadController.clear();
+                        precioController.clear();
+                      },
+                      texto: 'Añadir'),
                 ],
               ),
             ),
@@ -100,22 +96,18 @@ class DetVenta extends ConsumerWidget {
         thickness: 1,
       ),
       DataTableMapTelas(
-          listheader: const ['Nombre', 'Cantidad', 'Total'],
+          listheader: const ['Nombre', 'Cantidad','Precio', 'Total',''],
           listbody: detalleVentaForm.detVentas,
           total: detalleVentaForm.total,
           onTap: (int idtelas, double cantidad, double precio) {
-            ref
-                .read(detalleVentaFormProvider(venta).notifier)
-                .removeDetalleVenta(idtelas, cantidad, precio);
+            detVentaFormNotifier.removeDetalleVenta(idtelas, cantidad, precio);
           }),
       Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: TextFormField(
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          onChanged: ref
-              .read(detalleVentaFormProvider(venta).notifier)
-              .onDescuentoChanged,
+          onChanged: detVentaFormNotifier.onDescuentoChanged,
           decoration: const InputDecoration(
             labelText: 'Descuento',
             suffixText: 'Bs',
@@ -129,25 +121,12 @@ class DetVenta extends ConsumerWidget {
       Container(
           padding: const EdgeInsets.all(12.0),
           child: MaterialButtonWidget(
-            ontap: () => {
-              //detalleVentaForm.isLoading ? null :
-              ref
-                  .read(detalleVentaFormProvider(venta).notifier)
-                  .onFormSubmit()
-                  .then((value) => showSnackbarBool(context, value)),
-              context.go('/det_ventas')
+            ontap: () async {
+              final bool value = await detVentaFormNotifier.onFormSubmit();
+              if (context.mounted) showSnackbarBool(context, value);
             },
-            texto:
-                'Guardar', //detalleVentaForm.isLoading ? 'Guardando...' : 'Guardar'
+            texto: 'Guardar',
           ))
     ];
-  }
-
-  Function _onAdd(WidgetRef ref, Venta venta) {
-    return () {
-      ref.read(detalleVentaFormProvider(venta).notifier).addDetalleVenta();
-      cantidadController.clear();
-      precioController.clear();
-    };
   }
 }

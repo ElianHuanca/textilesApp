@@ -46,15 +46,17 @@ List<DataRow> _rows(
       return DataRow(cells: <DataCell>[
         _cell('${data['nombre']}'),
         _cell('${data['cantidad']}Bs'),
+        _cell('${data['precio']}Bs'),
         _cell('${data['total']}Bs'),
-        _cellButton(() => onTap)
-        //_cell('${data['ganancias']}'),
+        _cellButton(onTap, data['idtelas'], data['cantidad'], data['precio']),        
       ]);
     }).toList(),
     DataRow(cells: <DataCell>[
       _cell(''),
+      _cell(''),
       _cell('Total'),
       _cell('$total Bs'),
+      _cell(''),
     ])
   ];
 }
@@ -62,11 +64,11 @@ List<DataRow> _rows(
 DataCell _cell(String texto) => DataCell(
     Text(texto, style: const TextStyle(fontSize: 12, color: Colors.black)));
 
-DataCell _cellButton(Function() onTap) => DataCell(
+DataCell _cellButton(Function(int,double,double) onTap,int idtelas, double cantidad,double precio) => DataCell(
       IconButton(
-        padding: EdgeInsets.zero, // Elimina el relleno alrededor del icono
-        onPressed: onTap,
-        iconSize: 20, // Tamaño más pequeño del icono
+        padding: EdgeInsets.zero,
+        onPressed: () => onTap(idtelas, cantidad, precio),
+        iconSize: 20,
         icon: const Icon(Icons.delete_forever_rounded),
       ),
     );
