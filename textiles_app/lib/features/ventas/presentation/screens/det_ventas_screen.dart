@@ -11,8 +11,8 @@ class DetVentas extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ventaState = ref.watch(ventaProvider(idventa));
-    final detalleVentasState = ref.watch(detalleVentasProvider(idventa));    
-    return detalleVentasState.isLoading && ventaState.isLoading
+    final detalleVentasState = ref.watch(detalleVentasProvider(idventa));
+    return detalleVentasState.isLoading || ventaState.isLoading
         ? const FullScreenLoader()
         : Screen1(
             widget: [
@@ -30,6 +30,7 @@ class DetVentas extends ConsumerWidget {
                           ventaState.venta!.total,
                           ventaState.venta!.ganancias,
                           ventaState.venta!.descuento,
+                          (int id) => ref.read(detalleVentasProvider(idventa).notifier).deleteDetVenta(id)
                         ))
             ],
             title: changeFormatDate(ventaState.venta!.fecha),

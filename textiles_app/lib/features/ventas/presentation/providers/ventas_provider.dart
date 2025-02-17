@@ -37,6 +37,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
         final venta = await ventasRepository.createVentaAhora(idsucursal);
         ventas.insert(0, venta);
       }
+      state = state.copyWith(ventas: ventas);
     } catch (e) {
       print("Error al obtener ventas: $e");
     } finally {
