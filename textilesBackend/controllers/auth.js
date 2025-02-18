@@ -1,14 +1,13 @@
-
 const Usuario = require('../models/usuario');
-
+const pool = require('../database/database');
 const { generarJWT } = require('../helpers/generar-jwt');
 const bcryptjs = require('bcryptjs');
 
-const login = async (req, res) => {
-    /* res.json({ message: 'Login' }); */
+const login = async (req, res) => {    
     try {
         const { correo, password } = req.body;
-        const usuario = await Usuario.findOne({ where: { correo } });
+        const result = await pool.query('SELECT * FROM usuarios WHERE correo = $1', [correo]);
+        usuario = result.rows[0];
         if (!usuario) {
             return res.status(400).json({ error: 'El usuario no existe' });
         }
@@ -16,10 +15,9 @@ const login = async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({ error: 'La contraseña no es válida' });
         }
-
         const token = await generarJWT( usuario.id);
-        usuario.token = token;
-        await usuario.save();
+        usuario.token = token;      
+        await pool.query('UPDATE usuarios SET token = $1 WHERE id = $2', [token, usuario.id]);
         res.json( usuario );
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -32,8 +30,8 @@ const checkStatus= async(req, res = response) => {
 
   try {
     
-    const usuario = await Usuario.findOne({ token });
-
+    const result = await pool.query('SELECT * FROM usuarios WHERE token = $1', [token]);
+    const usuario = result.rows[0];
     if (!usuario) {
       return res.status(401).json({ error: 'Token incorrecto' });
     }

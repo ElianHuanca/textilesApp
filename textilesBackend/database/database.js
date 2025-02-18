@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Pool } = require('postgres-pool');
 require('dotenv').config();
 
 const database = process.env.DATABASE;
@@ -7,18 +7,12 @@ const password = process.env.PASSWORD;
 const host = process.env.HOST;
 const port = process.env.DB_PORT ? process.env.DB_PORT : 5432;
 
-console.log(database, username, password, host);
-
-const sequelize = new Sequelize(database, username, password ,{
-    host,
-    dialect: 'postgres',
-    dialectOptions: {
-        ssl: {
-          require: false,
-          rejectUnauthorized: false // <<<<<<< YOU NEED THIS
-        }
-    },
+const pool = new Pool({
+  connectionString: `postgres://${username}:${password}@${host}:${port}/${database}`,
+  ssl: {
+    require: false,
+    rejectUnauthorized: false 
+  }
 });
 
-
-module.exports = sequelize;
+module.exports = pool;

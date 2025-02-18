@@ -45,7 +45,7 @@ List<DataRow> _rows(
     ...listbody.map((data) {
       return DataRow(cells: <DataCell>[
         _cell('${data['nombre']}'),
-        _cell('${data['cantidad']}Bs'),
+        _cell('${data['cantidad']}mts'),
         _cell('${data['precio']}Bs'),
         _cell('${data['total']}Bs'),
         _cellButton(onTap, data['idtelas'], data['cantidad'], data['precio']),        

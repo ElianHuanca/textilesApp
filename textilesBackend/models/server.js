@@ -1,9 +1,7 @@
 const express  = require('express');
 const http     = require('http');
-//const socketio = require('socket.io');
 const path     = require('path');
 const cors     = require('cors');
-//const sequelize = require("../database/database");
 
 class Server {
 
@@ -45,8 +43,7 @@ class Server {
     }    
 
     async execute(){
-        try {
-            //await sequelize.sync({ force: false });
+        try {            
             console.log('Connection has been established successfully.');
           } catch (error) {
             console.error('Unable to connect to the database:', error);

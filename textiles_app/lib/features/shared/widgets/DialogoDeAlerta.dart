@@ -12,14 +12,14 @@ void dialogoDeAlerta(BuildContext context, Function onPressed) {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop(); 
               },
               child: const Text('Cancelar'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
-                onPressed(); // Ejecuta la función de eliminación
+                Navigator.of(context).pop(); 
+                onPressed();
               },
               child: const Text('Eliminar'),
             ),

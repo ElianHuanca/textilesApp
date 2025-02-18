@@ -1,4 +1,4 @@
-const sequelize = require("../database/database");
+/* const sequelize = require("../database/database");
 const { DataTypes } = require('sequelize');
 const Tela = require('./tela');
 const Venta = require('./venta');
@@ -45,8 +45,6 @@ const DetVenta = sequelize.define('det_ventas', {
     timestamps: false, 
 });
 
-DetVenta.belongsTo(Tela, { foreignKey: 'idtelas' });
-DetVenta.belongsTo(Venta, { foreignKey: 'idventas' });
-
 module.exports = DetVenta;
 
+ */

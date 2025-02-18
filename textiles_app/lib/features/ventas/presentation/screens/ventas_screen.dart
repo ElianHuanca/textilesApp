@@ -24,7 +24,8 @@ class VentasScreen extends ConsumerWidget {
 
   List<Widget> _buildBody(
       List<Venta> ventas, BuildContext context) {
-    return ([
+    return (
+      [
       ...ventas.map((venta) {
         final String fecha = changeFormatDate(venta.fecha);
         return ItemDashboard(

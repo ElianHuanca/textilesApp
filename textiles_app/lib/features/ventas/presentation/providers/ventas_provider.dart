@@ -43,22 +43,7 @@ class VentasNotifier extends StateNotifier<VentasState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
-  }
-
-  Future<bool> actualizarVenta(Map<String, dynamic> ventaLike, int id) async {
-    try {
-      final venta = await ventasRepository.actualizarVenta(ventaLike, id);
-      state = state.copyWith(
-          ventas: state.ventas
-              .map(
-                (element) => (element.id == venta.id) ? venta : element,
-              )
-              .toList());
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
+  } 
 }
 
 class VentasState {

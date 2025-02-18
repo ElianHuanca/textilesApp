@@ -1,4 +1,4 @@
-const sequelize = require("../database/database");
+/* const sequelize = require("../database/database");
 const { DataTypes } = require('sequelize');
 const Sucursal = require('./sucursal');
 const Tela = require('./tela');
@@ -38,3 +38,4 @@ SucTela.belongsTo(Sucursal, { foreignKey: 'idsucursales' }); // Establece la rel
 SucTela.belongsTo(Tela, { foreignKey: 'idtelas' });
 module.exports = SucTela;
 
+ */

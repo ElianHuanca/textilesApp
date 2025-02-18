@@ -1,13 +1,10 @@
-const Tela = require('../models/tela');
+const pool = require('../database/database');
 
 const ObtenerTelasXUsu = async (req, res) => {
-    try {
+    try {        
         const { idusuarios } = req.params;
-        const telas = await Tela.findAll({
-            where: { idusuarios },
-            order: [['nombre', 'ASC']] 
-        });
-        res.json(telas);
+        const result = await pool.query('SELECT * FROM telas WHERE idusuarios = $1 and estado=true ORDER BY nombre ', [idusuarios]);
+        res.json(result.rows);
     } catch (error) {
         console.error('Error al obtener telas:', error);
         res.status(500).json({ error: 'Error al obtener telas', message: error.message });
@@ -17,12 +14,8 @@ const ObtenerTelasXUsu = async (req, res) => {
 const ObtenerTela = async (req, res) => {
     try {
         const { id } = req.params;
-        const tela = await Tela.findOne({ where: { id } });
-        if (tela) {
-            res.json(tela);
-        } else {
-            res.status(404).json({ error: 'No se encontró la tela' });
-        }
+        const result = await pool.query('SELECT * FROM telas WHERE id = $1 and estado=true', [id]);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error('Error al obtener tela:', error);
         res.status(500).json({ error: 'Error al obtener tela', message: error.message });
@@ -33,8 +26,8 @@ const RegistrarTela = async (req, res) => {
     try {
         const { idusuarios } = req.params;
         const { nombre, precxmen, precxmay, precxrollo, precxcompra } = req.body;
-        const tela = await Tela.create({ idusuarios, nombre, precxmen, precxmay, precxrollo, precxcompra });
-        res.json(tela);
+        const result = await pool.query('INSERT INTO telas (idusuarios, nombre, precxmen, precxmay, precxrollo, precxcompra) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [idusuarios, nombre, precxmen, precxmay, precxrollo, precxcompra]);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error('Error al registrar tela:', error);
         res.status(500).json({ error: 'Error al registrar tela', message: error.message });
@@ -44,10 +37,9 @@ const RegistrarTela = async (req, res) => {
 const ActualizarTela = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, precxmen, precxmay, precxrollo, precxcompra } = req.body;
-        await Tela.update({ nombre, precxmen, precxmay, precxrollo, precxcompra }, { where: { id } });
-        const tela = await Tela.findOne({ where: { id } });
-        res.json(tela);
+        const { nombre, precxmen, precxmay, precxrollo, precxcompra } = req.body;        
+        const result = await pool.query('UPDATE telas SET nombre = $1, precxmen = $2, precxmay = $3, precxrollo = $4, precxcompra = $5 WHERE id = $6 RETURNING *', [nombre, precxmen, precxmay, precxrollo, precxcompra, id]);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error('Error al actualizar tela:', error);
         res.status(500).json({ error: 'Error al actualizar tela', message: error.message });
@@ -57,12 +49,8 @@ const ActualizarTela = async (req, res) => {
 const EliminarTela = async (req, res) => {
     try {
         const { id } = req.params;
-        const tela = await Tela.destroy({ where: { id } });
-        if (tela == 1) {
-            res.json({ message: 'Tela eliminada correctamente' });
-        } else {
-            res.status(404).json({ error: 'No se encontró la tela' });
-        }
+        const result = await pool.query('UPDATE telas SET estado=false WHERE id = $1 RETURNING *', [id]);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error('Error al eliminar tela:', error);
         res.status(500).json({ error: 'Error al eliminar tela', message: error.message });

@@ -1,4 +1,4 @@
-const sequelize = require("../database/database");
+/* const sequelize = require("../database/database");
 const { DataTypes } = require('sequelize');
 const Sucursal = require('./sucursal');
 
@@ -39,10 +39,6 @@ const Venta = sequelize.define('ventas', {
     timestamps: false, 
 });
 
-//Venta.belongsTo(Sucursal, { foreignKey: 'idsucursales' }); 
-
-/* Venta.associate = (models) => {
-    Venta.belongsTo(models.Sucursal, { foreignKey: 'idsucursales' });
-}; */
 module.exports = Venta;
 
+ */

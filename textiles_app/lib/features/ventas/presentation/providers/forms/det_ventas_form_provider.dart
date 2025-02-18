@@ -8,7 +8,7 @@ final detalleVentaFormProvider = StateNotifierProvider.autoDispose
   final createCallback =
       ref.watch(detalleVentasProvider(venta.id).notifier).createDetVenta;
   final updateCallback =
-      ref.watch(ventasProvider(venta.idsucursales).notifier).actualizarVenta;
+      ref.watch(ventaProvider(venta.id).notifier).actualizarVenta;
   return DetalleVentaFormNotifier(
       onSubmitCallback: createCallback,
       onUpdateCallback: updateCallback,
@@ -18,7 +18,7 @@ final detalleVentaFormProvider = StateNotifierProvider.autoDispose
 class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
   final Future<bool> Function(List<Map<String, dynamic>> detVentaLike)
       onSubmitCallback;
-  final Future<bool> Function(Map<String, dynamic> ventaLike, int id)
+  final Future<bool> Function(Map<String, dynamic> ventaLike)
       onUpdateCallback;
   DetalleVentaFormNotifier(
       {required this.onSubmitCallback,
@@ -90,18 +90,20 @@ class DetalleVentaFormNotifier extends StateNotifier<DetalleVentaFormState> {
     try {
       if (state.detVentas.isEmpty) return false;
       if (state.descuento == '') onDescuentoChanged('0');
-      return await onSubmitCallback(state.detVentas) &&
-          await onUpdateCallback(toMap(), state.idventa);
+      if (!_isValidDouble(state.descuento)) return false;
+      bool value1 = await onSubmitCallback(state.detVentas);
+      bool value2 = await onUpdateCallback(toMap());
+      return  value1 && value2;
     } catch (e) {
       print("Error al crear detalle venta: $e");
       return false;
     }
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {    
     return {
       'total': state.total,
-      'descuento': state.descuento,
+      'descuento': _toDouble(state.descuento),
       'ganancias': state.ganancias,
     };
   }

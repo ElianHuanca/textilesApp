@@ -20,9 +20,19 @@ class VentaNotifier extends StateNotifier<VentaState> {
       final venta = await ventasRepository.getVenta(state.id);
       state = state.copyWith(venta: venta);
     } catch (e) {
-      print("Error al obtener venta: $e");      
+      print("Error al obtener venta: $e");
     } finally {
       state = state.copyWith(isLoading: false);
+    }
+  }  
+
+  Future<bool> actualizarVenta(Map<String, dynamic> ventaLike) async {
+    try {
+      final venta = await ventasRepository.actualizarVenta(ventaLike, state.id);
+      state = state.copyWith(venta: venta);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

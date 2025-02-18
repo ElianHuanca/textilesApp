@@ -24,14 +24,17 @@ class DetVentas extends ConsumerWidget {
                               style: TextStyle(fontStyle: FontStyle.italic)),
                         )
                       : dataTableWidget(
-                          ['Producto', 'Cantidad', 'Precio', 'Total'],
+                          ['Producto', 'Cantidad', 'Precio', 'Total', 'Accion'],
                           context,
                           detalleVentasState.detalleVentas,
                           ventaState.venta!.total,
                           ventaState.venta!.ganancias,
                           ventaState.venta!.descuento,
-                          (int id) => ref.read(detalleVentasProvider(idventa).notifier).deleteDetVenta(id)
-                        ))
+                          (int id) =>{
+                             ref
+                                .read(detalleVentasProvider(idventa).notifier)
+                                .deleteDetVenta(id)
+                          }))
             ],
             title: changeFormatDate(ventaState.venta!.fecha),
             isGridview: false,

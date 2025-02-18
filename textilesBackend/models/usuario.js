@@ -1,4 +1,4 @@
-const sequelize = require("../database/database");
+/* const sequelize = require("../database/database");
 const { DataTypes } = require('sequelize');
 
 const Usuario = sequelize.define('usuarios', {
@@ -31,3 +31,4 @@ const Usuario = sequelize.define('usuarios', {
 
 module.exports = Usuario;
 
+ */

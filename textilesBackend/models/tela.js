@@ -1,4 +1,4 @@
-const sequelize = require("../database/database");
+/* const sequelize = require("../database/database");
 const { DataTypes } = require('sequelize');
 const Usuario = require('./usuario');
 
@@ -42,3 +42,4 @@ Tela.belongsTo(Usuario, { foreignKey: 'idusuarios' });
 
 module.exports = Tela;
 
+ */
