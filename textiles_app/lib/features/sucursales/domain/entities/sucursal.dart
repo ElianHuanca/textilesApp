@@ -1,3 +1,4 @@
+
 class Sucursal {
   final int id;
   final String nombre;
